@@ -1,1 +1,3 @@
-# ghp-7m4k2q9x
+# Prototype index
+
+- [home-platform-linking](./home-platform-linking/)
