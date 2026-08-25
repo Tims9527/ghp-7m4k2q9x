@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>GameHub 首页账号关联交互走查 v5</title>
+  <style>
+    :root {
+      --launcher-black: #0d0f12;
+      --launcher-canvas: #17191d;
+      --launcher-surface: #1d2025;
+      --launcher-raised: #25282e;
+      --launcher-inset: #14161a;
+      --launcher-border: rgba(255,255,255,.09);
+      --launcher-border-soft: rgba(255,255,255,.055);
+      --launcher-text: rgba(248,250,252,.95);
+      --launcher-text-2: rgba(229,233,239,.72);
+      --launcher-text-3: rgba(210,216,225,.48);
+      --cloud-blue: #39aee8;
+      --cloud-blue-deep: #227fc3;
+      --sync-green: #53d995;
+      --review-cyan: #8ed9ff;
+      font-family: -apple-system, "SF Pro Text", "PingFang SC", "Noto Sans SC", sans-serif;
+      color: var(--launcher-text);
+      background: #090a0d;
+    }
+    * { box-sizing: border-box; }
+    html, body, #root { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; background: #090a0d; }
+    button, input { font: inherit; }
+    button:focus-visible, input:focus-visible { outline: 2px solid #d8f3ff; outline-offset: 2px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+    .prototype-stage { width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; padding: 14px; }
+    .workspace-viewport { position: relative; }
+    .review-workspace { position: absolute; inset: 0 auto auto 0; width: 1696px; height: 760px; display: grid; grid-template-columns: 1280px 400px; gap: 16px; transform-origin: top left; }
+
+    .app-window { width: 1280px; height: 760px; display: grid; grid-template-columns: 72px 1fr; grid-template-rows: 34px 1fr; overflow: hidden; border-radius: 22px; background: var(--launcher-canvas); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 28px 76px rgba(0,0,0,.55); }
+    .window-topbar { grid-column: 1 / -1; display: flex; align-items: center; padding: 0 13px; background: #12141a; border-bottom: 1px solid var(--launcher-border-soft); }
+    .sidebar { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 10px 12px; background: var(--launcher-canvas); border-right: 1px solid var(--launcher-border-soft); }
+    .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; margin-bottom: 12px; border-radius: 13px; background: var(--launcher-surface); border: 1px solid var(--launcher-border); color: var(--launcher-text-2); font-size: 12px; font-weight: 800; }
+    .sidebar-icon { width: 42px; height: 42px; display: grid; place-items: center; border: 0; border-radius: 12px; background: transparent; color: var(--launcher-text-3); font-size: 20px; cursor: pointer; transition: color .16s ease, background .16s ease; }
+    .sidebar-icon:hover { color: var(--launcher-text); background: rgba(255,255,255,.04); }
+    .sidebar-icon.is-active { color: #fff; background: #2c2f35; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
+    .sidebar-glyph { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .sidebar-profile { position: relative; width: 38px; height: 38px; display: grid; place-items: center; margin-top: 2px; padding: 0; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; color: #eef8ff; background: linear-gradient(145deg,#154767,#6336a5 58%,#ce4286); cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 6px 18px rgba(0,0,0,.24); }
+    .sidebar-profile span { font-size: 12px; font-weight: 850; }
+    .sidebar-profile i { position: absolute; right: -1px; bottom: -1px; width: 9px; height: 9px; border: 2px solid var(--launcher-canvas); border-radius: 50%; background: var(--sync-green); }
+    .sidebar-profile:hover { filter: brightness(1.12); }
+    .sidebar-spacer { flex: 1; }
+
+    .home-scroll { min-width: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: #393d44 transparent; }
+    .hero-reference { height: 472px; overflow: hidden; border-bottom: 1px solid var(--launcher-border-soft); position: relative; }
+    .hero-reference__image { position: absolute; left: -54px; top: -4px; width: 1280px; height: auto; max-width: none; pointer-events: none; }
+    .hero-reference::after { content: ""; position: absolute; z-index: 1; inset: auto 0 0; height: 62px; background: linear-gradient(to bottom, transparent, var(--launcher-canvas)); }
+    .home-section { padding: 0 34px; }
+    .account-module { height: 205px; margin-top: 15px; border-radius: 15px; background: var(--launcher-surface); border: 1px solid var(--launcher-border); transition: box-shadow .18s ease, border-color .18s ease; }
+    .account-module__header { height: 55px; display: flex; align-items: center; gap: 18px; padding: 0 16px; border-bottom: 1px solid var(--launcher-border-soft); }
+    .module-heading { min-width: 170px; display: flex; flex-direction: column; gap: 3px; }
+    .module-heading b { font-size: 15px; }
+    .module-heading small { color: var(--launcher-text-3); font-size: 10px; }
+    .platform-tabs { align-self: stretch; display: flex; gap: 2px; transition: box-shadow .18s ease; }
+    .platform-tab { min-width: 135px; display: flex; align-items: center; gap: 8px; padding: 0 11px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--launcher-text-3); cursor: pointer; }
+    .platform-tab[aria-selected="true"] { color: var(--launcher-text); border-bottom-color: var(--platform-accent); }
+    .platform-tab > span:nth-child(2) { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+    .platform-tab b { font-size: 12px; }
+    .platform-tab small { font-size: 9px; color: var(--launcher-text-3); }
+    .platform-mark { width: 25px; height: 25px; display: inline-grid; place-items: center; flex: 0 0 auto; border-radius: 50%; background: #111318; border: 1px solid rgba(255,255,255,.15); color: #fff; font-size: 8px; font-weight: 850; }
+    .platform-mark--epic { border-radius: 6px; font-size: 6px; }
+    .platform-mark--gog { background: #f2f2f2; color: #181a1d; }
+    .platform-mark--compact { width: 21px; height: 21px; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #5d6169; }
+    .status-dot.is-connected { background: var(--sync-green); box-shadow: 0 0 0 3px rgba(83,217,149,.1); }
+    .module-actions { margin-left: auto; display: flex; gap: 7px; }
+    .module-actions button { height: 30px; padding: 0 11px; border-radius: 8px; border: 1px solid var(--launcher-border); background: #22252a; color: var(--launcher-text-2); font-size: 10px; cursor: pointer; }
+    .account-module__body { height: 149px; padding: 14px 16px 15px; }
+    .connected-account-panel { height: 100%; display: grid; grid-template-columns: 205px minmax(0,1fr) 82px; gap: 15px; align-items: center; }
+    .account-identity { min-width: 0; display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; }
+    .account-avatar { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: #14171b; border: 1px solid rgba(255,255,255,.12); color: var(--platform-accent, #8fc8df); font-weight: 850; }
+    .account-identity > div:last-child { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .account-identity b { font-size: 14px; }
+    .account-identity small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--launcher-text-3); font-size: 9px; }
+    .account-identity span { color: var(--launcher-text-2); font-size: 9px; }
+    .home-game-strip { min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 9px; }
+    .home-game-card { min-width: 0; border-radius: 10px; transition: box-shadow .18s ease, transform .16s ease; }
+    .home-game-card:hover { transform: translateY(-1px); }
+    .home-game-card__cover { width: 100%; height: 76px; display: block; padding: 0; border: 0; border-radius: 9px; overflow: hidden; background: #2a2d32; cursor: pointer; }
+    .game-art { width: 100%; height: 100%; display: block; background-size: 1512px 905px; background-repeat: no-repeat; filter: saturate(.9) brightness(.88); transition: filter .16s ease; }
+    button:hover > .game-art { filter: saturate(1) brightness(1); }
+    .home-game-card__footer { min-width: 0; height: 31px; display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 6px; }
+    .home-game-card__footer > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--launcher-text-2); font-size: 9px; }
+    .game-state-button { min-width: 74px; height: 30px; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 10px; border: 1px solid rgba(255,255,255,.11); border-radius: 16px; color: #fff; background: #2b2f35; cursor: pointer; transition: filter .16s ease, transform .16s ease; }
+    .game-state-button.is-cloud { background: var(--cloud-blue-deep); box-shadow: inset 0 0 0 1px rgba(142,217,255,.28); }
+    .game-state-button.is-acquire { background: #f4f5f6; color: #15171b; }
+    .game-state-button.is-compact { min-width: 54px; height: 23px; padding: 0 7px; border-radius: 12px; font-size: 9px; }
+    .game-state-button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .game-state-button span { font-size: 9px; }
+    .game-state-button b { white-space: nowrap; font-size: 10px; }
+    .view-all-button { width: 82px; height: 68px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 11px; border: 1px solid var(--launcher-border); background: #22252a; color: var(--launcher-text-2); cursor: pointer; transition: box-shadow .18s ease; }
+    .view-all-button b { font-size: 10px; }
+    .view-all-button span { color: var(--launcher-text-3); font-size: 8px; }
+    .unconnected-panel { height: 100%; display: grid; grid-template-columns: 1.02fr .98fr; gap: 24px; align-items: center; transition: box-shadow .18s ease; }
+    .unconnected-copy { display: flex; flex-direction: column; gap: 7px; }
+    .unconnected-copy > div:first-child { display: flex; align-items: center; gap: 9px; }
+    .unconnected-copy h2 { margin: 0; font-size: 17px; }
+    .unconnected-copy p { margin: 0; color: var(--launcher-text-2); font-size: 10px; line-height: 1.65; }
+    .connect-actions { display: flex; gap: 8px; margin-top: 2px; }
+    .primary-action, .secondary-action { height: 32px; padding: 0 12px; border-radius: 8px; font-size: 10px; font-weight: 750; cursor: pointer; }
+    .primary-action { border: 0; background: #f1f3f5; color: #121418; }
+    .secondary-action { border: 1px solid var(--launcher-border); background: transparent; color: var(--launcher-text-2); }
+    .connection-benefits { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+    .connection-benefits span { min-height: 67px; padding: 10px; display: flex; flex-direction: column; gap: 5px; border-radius: 10px; background: var(--launcher-inset); border: 1px solid var(--launcher-border-soft); }
+    .connection-benefits b { font-size: 10px; }
+    .connection-benefits small { color: var(--launcher-text-3); font-size: 8px; line-height: 1.5; }
+    .editor-section { padding: 20px 34px 40px; }
+    .editor-section > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .editor-section h2 { margin: 0; font-size: 18px; }
+    .editor-section header div { display: flex; gap: 6px; }
+    .editor-section header button { width: 29px; height: 29px; border-radius: 50%; border: 1px solid var(--launcher-border); background: #22252a; color: var(--launcher-text-3); }
+    .editor-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; }
+    .editor-grid article div { position: relative; height: 145px; overflow: hidden; border-radius: 12px; border: 1px solid var(--launcher-border-soft); }
+    .editor-grid article img { position: absolute; width: 1512px; height: 905px; max-width: none; pointer-events: none; }
+    .editor-grid p { margin: 7px 1px 0; color: var(--launcher-text-2); font-size: 10px; }
+
+    .library-content { display: grid; grid-template-columns: minmax(0,1fr) 292px; min-width: 0; overflow: hidden; }
+    .library-main { min-width: 0; display: grid; grid-template-rows: 66px 49px 1fr; padding: 0 26px 0 30px; border-right: 1px solid var(--launcher-border-soft); }
+    .library-title { display: flex; align-items: baseline; gap: 12px; }
+    .library-title h1 { margin: 0; font-size: 27px; letter-spacing: -.7px; }
+    .library-title span { color: var(--launcher-text-3); font-size: 10px; }
+    .library-toolbar { display: flex; align-items: center; gap: 8px; }
+    .filter-buttons { display: flex; gap: 5px; }
+    .filter-buttons button, .sort-button, .add-game-button { height: 31px; padding: 0 11px; border-radius: 9px; border: 1px solid var(--launcher-border); background: #202328; color: var(--launcher-text-2); font-size: 10px; cursor: pointer; }
+    .filter-buttons button.is-active { background: #32363d; color: var(--launcher-text); }
+    .add-game-button { margin-right: auto; }
+    .library-toolbar input { width: 177px; height: 31px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--launcher-border); background: #202328; color: var(--launcher-text); font-size: 10px; }
+    .library-scroll { overflow-y: auto; padding: 2px 6px 36px 0; scrollbar-width: thin; scrollbar-color: #393d44 transparent; }
+    .game-section { margin-bottom: 22px; }
+    .game-section h2 { display: flex; align-items: center; gap: 6px; margin: 12px 0 11px; font-size: 15px; }
+    .game-section h2::after { content: ""; height: 1px; flex: 1; margin-left: 6px; background: var(--launcher-border); }
+    .game-section h2 span { color: var(--launcher-text-3); font-size: 10px; font-weight: 500; }
+    .library-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px 11px; }
+    .library-game-card { min-width: 0; padding: 7px; border-radius: 13px; transition: background .16s ease, box-shadow .18s ease; }
+    .library-game-card:hover { background: rgba(255,255,255,.025); }
+    .library-game-card__cover { width: 100%; height: 92px; display: block; padding: 0; border: 0; border-radius: 10px; overflow: hidden; background: #2a2d32; cursor: pointer; }
+    .library-game-card__name { min-width: 0; margin-top: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+    .library-game-card__actions { min-height: 31px; display: flex; align-items: center; gap: 5px; margin-top: 7px; }
+    .installed-launch-button { height: 30px; min-width: 74px; display: flex; align-items: center; justify-content: center; gap: 5px; border-radius: 16px; border: 1px solid rgba(255,255,255,.11); background: #2c3036; color: #fff; cursor: pointer; }
+    .installed-launch-button b { font-size: 10px; }
+    .download-game-button { height: 30px; flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 9px; border: 0; border-radius: 16px; background: #f5f6f7; color: #131519; cursor: pointer; }
+    .download-game-button b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9px; }
+    .library-empty { height: 220px; display: grid; place-items: center; color: var(--launcher-text-3); font-size: 12px; }
+    .account-rail { overflow-y: auto; padding: 26px 18px; display: flex; flex-direction: column; gap: 13px; scrollbar-width: thin; transition: box-shadow .18s ease; }
+    .platform-account-card { border-radius: 14px; background: var(--launcher-surface); border: 1px solid var(--launcher-border); overflow: hidden; }
+    .platform-account-card > header { height: 48px; display: flex; align-items: center; gap: 9px; padding: 0 13px; border-bottom: 1px solid var(--launcher-border-soft); }
+    .platform-account-card > header b { font-size: 14px; }
+    .bound-account { padding: 13px; display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; }
+    .bound-account .account-avatar { width: 40px; height: 40px; }
+    .bound-account > div:nth-child(2) { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .bound-account > div:nth-child(2) b { font-size: 12px; }
+    .bound-account > div:nth-child(2) small { overflow: hidden; text-overflow: ellipsis; color: var(--launcher-text-3); font-size: 8px; }
+    .bound-account dl { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 2px 0 0; }
+    .bound-account dl div { padding: 8px; border-radius: 9px; background: var(--launcher-inset); }
+    .bound-account dt { color: var(--launcher-text-3); font-size: 8px; }
+    .bound-account dd { margin: 4px 0 0; font-size: 11px; font-weight: 750; }
+    .platform-account-card > button { width: calc(100% - 24px); height: 31px; margin: 12px; border-radius: 9px; border: 1px solid var(--launcher-border); background: #26292f; color: var(--launcher-text-2); font-size: 10px; cursor: pointer; }
+
+    .review-rail { width: 360px; height: 760px; display: flex; flex-direction: column; overflow: hidden; padding: 22px; border-radius: 22px; background: #15181d; border: 1px solid rgba(255,255,255,.16); box-shadow: 0 28px 76px rgba(0,0,0,.46); }
+    .review-rail > header { padding-bottom: 16px; border-bottom: 1px solid var(--launcher-border); }
+    .review-rail > header > span { color: var(--review-cyan); font-size: 9px; font-weight: 800; letter-spacing: 1.2px; }
+    .review-rail > header h1 { margin: 6px 0 5px; font-size: 20px; letter-spacing: -.4px; }
+    .review-rail > header p { margin: 0; color: var(--launcher-text-3); font-size: 10px; }
+    .review-legend { display: flex; align-items: center; gap: 8px; padding: 12px 0 8px; color: var(--launcher-text-3); font-size: 9px; }
+    .review-legend i { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--review-cyan); box-shadow: 0 0 0 4px rgba(142,217,255,.08); }
+    .review-note-list { display: flex; flex-direction: column; gap: 5px; }
+    .review-note-list > button { width: 100%; display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 9px; border: 1px solid transparent; border-radius: 11px; text-align: left; background: transparent; color: var(--launcher-text); cursor: pointer; }
+    .review-note-list > button:hover, .review-note-list > button.is-active { background: #20242a; border-color: var(--launcher-border); }
+    .review-note-list > button > span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: #2a2e35; color: var(--review-cyan); font-size: 9px; font-weight: 850; }
+    .review-note-list > button > div { display: flex; flex-direction: column; gap: 3px; }
+    .review-note-list b { font-size: 11px; }
+    .review-note-list p { margin: 0; color: var(--launcher-text-3); font-size: 9px; line-height: 1.5; }
+    .review-note-list small { color: rgba(142,217,255,.5); font-size: 7px; letter-spacing: .7px; }
+    .review-spec, .scenario-control { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--launcher-border); }
+    .review-spec h2, .scenario-control h2 { margin: 0 0 8px; color: var(--launcher-text-2); font-size: 10px; }
+    .review-spec dl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; }
+    .review-spec dl div { padding: 7px 8px; border-radius: 8px; background: #111419; }
+    .review-spec dt { color: var(--launcher-text-3); font-size: 7px; }
+    .review-spec dd { margin: 3px 0 0; font-size: 9px; font-weight: 700; }
+    .scenario-control > div { display: flex; gap: 5px; }
+    .scenario-control button { height: 26px; flex: 1; padding: 0 5px; border-radius: 7px; border: 1px solid var(--launcher-border); background: #20242a; color: var(--launcher-text-3); font-size: 8px; cursor: pointer; }
+    .scenario-control button.is-active { color: var(--launcher-text); background: #343941; }
+    .review-rail > footer { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--launcher-border); color: var(--launcher-text-3); font-size: 8px; }
+    .is-review-highlight { border-color: rgba(142,217,255,.8) !important; box-shadow: 0 0 0 2px rgba(142,217,255,.22), 0 0 22px rgba(67,177,232,.13) !important; }
+
+    .modal-backdrop { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 26px; background: rgba(0,0,0,.7); backdrop-filter: blur(9px); animation: fade-in .18s ease; }
+    .guide-dialog { width: 450px; padding: 19px; border-radius: 17px; background: #202329; border: 1px solid rgba(255,255,255,.13); box-shadow: 0 28px 80px rgba(0,0,0,.58); }
+    .guide-dialog header, .login-dialog > header { display: flex; align-items: center; gap: 10px; }
+    .guide-dialog h2, .login-dialog h2 { margin: 0; font-size: 18px; }
+    .guide-dialog header button, .login-dialog > header > button { margin-left: auto; width: 31px; height: 31px; border-radius: 9px; border: 0; background: #2b2f35; color: var(--launcher-text-2); cursor: pointer; }
+    .guide-dialog p { color: var(--launcher-text-2); font-size: 11px; line-height: 1.65; }
+    .guide-dialog ol { display: grid; gap: 7px; padding-left: 22px; color: var(--launcher-text-2); font-size: 11px; }
+    .guide-dialog > small { color: var(--launcher-text-3); font-size: 9px; }
+    .login-dialog { width: 760px; height: 620px; display: grid; grid-template-rows: 68px 1fr; overflow: hidden; border-radius: 23px; background: #111318; border: 1px solid rgba(255,255,255,.15); box-shadow: 0 30px 100px rgba(0,0,0,.65); }
+    .login-dialog > header { padding: 0 23px; background: #212327; border-bottom: 1px solid var(--launcher-border); }
+    .login-dialog > form { width: 480px; align-self: center; justify-self: center; display: flex; flex-direction: column; align-items: center; gap: 13px; padding: 28px 34px; border-radius: 17px; background: #17191e; border: 1px solid var(--launcher-border); }
+    .login-dialog > form .platform-mark { width: 46px; height: 46px; }
+    .login-dialog h3 { margin: 6px 0 12px; font-size: 24px; }
+    .login-dialog label, .login-dialog input, .continue-button { width: 100%; }
+    .login-dialog input { height: 48px; padding: 0 16px; border-radius: 9px; border: 1px solid rgba(255,255,255,.26); background: #25272c; color: var(--launcher-text); }
+    .continue-button { height: 48px; border: 0; border-radius: 9px; background: #2eb4ef; color: #101317; font-weight: 800; cursor: pointer; }
+    .login-dialog p { margin: 0; color: var(--launcher-text-3); font-size: 10px; }
+    .login-dialog p button { border: 0; background: transparent; color: #2eb4ef; cursor: pointer; }
+    .login-dialog hr { width: 100%; border: 0; border-top: 1px solid var(--launcher-border); }
+    .login-dialog form > b { font-size: 12px; }
+    .login-dialog form > small { color: var(--launcher-text-3); font-size: 9px; }
+    .login-error { width: 100%; color: #ff9c9c; font-size: 9px; }
+    .toast { position: fixed; left: 50%; bottom: 30px; z-index: 90; transform: translateX(-50%); padding: 10px 14px; border-radius: 10px; background: #f0f2f4; color: #15171a; font-size: 11px; font-weight: 750; box-shadow: 0 13px 36px rgba(0,0,0,.44); animation: toast-in .2s ease; }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes toast-in { from { opacity: 0; transform: translate(-50%,8px); } to { opacity: 1; transform: translate(-50%,0); } }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
+  </style>
+  <style>
+    /* v4：继续沿用碳黑、枪灰、云游戏蓝与同步绿；仅用边框和层级色差建立深度。 */
+    .ui-icon { width: 16px; height: 16px; display: block; object-fit: contain; flex: 0 0 auto; }
+    .sidebar-icon .ui-icon { width: 21px; height: 21px; opacity: .58; }
+    .sidebar-icon:hover .ui-icon, .sidebar-icon.is-active .ui-icon { opacity: 1; }
+    .platform-mark--steam { padding: 0; border: 0; background: transparent; overflow: visible; }
+    .platform-mark--steam img { width: 100%; height: 100%; object-fit: contain; }
+    .game-title-link, .library-game-card__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0; border: 0; text-align: left; background: transparent; color: var(--launcher-text-2); cursor: pointer; }
+    .game-title-link { font-size: 9px; }
+    .game-title-link:hover, .library-game-card__name:hover { color: var(--review-cyan); }
+    .game-state-button .ui-icon, .download-game-button .ui-icon, .installed-launch-button .ui-icon { width: 14px; height: 14px; }
+    .module-actions button { display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .module-actions button .ui-icon { width: 14px; height: 14px; opacity: .78; }
+    .module-actions button:disabled { cursor: progress; opacity: .72; }
+    .sync-progress { height: 36px; display: grid; grid-template-columns: 218px minmax(0,1fr) 44px; align-items: center; gap: 12px; padding: 0 16px; color: var(--launcher-text-2); background: rgba(83,217,149,.035); border-bottom: 1px solid rgba(116,237,199,.18); font-size: 10px; }
+    .sync-progress > div { height: 4px; overflow: hidden; border-radius: 2px; background: rgba(255,255,255,.09); }
+    .sync-progress i { height: 100%; display: block; border-radius: inherit; background: #9aefd5; transition: width .12s linear; }
+    .sync-progress b { text-align: right; color: #a9bdc8; font-variant-numeric: tabular-nums; }
+    .account-module:has(.sync-progress) { height: 241px; }
+    .account-module__body.has-sync-progress { height: 149px; }
+
+    /* v4：游戏库宽度约束，防止右栏、平台名称与双按钮溢出。 */
+    .library-content { width: 100%; grid-template-columns: minmax(0,1fr) 276px; }
+    .library-main { min-width: 0; padding: 0 22px 0 28px; }
+    .library-toolbar { min-width: 0; }
+    .library-toolbar input { width: 156px; }
+    .library-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 15px 10px; }
+    .library-game-card { width: 100%; min-width: 0; overflow: hidden; }
+    .library-game-card__name { width: 100%; display: block; margin-top: 7px; color: var(--launcher-text); font-size: 10px; }
+    .library-game-card__actions { width: 100%; min-width: 0; }
+    .library-game-card__actions.is-dual { display: grid; grid-template-columns: 72px minmax(0,1fr); gap: 5px; }
+    .library-game-card__actions.is-dual .game-state-button { width: 72px; min-width: 72px; padding: 0 8px; }
+    .download-game-button { width: 100%; min-width: 0; flex: none; padding: 0 8px; gap: 4px; }
+    .download-game-button b { min-width: 0; font-size: 9px; }
+    .account-rail { width: 100%; min-width: 0; overflow-x: hidden; padding: 22px 15px; }
+    .platform-account-card { width: 100%; min-width: 0; }
+    .platform-account-card > header { min-width: 0; padding: 0 12px; }
+    .platform-account-card > header b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bound-account { min-width: 0; }
+    .bound-account dl { min-width: 0; }
+    .bound-account dl div { min-width: 0; }
+
+    /* v4：详情页遵循现有桌面端的媒体主视觉 + 右侧资料结构。 */
+    .detail-scroll { position: relative; min-width: 0; overflow-y: auto; padding: 0 28px 42px; scrollbar-width: thin; scrollbar-color: #393d44 transparent; }
+    .detail-title { height: 68px; display: flex; align-items: center; gap: 14px; }
+    .detail-title button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--launcher-border); border-radius: 11px; background: #202328; cursor: pointer; }
+    .detail-title button .ui-icon { width: 18px; height: 18px; }
+    .detail-title h1 { margin: 0; font-size: 26px; letter-spacing: -.7px; }
+    .detail-hero { position: relative; height: 418px; overflow: hidden; border-radius: 17px; background: #1e2025; border: 1px solid var(--launcher-border); }
+    .detail-backdrop { position: absolute; inset: 0; overflow: hidden; }
+    .detail-backdrop .game-art { transform: scale(1.18); transform-origin: center; filter: saturate(.95) brightness(.72) blur(.2px); }
+    .detail-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(17,18,22,.18), rgba(17,18,22,.12) 45%, rgba(17,18,22,.88) 76%), linear-gradient(0deg, rgba(17,18,22,.82), transparent 42%); }
+    .detail-gallery { position: absolute; left: 18px; top: 18px; bottom: 64px; width: 112px; display: grid; grid-template-rows: repeat(5,1fr); gap: 7px; z-index: 2; }
+    .detail-gallery button { position: relative; overflow: hidden; padding: 0; border: 1px solid rgba(255,255,255,.11); border-radius: 9px; background: #25282d; opacity: .72; cursor: pointer; }
+    .detail-gallery button.is-active { opacity: 1; border-color: rgba(255,255,255,.34); }
+    .detail-gallery button > .ui-icon { position: absolute; inset: 50% auto auto 50%; width: 18px; height: 18px; transform: translate(-50%,-50%); filter: drop-shadow(0 2px 4px rgba(0,0,0,.65)); }
+    .detail-gallery .game-art { filter: saturate(.78) brightness(.72); }
+    .detail-facts { position: absolute; z-index: 3; top: 22px; right: 22px; width: 305px; padding: 18px; border-radius: 15px; background: rgba(29,32,37,.84); border: 1px solid rgba(255,255,255,.13); backdrop-filter: blur(14px); }
+    .detail-score { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .detail-score span { color: var(--launcher-text-2); font-size: 11px; }
+    .detail-score span b { color: #9aefd5; }
+    .detail-score strong { padding: 7px 10px; border-radius: 9px; color: #9aefd5; background: rgba(83,217,149,.08); border: 1px solid rgba(83,217,149,.2); font-size: 18px; }
+    .detail-tags { display: flex; gap: 6px; margin: 14px 0; }
+    .detail-tags span { padding: 5px 10px; border-radius: 13px; color: var(--launcher-text-2); background: rgba(255,255,255,.045); border: 1px solid var(--launcher-border); font-size: 10px; }
+    .detail-facts dl { margin: 0; }
+    .detail-facts dl div { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--launcher-border); }
+    .detail-facts dl div:last-child { border-bottom: 0; }
+    .detail-facts dt { color: var(--launcher-text-3); font-size: 10px; }
+    .detail-facts dd { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--launcher-text-2); font-size: 10px; }
+    .detail-facts dd .ui-icon { width: 21px; height: 21px; }
+    .detail-actions { position: absolute; z-index: 4; left: 50%; bottom: 18px; min-width: 220px; display: flex; justify-content: center; gap: 8px; padding: 8px; transform: translateX(-50%); border-radius: 24px; background: rgba(18,20,24,.78); border: 1px solid rgba(255,255,255,.1); backdrop-filter: blur(12px); }
+    .detail-actions .game-state-button, .detail-actions .download-game-button, .detail-actions .installed-launch-button { min-width: 96px; height: 34px; }
+    .detail-launch { padding: 0 14px; }
+    .compatibility-card { min-height: 96px; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 16px; padding: 18px 22px; border-radius: 15px; background: var(--launcher-surface); border: 1px solid var(--launcher-border); }
+    .compatibility-card > div { display: grid; grid-template-columns: auto auto auto; align-items: center; gap: 10px; }
+    .compatibility-card span { grid-column: 1 / -1; color: var(--launcher-text-2); font-size: 11px; }
+    .compatibility-card strong { font-size: 21px; }
+    .compatibility-card i { color: #f1ce44; font-style: normal; letter-spacing: 2px; }
+    .compatibility-card p { margin: 0; color: var(--launcher-text-3); font-size: 10px; }
+    .compatibility-card button { display: flex; align-items: center; gap: 5px; border: 0; background: transparent; color: var(--launcher-text-2); cursor: pointer; }
+    .compatibility-card button .ui-icon { width: 14px; height: 14px; }
+    .game-description { padding: 20px 3px 0; }
+    .game-description h2 { margin: 0 0 10px; font-size: 18px; }
+    .game-description p { max-width: 890px; margin: 0; color: var(--launcher-text-2); font-size: 11px; line-height: 1.75; }
+
+    /* v4：注释字号提升，并用编号锚点和动态连线降低误读。 */
+    .review-rail { width: 400px; height: 760px; padding: 22px 20px; overflow-y: auto; }
+    .review-rail > header > span { font-size: 11px; }
+    .review-rail > header h1 { font-size: 22px; }
+    .review-rail > header p, .review-legend { font-size: 11px; }
+    .review-note-list { gap: 6px; }
+    .review-note-list > button { grid-template-columns: 34px 1fr; gap: 11px; padding: 10px; }
+    .review-note-list > button > span { width: 32px; height: 32px; font-size: 11px; }
+    .review-note-list b { font-size: 13px; }
+    .review-note-list p { font-size: 11px; line-height: 1.55; }
+    .review-note-list small { font-size: 9px; }
+    .review-spec h2, .scenario-control h2 { font-size: 11px; }
+    .review-spec dt { font-size: 9px; }
+    .review-spec dd { font-size: 10px; }
+    .review-rail > footer { font-size: 9px; }
+    .is-review-highlight { position: relative; z-index: 2; }
+    [data-note].is-review-highlight::after { content: attr(data-note); position: absolute; z-index: 30; top: 7px; right: 7px; min-width: 31px; height: 19px; display: grid; place-items: center; padding: 0 5px; border-radius: 9px; color: #07131a; background: var(--review-cyan); font-size: 8px; font-weight: 850; box-shadow: 0 3px 12px rgba(0,0,0,.38); pointer-events: none; }
+    .review-connector { position: absolute; inset: 0; z-index: 70; overflow: visible; pointer-events: none; }
+    .review-connector path { fill: none; stroke: var(--review-cyan); stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 0 5px rgba(142,217,255,.52)); }
+    .review-connector circle { fill: var(--review-cyan); stroke: #0d151a; stroke-width: 2; }
+
+    /* v5：左侧是完整等比产品画布，右侧是独立的功能说明与变动走查区。 */
+    .prototype-stage { place-items: start center; padding: 12px; background: radial-gradient(circle at 22% 10%, #131821 0, #090b0f 38%, #07080b 100%); }
+    .review-workspace { width: 1756px; grid-template-columns: 1280px 460px; }
+    .app-window { position: relative; box-shadow: 0 0 0 1px rgba(142,217,255,.08), 0 28px 76px rgba(0,0,0,.55); }
+    .app-window::before { content: "产品可见区域 · 1280 × 760"; position: absolute; z-index: 40; top: 8px; right: 14px; color: rgba(210,216,225,.38); font-size: 8px; letter-spacing: .08em; pointer-events: none; }
+
+    /* v5.9：账号区改为独立摘要卡 + 等高游戏卡，提升比例与操作层级。 */
+    .account-module { height: 238px; border-radius: 17px; }
+    .account-module__header { height: 58px; gap: 10px; padding: 0 18px; }
+    .module-heading { min-width: 230px; }
+    .module-heading small { max-width: 230px; }
+    .platform-tabs { flex: 1; }
+    .platform-tab { min-width: 0; flex: 1; max-width: 154px; }
+    .account-module__body { height: 180px; padding: 14px 16px 15px; }
+    .connected-account-panel { grid-template-columns: 252px minmax(0,1fr) 96px; align-items: stretch; gap: 14px; }
+    .account-summary { position: relative; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 6px; overflow: hidden; padding: 11px 12px; border: 1px solid rgba(255,255,255,.075); border-radius: 13px; background: linear-gradient(145deg,rgba(255,255,255,.035),rgba(8,10,14,.2)); }
+    .account-summary::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 2px; background: var(--platform-accent); opacity: .72; }
+    .account-identity { width: 100%; grid-template-columns: 48px minmax(0,1fr); gap: 11px; }
+    .account-avatar { width: 48px; height: 48px; border-radius: 14px; background: radial-gradient(circle at 35% 25%,rgba(255,255,255,.12),transparent 45%),#11161c; box-shadow: inset 0 0 0 1px rgba(143,200,223,.3); }
+    .account-identity > div:last-child { gap: 4px; }
+    .account-name-row { display: flex; align-items: center; gap: 8px; }
+    .account-name-row b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .account-name-row > span { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: var(--sync-green); font-size: 8px; white-space: nowrap; }
+    .account-name-row .status-dot { width: 5px; height: 5px; }
+    .account-identity strong { color: var(--launcher-text-2); font-size: 9px; font-weight: 600; }
+    .steam-friends-shortcut { width: 100%; height: 30px; display: grid; grid-template-columns: 17px minmax(0,1fr) auto 10px; align-items: center; gap: 7px; padding: 0 9px; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; color: var(--launcher-text-2); background: rgba(255,255,255,.025); cursor: pointer; }
+    .steam-friends-shortcut:hover { color: #fff; border-color: rgba(142,217,255,.28); background: rgba(142,217,255,.06); }
+    .steam-friends-shortcut svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .steam-friends-shortcut b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; font-size: 10px; }
+    .steam-friends-shortcut span { padding: 3px 6px; border-radius: 6px; color: #b9c7d1; background: rgba(255,255,255,.06); font-size: 8px; font-variant-numeric: tabular-nums; }
+    .steam-friends-shortcut i { color: var(--launcher-text-3); font-size: 15px; font-style: normal; }
+    .platform-card-actions { width: 100%; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; min-height: 30px; }
+    .platform-card-actions > button { width: 100%; height: 30px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border: 1px solid var(--launcher-border); border-radius: 9px; background: #25282e; color: var(--launcher-text-2); cursor: pointer; transition: background .18s ease, color .18s ease, transform .16s ease; }
+    .platform-card-actions > button:hover { color: var(--launcher-text); background: #30343b; transform: translateY(-1px); }
+    .platform-card-actions > button:active { transform: translateY(0) scale(.98); }
+    .platform-card-actions > button:disabled { opacity: .55; cursor: progress; transform: none; }
+    .platform-card-actions .ui-icon { width: 14px; height: 14px; opacity: .86; }
+    .platform-card-actions .action-label { font-size: 10px; }
+    .manage-glyph { position: relative; top: -2px; font-size: 12px; letter-spacing: 1px; }
+    .home-game-strip { align-content: center; gap: 10px; padding: 1px; border: 1px solid transparent; border-radius: 11px; }
+    .home-game-card__cover { height: 94px; border-radius: 11px; }
+    .home-game-card__footer { height: 34px; }
+    .home-game-card__footer > span { display: inline-flex; border: 1px solid transparent; border-radius: 14px; }
+    .view-all-button { width: 96px; height: 128px; align-self: center; gap: 6px; border-radius: 13px; background: linear-gradient(145deg,#262a30,#1b1e23); }
+    .view-all-button b { font-size: 11px; }
+    .view-all-button span { font-size: 9px; }
+    .account-module:has(.sync-progress) { height: 238px; }
+    .account-module__body.has-sync-progress { height: 180px; }
+    .account-summary .sync-progress { width: 100%; height: 32px; display: grid; grid-template-columns: minmax(0,1fr) 34px; grid-template-rows: 13px 4px; gap: 3px 6px; padding: 5px 7px; border: 1px solid rgba(116,237,199,.14); border-radius: 8px; background: rgba(83,217,149,.045); font-size: 8px; }
+    .account-summary .sync-progress > span { grid-column: 1 / -1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .account-summary .sync-progress > div { grid-column: 1; grid-row: 2; height: 4px; }
+    .account-summary .sync-progress > b { grid-column: 2; grid-row: 2; align-self: center; font-size: 8px; line-height: 1; }
+
+    /* Steam 好友属于原有页面；首页只新增入口，弹层用于走查既有承接。 */
+    .steam-friends-layer { position: absolute; z-index: 58; left: 72px; top: 34px; width: 1208px; height: 726px; display: grid; place-items: center; background: rgba(7,9,12,.83); backdrop-filter: blur(8px); }
+    .steam-friends-dialog { width: 690px; height: 560px; display: grid; grid-template-rows: 72px 66px minmax(0,1fr) 36px; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 25px; color: #eef4f8; background: #151719; box-shadow: 0 32px 90px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.055); }
+    .steam-friends-dialog > header { display: grid; grid-template-columns: minmax(0,1fr) auto 40px; align-items: center; gap: 14px; padding: 0 26px; }
+    .steam-friends-dialog > header > div { display: flex; align-items: center; gap: 11px; }
+    .steam-friends-dialog h2 { margin: 0; font-size: 22px; letter-spacing: -.35px; }
+    .steam-friends-dialog > header > span { color: #8392a0; font-size: 15px; font-variant-numeric: tabular-nums; }
+    .steam-friends-dialog > header > button { width: 38px; height: 38px; border: 0; border-radius: 11px; color: #7e858b; background: transparent; font-size: 28px; font-weight: 300; cursor: pointer; }
+    .steam-friends-dialog > header > button:hover { color: #fff; background: rgba(255,255,255,.055); }
+    .friends-toolbar { display: grid; grid-template-columns: minmax(0,1fr) 48px; gap: 12px; padding: 4px 26px 12px; }
+    .friends-toolbar label { height: 50px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; background: #202326; }
+    .friends-toolbar label svg { width: 20px; height: 20px; fill: none; stroke: #80909e; stroke-width: 1.8; stroke-linecap: round; }
+    .friends-toolbar input { min-width: 0; flex: 1; border: 0; outline: 0; color: #eef4f8; background: transparent; font-size: 15px; }
+    .friends-toolbar input::placeholder { color: #7c8791; }
+    .friends-toolbar > button { width: 48px; height: 50px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; color: #edf4f8; background: #202326; cursor: pointer; }
+    .friends-toolbar > button:hover { color: #8ed9ff; border-color: rgba(142,217,255,.28); }
+    .friends-toolbar > button svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .steam-friend-list { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; padding: 0 26px 10px; scrollbar-width: thin; scrollbar-color: #363c42 transparent; }
+    .steam-friend-row { min-height: 78px; display: grid; grid-template-columns: 54px minmax(0,1fr) 46px 46px; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid rgba(255,255,255,.075); border-radius: 13px; background: #1d1f21; }
+    .steam-friend-row:hover { border-color: rgba(255,255,255,.13); background: #222527; }
+    .friend-avatar { position: relative; width: 52px; height: 52px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.09); border-radius: 13px; color: rgba(255,255,255,.83); background: linear-gradient(145deg,#30343a,#181a1d); font-size: 25px; font-weight: 800; }
+    .friend-avatar--2 { background: linear-gradient(145deg,#74706b,#25282c); }
+    .friend-avatar--3 { background: linear-gradient(145deg,#5c5d68,#1c1d22); }
+    .friend-avatar--4 { background: linear-gradient(145deg,#384952,#171b1e); }
+    .friend-avatar i { position: absolute; right: -2px; bottom: -2px; width: 11px; height: 11px; border: 3px solid #1d1f21; border-radius: 50%; background: #555a5e; }
+    .steam-friend-row.is-online .friend-avatar i { background: #43d8bd; }
+    .friend-copy { min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+    .friend-copy > div { display: flex; align-items: center; gap: 9px; }
+    .friend-copy b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; }
+    .friend-copy span { flex: 0 0 auto; padding: 4px 8px; border: 1px solid rgba(232,166,43,.33); border-radius: 10px; color: #e9a82e; background: rgba(232,166,43,.09); font-size: 10px; }
+    .steam-friend-row.is-online .friend-copy span { color: #62e0ba; border-color: rgba(65,210,166,.32); background: rgba(65,210,166,.09); }
+    .friend-copy small { color: #70808e; font-size: 11px; }
+    .friend-chat, .friend-more { position: relative; width: 46px; height: 46px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(87,213,170,.2); border-radius: 50%; color: #dff9ef; background: rgba(51,121,94,.12); cursor: pointer; }
+    .friend-more { border-color: rgba(255,255,255,.1); color: #eef2f4; background: #25282b; font-size: 23px; }
+    .friend-chat:hover, .friend-more:hover { filter: brightness(1.2); }
+    .friend-chat svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .friend-chat > i { position: absolute; right: -2px; top: -4px; min-width: 20px; height: 20px; display: grid; place-items: center; padding: 0 5px; border-radius: 10px; color: #082018; background: #43d8a7; font-size: 10px; font-style: normal; font-weight: 800; }
+    .friend-empty { height: 220px; display: grid; place-items: center; color: #74818b; font-size: 13px; }
+    .steam-friends-dialog > footer { display: flex; align-items: center; padding: 0 27px; border-top: 1px solid rgba(255,255,255,.055); color: #626f78; font-size: 9px; }
+
+    /* v6.1：我的游戏右侧账号栏按现有产品卡片层级重构。 */
+    .library-content { grid-template-columns: minmax(0,1fr) 306px; }
+    .account-rail { width: 100%; min-width: 0; overflow-x: hidden; padding: 22px 16px; gap: 14px; background: rgba(10,12,15,.12); }
+    .platform-account-card { position: relative; width: 100%; min-width: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 17px; background: linear-gradient(145deg,#202326,#1a1c1f); box-shadow: inset 0 1px 0 rgba(255,255,255,.025); }
+    .platform-account-card.is-unconnected { border-color: rgba(255,255,255,.075); background: linear-gradient(145deg,#1d2023,#17191c); }
+    .platform-account-card > header { height: 58px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .platform-account-card > header b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+    .platform-account-card > header .platform-mark { width: 28px; height: 28px; margin-left: 0; flex: 0 0 28px; }
+    .platform-account-card.is-unconnected > header { gap: 10px; padding: 0 16px; }
+    .platform-account-card.is-unconnected > header b { font-size: 14px; line-height: 1; }
+    .platform-account-card--epic .platform-mark--epic { border: 1px solid rgba(255,255,255,.78); border-radius: 5px; color: #111418; background: #edf1f3; font-size: 5px; line-height: 1; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+    .platform-account-card--gog .platform-mark--gog { border-color: rgba(255,255,255,.8); color: #17191c; background: #f1f3f4; }
+    .account-header-actions { min-width: 0; display: flex; align-items: center; gap: 5px; margin-left: auto; }
+    .account-header-actions > span { height: 25px; display: inline-flex; align-items: center; gap: 6px; padding: 0 9px; border: 1px solid rgba(83,217,149,.22); border-radius: 13px; color: #6ce0b0; background: rgba(83,217,149,.08); font-size: 9px; white-space: nowrap; }
+    .account-header-actions > button { width: 29px; height: 29px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 8px; color: #7d8c99; background: transparent; cursor: pointer; }
+    .account-header-actions > button:hover { color: #dfe9ef; background: rgba(255,255,255,.05); }
+    .account-header-actions svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .steam-account-profile { display: grid; grid-template-columns: 40px 46px minmax(0,1fr); align-items: center; gap: 10px; padding: 14px 15px 12px; }
+    .steam-level { width: 40px; height: 40px; display: grid; place-items: center; border: 1.5px solid #efabab; border-radius: 50%; color: #f6f1f1; font-size: 16px; font-weight: 750; }
+    .rail-account-avatar { width: 46px; height: 46px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.11); border-radius: 12px; color: #d8f3ff; background: radial-gradient(circle at 45% 40%,#6c2bd7 0 17%,transparent 18%),conic-gradient(#15d7f2,#8b32eb,#f046a8,#273cbd,#15d7f2); font-size: 14px; font-weight: 850; box-shadow: inset 0 0 0 2px rgba(255,255,255,.09); }
+    .steam-account-profile > div:last-child, .compact-platform-account > div:nth-child(2) { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+    .steam-account-profile b, .compact-platform-account b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+    .steam-account-profile small, .compact-platform-account small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #687786; font-size: 9px; }
+    .steam-account-profile small i, .compact-platform-account small i { margin-left: 5px; color: #586671; font-size: 8px; font-style: normal; }
+    .steam-account-details { margin: 0 14px 14px; padding: 12px; border-radius: 14px; background: rgba(8,10,12,.32); }
+    .rail-friends-entry { width: 100%; height: 42px; display: grid; grid-template-columns: 20px minmax(0,1fr) auto 11px; align-items: center; gap: 8px; padding: 0 11px; border: 1px solid rgba(255,255,255,.12); border-radius: 11px; color: #d7e0e6; background: rgba(255,255,255,.025); cursor: pointer; }
+    .rail-friends-entry:hover { color: #fff; border-color: rgba(142,217,255,.3); background: rgba(142,217,255,.05); }
+    .rail-friends-entry svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .rail-friends-entry b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; font-size: 12px; }
+    .rail-friends-entry span { padding: 5px 8px; border-radius: 7px; color: #d3dde4; background: rgba(255,255,255,.08); font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .rail-friends-entry i { color: #687580; font-size: 17px; font-style: normal; }
+    .steam-account-details dl { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin: 13px 0 0; }
+    .steam-account-details dl div { min-width: 0; text-align: center; }
+    .steam-account-details dt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #7c858c; font-size: 9px; }
+    .steam-account-details dd { margin: 8px 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #edf3f6; font-size: 13px; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .compact-platform-account { display: grid; grid-template-columns: 48px minmax(0,1fr) 58px; align-items: center; gap: 11px; padding: 14px 16px 16px; }
+    .compact-platform-account .rail-account-avatar { width: 48px; height: 48px; color: #b9cad4; background: #292c30; }
+    .compact-platform-account dl { min-width: 0; margin: 0; padding-left: 11px; border-left: 1px solid rgba(255,255,255,.08); text-align: center; }
+    .compact-platform-account dt { color: #74808a; font-size: 8px; }
+    .compact-platform-account dd { margin: 5px 0 0; color: #eef3f6; font-size: 15px; font-weight: 800; }
+    .platform-login-state { display: flex; flex-direction: column; gap: 12px; padding: 15px 16px 17px; }
+    .unconnected-platform-summary { min-width: 0; display: grid; grid-template-columns: 42px minmax(0,1fr); align-items: center; gap: 11px; }
+    .unconnected-platform-summary .platform-mark { width: 42px; height: 42px; }
+    .unconnected-platform-summary > div { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+    .unconnected-platform-summary b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #d6dde2; font-size: 12px; }
+    .unconnected-platform-summary small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #68757f; font-size: 9px; }
+    .platform-login-state > button { width: 100%; height: 40px; display: flex; align-items: center; justify-content: space-between; margin: 0; padding: 0 13px 0 15px; border: 1px solid rgba(142,217,255,.18); border-radius: 11px; color: #d5e9f3; background: rgba(142,217,255,.055); font-size: 10px; font-weight: 700; cursor: pointer; }
+    .platform-login-state > button i { color: #7e9dad; font-size: 15px; font-style: normal; }
+    .platform-login-state > button:hover { color: #fff; border-color: rgba(142,217,255,.36); background: rgba(142,217,255,.1); }
+
+    /* v5：说明区使用独立视觉规范，更大字号与更强信息层级。 */
+    .review-rail { width: 460px; height: 760px; padding: 24px 22px 20px; border-radius: 20px; background: #101722; border-color: rgba(142,217,255,.24); box-shadow: 0 28px 76px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.04); color: #f5f9fc; scrollbar-color: #334b5e transparent; }
+    .review-rail > header { padding-bottom: 18px; border-bottom-color: rgba(142,217,255,.15); }
+    .review-header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .review-header-row > span { color: #7fd2ff; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 10px; letter-spacing: 1.25px; }
+    .annotation-toggle { flex: 0 0 auto; height: 30px; display: inline-flex; align-items: center; gap: 8px; padding: 0 8px 0 10px; border: 1px solid rgba(127,210,255,.18); border-radius: 9px; color: #91a6b6; background: #0b111a; cursor: pointer; }
+    .annotation-toggle > span { font-size: 10px; font-weight: 700; }
+    .annotation-toggle > i { position: relative; width: 27px; height: 15px; border-radius: 999px; background: #33404b; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); transition: background .18s ease; }
+    .annotation-toggle > i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #8c99a4; transition: transform .18s ease, background .18s ease; }
+    .annotation-toggle.is-on { color: #dff6ff; border-color: rgba(127,210,255,.38); background: rgba(127,210,255,.08); }
+    .annotation-toggle.is-on > i { background: #3c98c8; }
+    .annotation-toggle.is-on > i::after { transform: translateX(12px); background: #fff; }
+    .review-rail > header h1 { margin-top: 9px; color: #fff; font-size: 25px; letter-spacing: -.55px; }
+    .review-rail > header p { max-width: 39em; color: #aab9c7; font-size: 13px; line-height: 1.65; }
+    .review-legend { position: sticky; top: -24px; z-index: 4; margin: 0 -4px; padding: 13px 4px 10px; color: #b6c8d6; background: #101722; font-size: 11px; }
+    .review-note-list { gap: 8px; }
+    .review-note-list > button { grid-template-columns: 38px minmax(0,1fr); gap: 12px; padding: 12px; border-color: rgba(255,255,255,.035); border-radius: 13px; background: rgba(255,255,255,.018); }
+    .review-note-list > button:hover, .review-note-list > button.is-active { background: #192838; border-color: rgba(127,210,255,.34); box-shadow: inset 3px 0 0 #7fd2ff; }
+    .review-note-list > button > span { width: 36px; height: 36px; border-radius: 10px; background: #1d3040; color: #8bd8ff; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 11px; }
+    .review-note-list > button > div { gap: 5px; }
+    .review-note-list b { color: #f8fbfd; font-size: 15px; letter-spacing: -.1px; }
+    .review-note-list p { color: #b5c2cd; font-size: 13px; line-height: 1.68; text-wrap: pretty; }
+    .review-note-list small { color: rgba(127,210,255,.62); font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 9px; }
+    .note-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .note-tags em { padding: 3px 6px; border: 1px solid rgba(127,210,255,.16); border-radius: 5px; color: #9fc6dc; background: rgba(127,210,255,.045); font-size: 9px; font-style: normal; line-height: 1; }
+    .review-spec, .scenario-control { margin-top: 16px; padding-top: 15px; border-top-color: rgba(142,217,255,.14); }
+    .review-spec h2, .scenario-control h2 { color: #d9e7f0; font-size: 12px; }
+    .review-spec dl div { padding: 9px 10px; background: #0b111a; border: 1px solid rgba(255,255,255,.035); }
+    .review-spec dt { color: #73889a; font-size: 9px; }
+    .review-spec dd { color: #e9f2f7; font-size: 10px; }
+    .scenario-control button { height: 30px; color: #8fa2b2; background: #16202b; font-size: 9px; }
+    .scenario-control button.is-active { color: #fff; background: #2b455a; border-color: rgba(127,210,255,.32); }
+    .review-rail > footer { padding-top: 16px; color: #6e8495; font-size: 9px; }
+    .is-review-highlight { animation: review-pulse .55s ease-out; }
+    .detail-gallery.is-review-highlight,
+    .detail-facts.is-review-highlight,
+    .detail-actions.is-review-highlight { position: absolute; }
+
+    /* v5.2：管理账号沿用既有弹窗结构，覆盖产品区但不遮挡右侧评审说明。 */
+    .account-management-layer { position: absolute; z-index: 50; left: 0; top: 0; width: 1280px; height: 760px; display: grid; place-items: center; background: rgba(7,9,13,.6); backdrop-filter: blur(9px); }
+    .account-management-dialog { position: relative; width: 620px; padding: 34px 34px 28px; border: 1px solid rgba(255,255,255,.14); border-radius: 24px; color: #f3f5f7; background: linear-gradient(145deg, rgba(55,60,68,.97), rgba(36,34,40,.98)); box-shadow: 0 28px 90px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.08); }
+    .account-management-dialog > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 26px; }
+    .account-management-dialog h2 { margin: 0; color: #c8e2fb; font-size: 29px; letter-spacing: -.7px; }
+    .account-management-dialog h2 span { margin-left: 10px; color: #a8c8df; font-size: 23px; }
+    .account-management-dialog header p { margin: 12px 0 0; color: rgba(235,238,242,.58); font-size: 17px; }
+    .account-management-dialog header > button { width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; color: rgba(239,242,246,.62); background: rgba(255,255,255,.06); font-size: 30px; font-weight: 300; line-height: 1; cursor: pointer; }
+    .account-management-dialog header > button:hover { color: #fff; background: rgba(255,255,255,.1); }
+    .managed-account-list { display: grid; gap: 14px; }
+    .managed-account-list > button { min-height: 104px; display: grid; grid-template-columns: 68px minmax(0,1fr) 30px; align-items: center; gap: 18px; padding: 16px 24px; border: 1px solid rgba(255,255,255,.12); border-radius: 22px; color: #f2f3f5; background: rgba(255,255,255,.035); text-align: left; cursor: pointer; box-shadow: inset 0 -5px 14px rgba(0,0,0,.1); }
+    .managed-account-list > button:hover { background: rgba(255,255,255,.06); }
+    .managed-account-list b { font-size: 22px; }
+    .managed-account-list i { width: 28px; height: 28px; border: 2px solid rgba(255,255,255,.2); border-radius: 50%; }
+    .managed-account-list > button.is-selected i { border-color: #3fd4a6; box-shadow: inset 0 0 0 7px rgba(63,212,166,.26); background: #54d9ae; }
+    .managed-avatar { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 50%; color: rgba(255,255,255,.9); font-size: 20px; font-weight: 850; box-shadow: inset 0 0 0 2px rgba(255,255,255,.12), 0 7px 20px rgba(0,0,0,.25); }
+    .managed-avatar--smallhao { background: radial-gradient(circle at 60% 70%, #ffae48 0 16%, transparent 17%), conic-gradient(from 20deg, #c76f24, #1d1010, #ff8a3d, #2a1114, #c76f24); }
+    .managed-avatar--mello { background: radial-gradient(circle at 50% 55%, #16172f 0 28%, transparent 29%), conic-gradient(from 30deg, #18d6ff, #7136ff, #ff2bf2, #2d48ff, #18d6ff); }
+    .add-managed-account { width: 100%; height: 78px; margin-top: 18px; border: 1px dashed rgba(255,255,255,.2); border-radius: 19px; color: rgba(244,246,249,.6); background: rgba(255,255,255,.018); font-size: 20px; cursor: pointer; }
+    .add-managed-account:hover { color: #fff; border-color: rgba(127,210,255,.4); background: rgba(127,210,255,.05); }
+    .add-managed-account span { margin-right: 8px; font-size: 26px; font-weight: 300; }
+    .account-management-dialog > small { display: block; margin-top: 15px; color: rgba(220,229,236,.48); font-size: 10px; line-height: 1.55; }
+    @keyframes review-pulse { 0% { filter: brightness(1); } 45% { filter: brightness(1.22); } 100% { filter: brightness(1); } }
+  </style>
+</head>
+<body>
+  <!--
+    产品画布：1280 × 760 px；交互注释：460 × 760 px；间距：16 px。
+    H-01～H-11 对应首页，R-01 对应“我的游戏”返回入口，D-01～D-05 对应游戏详情页。
+    游戏状态规则：支持云游戏 → 显示“秒玩”；不支持云游戏 → 显示“获取游戏”。
+    “我的游戏”页中，支持下载的未安装 Steam 游戏额外展示“下载 + 体积”。
+    评审栏为交付辅助，不进入正式产品。
+  -->
+  <div id="root"></div>
+  <script src="assets/home.js"></script>
+  <script src="assets/library.js"></script>
+  <script src="assets/icons.js"></script>
+  <script src="vendor/react.js"></script>
+  <script src="vendor/react-dom.js"></script>
+  <script src="macos-window.js"></script>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
