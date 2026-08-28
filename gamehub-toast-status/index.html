@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>提示状态 Toast 文案预览</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --canvas: #050607;
+      --toast: #13171c;
+      --toast-line: rgba(163, 181, 202, 0.16);
+      --text: #d8e5f4;
+      --text-soft: #8391a2;
+      --button-text: #bfd1e5;
+      --button-bg: rgba(255, 255, 255, 0.035);
+      --button-line: rgba(180, 199, 221, 0.14);
+      --success: #86d53c;
+      --info: #66bfff;
+      --warning: #f2c258;
+      --error: #ff766d;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background: var(--canvas);
+      color: var(--text);
+      font-family: Inter, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font: inherit; }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--canvas);
+    }
+
+    .preview {
+      width: min(720px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+    }
+
+    .toast-stack {
+      position: relative;
+      width: 100%;
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+    }
+
+    .toast {
+      width: 100%;
+      min-height: 112px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      padding: 22px 24px;
+      border: 1px solid var(--toast-line);
+      border-radius: 22px;
+      background:
+        linear-gradient(110deg, rgba(255, 255, 255, 0.018), transparent 58%),
+        var(--toast);
+      box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.44),
+        0 1px 0 rgba(255, 255, 255, 0.025) inset;
+      transition: border-color 180ms ease, transform 180ms ease, opacity 180ms ease;
+    }
+
+    .toast-stack.is-changing .toast {
+      opacity: 0;
+      transform: translateY(7px);
+    }
+
+    .toast-icon {
+      position: relative;
+      width: 30px;
+      height: 30px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      color: var(--info);
+      filter: drop-shadow(0 0 8px rgba(102, 191, 255, 0.16));
+    }
+
+    .toast-icon::before,
+    .toast-icon::after {
+      content: "";
+      position: absolute;
+    }
+
+    .toast[data-type="success"] .toast-icon { color: var(--success); }
+    .toast[data-type="warning"] .toast-icon { color: var(--warning); }
+    .toast[data-type="error"] .toast-icon { color: var(--error); }
+    .toast[data-type="info"] .toast-icon,
+    .toast[data-type="progress"] .toast-icon { color: var(--info); }
+
+    .toast[data-type="success"] .toast-icon::after {
+      left: 8px;
+      top: 7px;
+      width: 8px;
+      height: 4px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
+    }
+
+    .toast[data-type="warning"] .toast-icon,
+    .toast[data-type="error"] .toast-icon {
+      border-radius: 8px;
+      transform: rotate(45deg) scale(0.78);
+    }
+
+    .toast[data-type="warning"] .toast-icon::before,
+    .toast[data-type="error"] .toast-icon::before {
+      left: 13px;
+      top: 6px;
+      width: 2px;
+      height: 10px;
+      border-radius: 2px;
+      background: currentColor;
+      transform: rotate(-45deg);
+    }
+
+    .toast[data-type="warning"] .toast-icon::after,
+    .toast[data-type="error"] .toast-icon::after {
+      left: 13px;
+      top: 19px;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .toast[data-type="info"] .toast-icon::before {
+      left: 13px;
+      top: 7px;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .toast[data-type="info"] .toast-icon::after {
+      left: 13px;
+      top: 12px;
+      width: 2px;
+      height: 9px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    .toast[data-type="progress"] .toast-icon {
+      border-color: rgba(102, 191, 255, 0.24);
+      border-top-color: currentColor;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast-copy {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .status-line {
+      margin: 0;
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 650;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+    }
+
+    .toast[data-content-kind="reason"] .status-line {
+      font-size: 16px;
+      font-weight: 520;
+    }
+
+    .reason-line {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 15px;
+      font-weight: 480;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+    }
+
+    .reason-line[hidden] { display: none; }
+
+    .toast-action {
+      min-width: 96px;
+      height: 42px;
+      padding: 0 18px;
+      border: 1px solid var(--button-line);
+      border-radius: 999px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+
+    .toast-action:hover {
+      color: #e8f2ff;
+      border-color: rgba(180, 199, 221, 0.28);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .toast-action:disabled {
+      color: rgba(191, 209, 229, 0.32);
+      border-color: rgba(180, 199, 221, 0.09);
+      background: rgba(255, 255, 255, 0.018);
+      cursor: not-allowed;
+    }
+
+    .toast-action[hidden] { display: none; }
+
+    .switcher {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .mode-switch {
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      border: 1px solid rgba(177, 197, 220, 0.13);
+      border-radius: 11px;
+      background: #101419;
+    }
+
+    .mode-button {
+      min-width: 64px;
+      height: 32px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #687585;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 140ms ease, background 140ms ease;
+    }
+
+    .mode-button[aria-pressed="true"] {
+      background: #252c35;
+      color: #dce8f5;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+    }
+
+    .counter {
+      min-width: 54px;
+      color: #657181;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .next-button {
+      min-width: 126px;
+      height: 40px;
+      padding: 0 18px;
+      border: 1px solid rgba(177, 197, 220, 0.18);
+      border-radius: 11px;
+      background: #1c222a;
+      color: #cfdeed;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      transition: background 140ms ease, border-color 140ms ease, transform 100ms ease;
+    }
+
+    .next-button:hover {
+      border-color: rgba(177, 197, 220, 0.34);
+      background: #242b35;
+    }
+
+    .next-button:active { transform: scale(0.98); }
+
+    button:focus-visible {
+      outline: 2px solid var(--info);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 620px) {
+      .toast {
+        grid-template-columns: 30px minmax(0, 1fr);
+        align-items: start;
+        gap: 14px;
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .toast-action {
+        grid-column: 2;
+        width: fit-content;
+        margin-top: 2px;
+      }
+
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="preview" aria-label="Toast 文案预览">
+      <div class="toast-stack" id="toastStack">
+        <article class="toast" id="toast" data-type="progress" role="status" aria-live="polite">
+          <span class="toast-icon" aria-hidden="true"></span>
+          <div class="toast-copy">
+            <p class="status-line" id="statusLine">正在读取状态</p>
+            <p class="reason-line" id="reasonLine" hidden></p>
+          </div>
+          <button class="toast-action" id="toastAction" type="button" hidden></button>
+        </article>
+      </div>
+
+      <div class="switcher">
+        <div class="mode-switch" aria-label="层级效果">
+          <button class="mode-button" id="singleModeButton" type="button" aria-pressed="true">单层</button>
+          <button class="mode-button" id="multiModeButton" type="button" aria-pressed="false">双层</button>
+        </div>
+        <span class="counter" id="counter">01 / 40</span>
+        <button class="next-button" id="nextButton" type="button">切换文案</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const messages = [
+      { category: '基础状态', text: '正在读取状态', type: 'progress' },
+      { category: '基础状态', text: '等待磁盘空闲', type: 'progress' },
+      { category: '基础状态', text: '正在验证', type: 'progress', action: '取消验证' },
+      { category: '基础状态', text: '已验证', type: 'success', action: '重新验证' },
+      { category: '基础状态', text: '尚未验证', type: 'warning', action: '开始验证' },
+      { category: '基础状态', text: '需要修复', type: 'error', action: '修复' },
+
+      { category: '尚未验证的原因', text: '这是外部导入的安装，建议先验证文件。', type: 'warning', action: '开始验证' },
+      { category: '尚未验证的原因', text: '验证所需的本地清单暂不完整。', type: 'warning', action: '重试' },
+      { category: '尚未验证的原因', text: '部分共享内容尚未就绪。', type: 'warning', action: '重试' },
+      { category: '尚未验证的原因', text: '游戏内容已发生变化，需要重新验证。', type: 'warning', action: '重新验证' },
+      { category: '尚未验证的原因', text: '检测到越出游戏库边界的文件项，已停止读取。', type: 'error', action: '查看详情' },
+      { category: '尚未验证的原因', text: '上一次验证未完成。', type: 'warning', action: '重新验证' },
+      { category: '尚未验证的原因', text: '游戏库当前离线。', type: 'warning', action: '重试' },
+      { category: '尚未验证的原因', text: '本次无法完成可靠验证，可稍后重试。', type: 'warning', action: '重试' },
+      { category: '尚未验证的原因', text: '此安装尚未完成验证。', type: 'warning', action: '开始验证' },
+
+      { category: '操作不可用原因', text: '文件维护正在进行，请完成或取消后再试。', type: 'warning' },
+      { category: '操作不可用原因', text: '游戏内容正在被其他任务使用。', type: 'warning' },
+      { category: '操作不可用原因', text: '暂时无法确认是否有任务正在写入游戏文件。', type: 'warning', action: '重试' },
+      { category: '操作不可用原因', text: 'SteamLibrary 所在磁盘未连接。', type: 'warning', action: '重试' },
+      { category: '操作不可用原因', text: '暂时无法确认 SteamLibrary 是否可用。', type: 'warning', action: '重试' },
+      { category: '操作不可用原因', text: '修复和更新需要当前账号拥有或可访问该游戏。', type: 'error' },
+      { category: '操作不可用原因', text: '登录 Steam 后才能修复或更新。', type: 'warning', action: '登录 Steam' },
+      { category: '操作不可用原因', text: '正在确认当前账号的游戏访问权。', type: 'progress' },
+      { category: '操作不可用原因', text: '请先修复游戏文件。', type: 'warning', action: '修复' },
+      { category: '操作不可用原因', text: '请先完成文件验证。', type: 'warning', action: '开始验证' },
+      { category: '操作不可用原因', text: '当前状态下无法执行此操作。', type: 'warning' },
+
+      { category: '验证与修复过程', text: '已加入本磁盘的验证队列，可随时取消。', type: 'info', action: '取消验证' },
+      { category: '验证与修复过程', text: '已检查 {{checked}} / {{total}} 个文件，{{percent}}%。', type: 'progress', action: '取消验证' },
+      { category: '验证与修复过程', text: '发现 {{count}} 个异常文件，共 {{size}}。', type: 'warning', action: '查看详情' },
+      { category: '验证与修复过程', text: '修复需要下载约 {{size}}。确认后才会加入下载队列。', type: 'warning', action: '确认修复' },
+      { category: '验证与修复过程', text: '本地文件状态已修复，无需下载。', type: 'success' },
+      { category: '验证与修复过程', text: '修复任务已加入下载队列。', type: 'info', action: '查看队列' },
+
+      { category: '异常提示', text: '当前 Steam 账号没有执行此修复所需的访问权。', type: 'error' },
+      { category: '异常提示', text: 'SteamLibrary 当前不可用，请连接磁盘后重试。', type: 'error', action: '重试' },
+      { category: '异常提示', text: '安装状态已变化，请刷新后重新操作。', type: 'error', action: '重试' },
+      { category: '异常提示', text: '另一个文件操作正在进行，请稍后重试。', type: 'warning' },
+      { category: '异常提示', text: '无法准备或执行修复，请重新验证后重试。', type: 'error', action: '重新验证' },
+      { category: '异常提示', text: '当前平台暂不支持此文件维护操作。', type: 'error' },
+      { category: '异常提示', text: '本次无法完成可靠验证，可稍后重试。', type: 'error', action: '重试' },
+      { category: '异常提示', text: '文件维护失败，请稍后重试。', type: 'error', action: '重试' }
+    ];
+
+    const baseStatuses = messages.filter((item) => item.category === '基础状态');
+    const reasons = messages.filter((item) => item.category !== '基础状态');
+
+    const toastStack = document.getElementById('toastStack');
+    const toast = document.getElementById('toast');
+    const statusLine = document.getElementById('statusLine');
+    const reasonLine = document.getElementById('reasonLine');
+    const toastAction = document.getElementById('toastAction');
+    const counter = document.getElementById('counter');
+    const nextButton = document.getElementById('nextButton');
+    const singleModeButton = document.getElementById('singleModeButton');
+    const multiModeButton = document.getElementById('multiModeButton');
+    let mode = 'single';
+    let singleIndex = 0;
+    let statusIndex = 0;
+    let reasonIndex = 0;
+    let transitionTimer;
+
+    function renderAction(item, disabled) {
+      if (item.action) {
+        toastAction.textContent = item.action;
+        toastAction.hidden = false;
+        toastAction.disabled = disabled;
+        toastAction.setAttribute('aria-disabled', String(disabled));
+      } else {
+        toastAction.hidden = true;
+        toastAction.disabled = false;
+        toastAction.removeAttribute('aria-disabled');
+        toastAction.textContent = '';
+      }
+    }
+
+    function renderCurrent() {
+      const isMulti = mode === 'multi';
+      singleModeButton.setAttribute('aria-pressed', String(!isMulti));
+      multiModeButton.setAttribute('aria-pressed', String(isMulti));
+
+      if (isMulti) {
+        const status = baseStatuses[statusIndex];
+        const reason = reasons[reasonIndex];
+        const actionDisabled = reason.category === '操作不可用原因';
+        toast.dataset.type = status.type;
+        toast.dataset.contentKind = 'status';
+        statusLine.textContent = status.text;
+        reasonLine.textContent = reason.text;
+        reasonLine.hidden = false;
+        renderAction(status, actionDisabled);
+        counter.textContent = `状态 ${String(statusIndex + 1).padStart(2, '0')} / ${baseStatuses.length} · 原因 ${String(reasonIndex + 1).padStart(2, '0')} / ${reasons.length}`;
+      } else {
+        const item = messages[singleIndex];
+        toast.dataset.type = item.type;
+        toast.dataset.contentKind = item.category === '基础状态' ? 'status' : 'reason';
+        statusLine.textContent = item.text;
+        reasonLine.hidden = true;
+        reasonLine.textContent = '';
+        renderAction(item, false);
+        counter.textContent = `${String(singleIndex + 1).padStart(2, '0')} / ${messages.length}`;
+      }
+    }
+
+    function transitionTo(callback) {
+      window.clearTimeout(transitionTimer);
+      toastStack.classList.add('is-changing');
+      transitionTimer = window.setTimeout(() => {
+        callback();
+        renderCurrent();
+        toastStack.classList.remove('is-changing');
+      }, 150);
+    }
+
+    function showNextMessage() {
+      transitionTo(() => {
+        if (mode === 'multi') {
+          statusIndex = (statusIndex + 1) % baseStatuses.length;
+          reasonIndex = (reasonIndex + 1) % reasons.length;
+        } else {
+          singleIndex = (singleIndex + 1) % messages.length;
+        }
+      });
+    }
+
+    function setMode(nextMode) {
+      if (mode === nextMode) return;
+      transitionTo(() => { mode = nextMode; });
+    }
+
+    nextButton.addEventListener('click', showNextMessage);
+    singleModeButton.addEventListener('click', () => setMode('single'));
+    multiModeButton.addEventListener('click', () => setMode('multi'));
+    toastAction.addEventListener('click', () => {
+      if (!toastAction.disabled) showNextMessage();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const spaceOutsideButton = event.key === ' ' && !event.target.closest('button');
+      if (event.key === 'ArrowRight' || spaceOutsideButton) {
+        event.preventDefault();
+        showNextMessage();
+      }
+    });
+
+    renderCurrent();
+  </script>
+</body>
+</html>
