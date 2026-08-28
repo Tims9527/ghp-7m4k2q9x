@@ -82,6 +82,17 @@
       transition: border-color 180ms ease, transform 180ms ease, opacity 180ms ease;
     }
 
+    .toast[hidden] { display: none; }
+
+    .toast--secondary:not([hidden]) {
+      animation: toast-append 220ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    @keyframes toast-append {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .toast-stack.is-changing .toast {
       opacity: 0;
       transform: translateY(7px);
@@ -340,6 +351,15 @@
           </div>
           <button class="toast-action" id="toastAction" type="button" hidden></button>
         </article>
+
+        <article class="toast toast--secondary" id="toast2" data-type="error" role="status" aria-live="polite" hidden>
+          <span class="toast-icon" aria-hidden="true"></span>
+          <div class="toast-copy">
+            <p class="status-line" id="statusLine2">文件维护失败，请稍后重试。</p>
+            <p class="reason-line" id="reasonLine2" hidden></p>
+          </div>
+          <button class="toast-action" id="toastAction2" type="button" hidden></button>
+        </article>
       </div>
 
       <div class="switcher">
@@ -409,15 +429,40 @@
     const statusLine = document.getElementById('statusLine');
     const reasonLine = document.getElementById('reasonLine');
     const toastAction = document.getElementById('toastAction');
+    const toast2 = document.getElementById('toast2');
+    const statusLine2 = document.getElementById('statusLine2');
+    const reasonLine2 = document.getElementById('reasonLine2');
+    const toastAction2 = document.getElementById('toastAction2');
     const counter = document.getElementById('counter');
     const nextButton = document.getElementById('nextButton');
     const singleModeButton = document.getElementById('singleModeButton');
     const multiModeButton = document.getElementById('multiModeButton');
     let mode = 'single';
     let singleIndex = 0;
+    let singleIndex = messages.findIndex((item) =>
+      item.text === '安装状态已变化，请刷新后重新操作。'
+    );
     let statusIndex = 0;
     let reasonIndex = 0;
     let transitionTimer;
+    let actionTimer;
+
+    const failureByAction = {
+      '重新验证': '本次无法完成可靠验证，可稍后重试。',
+      '开始验证': '本次无法完成可靠验证，可稍后重试。',
+      '修复': '无法准备或执行修复，请重新验证后重试。',
+      '确认修复': '文件维护失败，请稍后重试。',
+      '重试': '文件维护失败，请稍后重试。'
+    };
+
+    function clearSecondaryToast() {
+      window.clearTimeout(actionTimer);
+      toast2.hidden = true;
+      reasonLine2.hidden = true;
+      reasonLine2.textContent = '';
+      toastAction2.hidden = true;
+      toastAction2.textContent = '';
+    }
 
     function renderAction(item, disabled) {
       if (item.action) {
@@ -473,6 +518,7 @@
 
     function showNextMessage() {
       transitionTo(() => {
+        clearSecondaryToast();
         if (mode === 'multi') {
           statusIndex = (statusIndex + 1) % baseStatuses.length;
           reasonIndex = (reasonIndex + 1) % reasons.length;
@@ -485,6 +531,34 @@
     function setMode(nextMode) {
       if (mode === nextMode) return;
       transitionTo(() => { mode = nextMode; });
+      transitionTo(() => {
+        clearSecondaryToast();
+        mode = nextMode;
+      });
+    }
+
+    function showActionFailure() {
+      if (toastAction.disabled || toastAction.hidden) return;
+
+      const actionName = toastAction.textContent;
+      toastAction.textContent = actionName === '重试' ? '重试中' : '处理中';
+      toastAction.disabled = true;
+      toastAction.setAttribute('aria-disabled', 'true');
+
+      window.clearTimeout(actionTimer);
+      actionTimer = window.setTimeout(() => {
+        const failureText = failureByAction[actionName] || '当前操作失败，请稍后重试。';
+        toast2.dataset.type = 'error';
+        toast2.dataset.contentKind = 'reason';
+        statusLine2.textContent = failureText;
+        reasonLine2.hidden = true;
+        toastAction2.hidden = true;
+        toast2.hidden = false;
+
+        toastAction.textContent = actionName;
+        toastAction.disabled = false;
+        toastAction.setAttribute('aria-disabled', 'false');
+      }, 650);
     }
 
     nextButton.addEventListener('click', showNextMessage);
@@ -493,6 +567,7 @@
     toastAction.addEventListener('click', () => {
       if (!toastAction.disabled) showNextMessage();
     });
+    toastAction.addEventListener('click', showActionFailure);
 
     document.addEventListener('keydown', (event) => {
       const spaceOutsideButton = event.key === ' ' && !event.target.closest('button');
