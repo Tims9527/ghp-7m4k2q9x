@@ -3,22 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>提示状态 Toast 文案预览</title>
+  <title>外部游戏顺序检测</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
   <style>
     :root {
       color-scheme: dark;
       --canvas: #050607;
-      --toast: #13171c;
-      --toast-line: rgba(163, 181, 202, 0.16);
-      --text: #d8e5f4;
-      --text-soft: #8391a2;
-      --button-text: #bfd1e5;
-      --button-bg: rgba(255, 255, 255, 0.035);
-      --button-line: rgba(180, 199, 221, 0.14);
-      --success: #86d53c;
-      --info: #66bfff;
-      --warning: #f2c258;
-      --error: #ff766d;
+      --surface: #14181d;
+      --surface-soft: #101419;
+      --line: rgba(165, 188, 213, 0.18);
+      --line-strong: rgba(165, 188, 213, 0.26);
+      --text: #e4eefb;
+      --text-soft: #acbbcb;
+      --text-muted: #6f7d8d;
+      --accent: #7ccaff;
+      --accent-soft: #dbeeff;
+      --success: #83d34a;
+      --warning: #f0bf5b;
     }
 
     * { box-sizing: border-box; }
@@ -38,296 +41,307 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    button { font: inherit; }
+    button,
+    input { font: inherit; }
+
+    button:focus-visible,
+    input:focus-visible + .toggle-track {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
 
     .stage {
       min-height: 100vh;
       display: grid;
       place-items: center;
       padding: 24px;
-      background: var(--canvas);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(59, 88, 112, 0.08), transparent 34%),
+        var(--canvas);
     }
 
-    .preview {
+    .demo {
       width: min(720px, 100%);
       display: grid;
-      justify-items: center;
-      gap: 18px;
+      gap: 16px;
     }
 
-    .toast-stack {
-      position: relative;
+    .detection-card {
       width: 100%;
-      display: grid;
-      justify-items: center;
-      gap: 10px;
-    }
-
-    .toast {
-      width: 100%;
-      min-height: 112px;
-      display: grid;
-      grid-template-columns: 34px minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 18px;
-      padding: 22px 24px;
-      border: 1px solid var(--toast-line);
+      overflow: hidden;
+      border: 1px solid var(--line);
       border-radius: 22px;
       background:
-        linear-gradient(110deg, rgba(255, 255, 255, 0.018), transparent 58%),
-        var(--toast);
-      box-shadow:
-        0 24px 64px rgba(0, 0, 0, 0.44),
-        0 1px 0 rgba(255, 255, 255, 0.025) inset;
-      transition: border-color 180ms ease, transform 180ms ease, opacity 180ms ease;
+        linear-gradient(112deg, rgba(255, 255, 255, 0.02), transparent 58%),
+        var(--surface);
+      box-shadow: 0 24px 68px rgba(0, 0, 0, 0.44);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
     }
 
-    .toast[hidden] { display: none; }
-
-    .toast--secondary:not([hidden]) {
-      animation: toast-append 220ms cubic-bezier(.2, .8, .2, 1);
+    .detection-card[data-state="running"] {
+      border-color: rgba(124, 202, 255, 0.28);
+      box-shadow: 0 26px 76px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(124, 202, 255, 0.04) inset;
     }
 
-    @keyframes toast-append {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .detection-card[data-state="paused"] { border-color: rgba(240, 191, 91, 0.34); }
+    .detection-card[data-state="complete"] { border-color: rgba(131, 211, 74, 0.28); }
 
-    .toast-stack.is-changing .toast {
-      opacity: 0;
-      transform: translateY(7px);
-    }
-
-    .toast-icon {
-      position: relative;
-      width: 30px;
-      height: 30px;
-      border: 2px solid currentColor;
-      border-radius: 50%;
-      color: var(--info);
-      filter: drop-shadow(0 0 8px rgba(102, 191, 255, 0.16));
-    }
-
-    .toast-icon::before,
-    .toast-icon::after {
-      content: "";
-      position: absolute;
-    }
-
-    .toast[data-type="success"] .toast-icon { color: var(--success); }
-    .toast[data-type="warning"] .toast-icon { color: var(--warning); }
-    .toast[data-type="error"] .toast-icon { color: var(--error); }
-    .toast[data-type="info"] .toast-icon,
-    .toast[data-type="progress"] .toast-icon { color: var(--info); }
-
-    .toast[data-type="success"] .toast-icon::after {
-      left: 8px;
-      top: 7px;
-      width: 8px;
-      height: 4px;
-      border-left: 2px solid currentColor;
-      border-bottom: 2px solid currentColor;
-      transform: rotate(-45deg);
-    }
-
-    .toast[data-type="warning"] .toast-icon,
-    .toast[data-type="error"] .toast-icon {
-      border-radius: 8px;
-      transform: rotate(45deg) scale(0.78);
-    }
-
-    .toast[data-type="warning"] .toast-icon::before,
-    .toast[data-type="error"] .toast-icon::before {
-      left: 13px;
-      top: 6px;
-      width: 2px;
-      height: 10px;
-      border-radius: 2px;
-      background: currentColor;
-      transform: rotate(-45deg);
-    }
-
-    .toast[data-type="warning"] .toast-icon::after,
-    .toast[data-type="error"] .toast-icon::after {
-      left: 13px;
-      top: 19px;
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    .toast[data-type="info"] .toast-icon::before {
-      left: 13px;
-      top: 7px;
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    .toast[data-type="info"] .toast-icon::after {
-      left: 13px;
-      top: 12px;
-      width: 2px;
-      height: 9px;
-      border-radius: 2px;
-      background: currentColor;
-    }
-
-    .toast[data-type="progress"] .toast-icon {
-      border-color: rgba(102, 191, 255, 0.24);
-      border-top-color: currentColor;
-      animation: spin 0.9s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .toast-copy {
-      min-width: 0;
+    .entry-row {
+      min-height: 92px;
       display: grid;
-      gap: 8px;
+      grid-template-columns: 30px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 22px;
     }
 
-    .status-line {
+    .entry-icon {
+      color: var(--accent);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .entry-copy {
       margin: 0;
-      color: var(--text);
-      font-size: 18px;
-      font-weight: 650;
-      line-height: 1.55;
-      letter-spacing: 0.01em;
-    }
-
-    .toast[data-content-kind="reason"] .status-line {
+      color: #cbd8e8;
       font-size: 16px;
       font-weight: 520;
-    }
-
-    .reason-line {
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 15px;
-      font-weight: 480;
       line-height: 1.6;
-      letter-spacing: 0.01em;
     }
 
-    .reason-line[hidden] { display: none; }
-
-    .toast-action {
-      min-width: 96px;
+    .primary-button,
+    .secondary-button {
+      min-width: 108px;
       height: 42px;
       padding: 0 18px;
-      border: 1px solid var(--button-line);
       border-radius: 999px;
-      background: var(--button-bg);
-      color: var(--button-text);
-      font-weight: 600;
+      font-weight: 650;
       cursor: pointer;
-      transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
+      transition: transform 100ms ease, background 150ms ease, border-color 150ms ease, color 150ms ease;
     }
 
-    .toast-action:hover {
-      color: #e8f2ff;
-      border-color: rgba(180, 199, 221, 0.28);
-      background: rgba(255, 255, 255, 0.065);
+    .primary-button {
+      border: 1px solid rgba(190, 218, 245, 0.22);
+      background: var(--accent-soft);
+      color: #11171d;
     }
 
-    .toast-action:disabled {
-      color: rgba(191, 209, 229, 0.32);
-      border-color: rgba(180, 199, 221, 0.09);
-      background: rgba(255, 255, 255, 0.018);
+    .primary-button:hover { background: #eef7ff; }
+    .primary-button:active,
+    .secondary-button:active { transform: scale(0.98); }
+
+    .primary-button:disabled {
+      border-color: rgba(165, 188, 213, 0.1);
+      background: rgba(165, 188, 213, 0.07);
+      color: rgba(202, 219, 237, 0.42);
       cursor: not-allowed;
     }
 
-    .toast-action[hidden] { display: none; }
+    .secondary-button {
+      min-width: 92px;
+      height: 36px;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: #afbecf;
+      font-size: 13px;
+    }
 
-    .switcher {
+    .secondary-button:hover {
+      border-color: rgba(165, 188, 213, 0.4);
+      background: rgba(255, 255, 255, 0.035);
+      color: #e7f0fb;
+    }
+
+    .inline-progress {
+      padding: 18px 22px 22px;
+      border-top: 1px solid rgba(165, 188, 213, 0.1);
+      background: rgba(5, 8, 11, 0.2);
+      animation: progress-in 220ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .inline-progress[hidden] { display: none; }
+
+    @keyframes progress-in {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    .current-step {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #dce8f6;
+      font-size: 14px;
+      font-weight: 560;
+      line-height: 1.5;
+    }
+
+    .current-step i {
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .detection-card[data-state="running"] .current-step i { animation: spin 0.85s linear infinite; }
+    .detection-card[data-state="paused"] .current-step i { color: var(--warning); }
+    .detection-card[data-state="complete"] .current-step i { color: var(--success); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .step-count {
+      flex: 0 0 auto;
+      color: #7d8b9b;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.4;
+    }
+
+    .progress-track {
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(148, 171, 195, 0.13);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #5aafe9, #9fddff);
+      box-shadow: 0 0 16px rgba(124, 202, 255, 0.34);
+      transition: width 420ms cubic-bezier(.2, .8, .2, 1), background 180ms ease;
+    }
+
+    .detection-card[data-state="paused"] .progress-fill {
+      background: var(--warning);
+      box-shadow: 0 0 14px rgba(240, 191, 91, 0.28);
+    }
+
+    .detection-card[data-state="complete"] .progress-fill {
+      background: var(--success);
+      box-shadow: 0 0 14px rgba(131, 211, 74, 0.24);
+    }
+
+    .progress-footer {
+      min-height: 36px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .latest-result {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #738293;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .latest-result i {
+      flex: 0 0 auto;
+      color: var(--success);
+      font-size: 16px;
+    }
+
+    .latest-result[data-result="warning"] { color: #a99467; }
+    .latest-result[data-result="warning"] i { color: var(--warning); }
+
+    .interrupt-actions {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .interrupt-actions[hidden] { display: none; }
+
+    .demo-control {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .mode-switch {
-      display: flex;
-      align-items: center;
-      padding: 3px;
-      border: 1px solid rgba(177, 197, 220, 0.13);
-      border-radius: 11px;
-      background: #101419;
-    }
-
-    .mode-button {
-      min-width: 64px;
-      height: 32px;
-      padding: 0 14px;
-      border: 0;
-      border-radius: 8px;
-      background: transparent;
-      color: #687585;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: color 140ms ease, background 140ms ease;
-    }
-
-    .mode-button[aria-pressed="true"] {
-      background: #252c35;
-      color: #dce8f5;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
-    }
-
-    .counter {
-      min-width: 54px;
-      color: #657181;
+      gap: 10px;
+      color: #657282;
       font-size: 12px;
-      font-variant-numeric: tabular-nums;
-      text-align: right;
+      user-select: none;
     }
 
-    .next-button {
-      min-width: 126px;
-      height: 40px;
-      padding: 0 18px;
-      border: 1px solid rgba(177, 197, 220, 0.18);
-      border-radius: 11px;
-      background: #1c222a;
-      color: #cfdeed;
-      font-weight: 600;
+    .toggle {
+      position: relative;
+      width: 34px;
+      height: 20px;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-      transition: background 140ms ease, border-color 140ms ease, transform 100ms ease;
     }
 
-    .next-button:hover {
-      border-color: rgba(177, 197, 220, 0.34);
-      background: #242b35;
+    .toggle input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
     }
 
-    .next-button:active { transform: scale(0.98); }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(165, 188, 213, 0.2);
+      border-radius: 999px;
+      background: #151a20;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
 
-    button:focus-visible {
-      outline: 2px solid var(--info);
-      outline-offset: 3px;
+    .toggle-track::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #768494;
+      transition: transform 150ms ease, background 150ms ease;
+    }
+
+    .toggle input:checked + .toggle-track {
+      border-color: rgba(240, 191, 91, 0.42);
+      background: rgba(240, 191, 91, 0.12);
+    }
+
+    .toggle input:checked + .toggle-track::after {
+      background: var(--warning);
+      transform: translateX(14px);
     }
 
     @media (max-width: 620px) {
-      .toast {
-        grid-template-columns: 30px minmax(0, 1fr);
-        align-items: start;
-        gap: 14px;
-        padding: 20px;
-        border-radius: 18px;
+      .stage { padding: 16px; }
+
+      .entry-row {
+        grid-template-columns: 28px minmax(0, 1fr);
+        padding: 18px;
       }
 
-      .toast-action {
+      .entry-row .primary-button {
         grid-column: 2;
         width: fit-content;
-        margin-top: 2px;
       }
 
+      .inline-progress { padding: 16px 18px 18px; }
+
+      .progress-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -341,243 +355,236 @@
 </head>
 <body>
   <main class="stage">
-    <section class="preview" aria-label="Toast 文案预览">
-      <div class="toast-stack" id="toastStack">
-        <article class="toast" id="toast" data-type="progress" role="status" aria-live="polite">
-          <span class="toast-icon" aria-hidden="true"></span>
-          <div class="toast-copy">
-            <p class="status-line" id="statusLine">正在读取状态</p>
-            <p class="reason-line" id="reasonLine" hidden></p>
-          </div>
-          <button class="toast-action" id="toastAction" type="button" hidden></button>
-        </article>
-
-        <article class="toast toast--secondary" id="toast2" data-type="error" role="status" aria-live="polite" hidden>
-          <span class="toast-icon" aria-hidden="true"></span>
-          <div class="toast-copy">
-            <p class="status-line" id="statusLine2">文件维护失败，请稍后重试。</p>
-            <p class="reason-line" id="reasonLine2" hidden></p>
-          </div>
-          <button class="toast-action" id="toastAction2" type="button" hidden></button>
-        </article>
-      </div>
-
-      <div class="switcher">
-        <div class="mode-switch" aria-label="层级效果">
-          <button class="mode-button" id="singleModeButton" type="button" aria-pressed="true">单层</button>
-          <button class="mode-button" id="multiModeButton" type="button" aria-pressed="false">双层</button>
+    <section class="demo" aria-label="外部游戏文件检测原型">
+      <article class="detection-card" id="detectionCard" data-state="idle">
+        <div class="entry-row">
+          <i class="ph ph-shield-check entry-icon" id="entryIcon" aria-hidden="true"></i>
+          <p class="entry-copy" id="entryCopy">检测到外部导入的安装，建议先验证文件</p>
+          <button class="primary-button" id="mainButton" type="button">一键检测</button>
         </div>
-        <span class="counter" id="counter">01 / 40</span>
-        <button class="next-button" id="nextButton" type="button">切换文案</button>
+
+        <section class="inline-progress" id="progressArea" aria-label="顺序检测进度" hidden>
+          <div class="progress-header">
+            <div class="current-step">
+              <i class="ph ph-spinner-gap" id="currentIcon" aria-hidden="true"></i>
+              <span id="currentLabel">正在读取安装信息</span>
+            </div>
+            <span class="step-count" id="stepCount">步骤 1 / 5 · 8%</span>
+          </div>
+
+          <div class="progress-track" role="progressbar" aria-label="检测进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+
+          <div class="progress-footer">
+            <div class="latest-result" id="latestResult">
+              <i class="ph ph-clock" aria-hidden="true"></i>
+              <span>正在准备检测任务</span>
+            </div>
+            <div class="interrupt-actions" id="interruptActions" hidden>
+              <button class="secondary-button" id="restartButton" type="button">重新检测</button>
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <div class="demo-control">
+        <span>原型演示：任务中断</span>
+        <label class="toggle" aria-label="模拟任务中断">
+          <input id="interruptToggle" type="checkbox">
+          <span class="toggle-track"></span>
+        </label>
       </div>
     </section>
   </main>
 
   <script>
-    const messages = [
-      { category: '基础状态', text: '正在读取状态', type: 'progress' },
-      { category: '基础状态', text: '等待磁盘空闲', type: 'progress' },
-      { category: '基础状态', text: '正在验证', type: 'progress', action: '取消验证' },
-      { category: '基础状态', text: '已验证', type: 'success', action: '重新验证' },
-      { category: '基础状态', text: '尚未验证', type: 'warning', action: '开始验证' },
-      { category: '基础状态', text: '需要修复', type: 'error', action: '修复' },
+    const detectionCard = document.getElementById('detectionCard');
+    const entryIcon = document.getElementById('entryIcon');
+    const entryCopy = document.getElementById('entryCopy');
+    const mainButton = document.getElementById('mainButton');
+    const progressArea = document.getElementById('progressArea');
+    const currentIcon = document.getElementById('currentIcon');
+    const currentLabel = document.getElementById('currentLabel');
+    const stepCount = document.getElementById('stepCount');
+    const progressFill = document.getElementById('progressFill');
+    const progressTrack = document.querySelector('.progress-track');
+    const latestResult = document.getElementById('latestResult');
+    const resultIcon = latestResult.querySelector('i');
+    const resultText = latestResult.querySelector('span');
+    const interruptActions = document.getElementById('interruptActions');
+    const restartButton = document.getElementById('restartButton');
+    const interruptToggle = document.getElementById('interruptToggle');
 
-      { category: '尚未验证的原因', text: '这是外部导入的安装，建议先验证文件。', type: 'warning', action: '开始验证' },
-      { category: '尚未验证的原因', text: '验证所需的本地清单暂不完整。', type: 'warning', action: '重试' },
-      { category: '尚未验证的原因', text: '部分共享内容尚未就绪。', type: 'warning', action: '重试' },
-      { category: '尚未验证的原因', text: '游戏内容已发生变化，需要重新验证。', type: 'warning', action: '重新验证' },
-      { category: '尚未验证的原因', text: '检测到越出游戏库边界的文件项，已停止读取。', type: 'error', action: '查看详情' },
-      { category: '尚未验证的原因', text: '上一次验证未完成。', type: 'warning', action: '重新验证' },
-      { category: '尚未验证的原因', text: '游戏库当前离线。', type: 'warning', action: '重试' },
-      { category: '尚未验证的原因', text: '本次无法完成可靠验证，可稍后重试。', type: 'warning', action: '重试' },
-      { category: '尚未验证的原因', text: '此安装尚未完成验证。', type: 'warning', action: '开始验证' },
-
-      { category: '操作不可用原因', text: '文件维护正在进行，请完成或取消后再试。', type: 'warning' },
-      { category: '操作不可用原因', text: '游戏内容正在被其他任务使用。', type: 'warning' },
-      { category: '操作不可用原因', text: '暂时无法确认是否有任务正在写入游戏文件。', type: 'warning', action: '重试' },
-      { category: '操作不可用原因', text: 'SteamLibrary 所在磁盘未连接。', type: 'warning', action: '重试' },
-      { category: '操作不可用原因', text: '暂时无法确认 SteamLibrary 是否可用。', type: 'warning', action: '重试' },
-      { category: '操作不可用原因', text: '修复和更新需要当前账号拥有或可访问该游戏。', type: 'error' },
-      { category: '操作不可用原因', text: '登录 Steam 后才能修复或更新。', type: 'warning', action: '登录 Steam' },
-      { category: '操作不可用原因', text: '正在确认当前账号的游戏访问权。', type: 'progress' },
-      { category: '操作不可用原因', text: '请先修复游戏文件。', type: 'warning', action: '修复' },
-      { category: '操作不可用原因', text: '请先完成文件验证。', type: 'warning', action: '开始验证' },
-      { category: '操作不可用原因', text: '当前状态下无法执行此操作。', type: 'warning' },
-
-      { category: '验证与修复过程', text: '已加入本磁盘的验证队列，可随时取消。', type: 'info', action: '取消验证' },
-      { category: '验证与修复过程', text: '已检查 {{checked}} / {{total}} 个文件，{{percent}}%。', type: 'progress', action: '取消验证' },
-      { category: '验证与修复过程', text: '发现 {{count}} 个异常文件，共 {{size}}。', type: 'warning', action: '查看详情' },
-      { category: '验证与修复过程', text: '修复需要下载约 {{size}}。确认后才会加入下载队列。', type: 'warning', action: '确认修复' },
-      { category: '验证与修复过程', text: '本地文件状态已修复，无需下载。', type: 'success' },
-      { category: '验证与修复过程', text: '修复任务已加入下载队列。', type: 'info', action: '查看队列' },
-
-      { category: '异常提示', text: '当前 Steam 账号没有执行此修复所需的访问权。', type: 'error' },
-      { category: '异常提示', text: 'SteamLibrary 当前不可用，请连接磁盘后重试。', type: 'error', action: '重试' },
-      { category: '异常提示', text: '安装状态已变化，请刷新后重新操作。', type: 'error', action: '重试' },
-      { category: '异常提示', text: '另一个文件操作正在进行，请稍后重试。', type: 'warning' },
-      { category: '异常提示', text: '无法准备或执行修复，请重新验证后重试。', type: 'error', action: '重新验证' },
-      { category: '异常提示', text: '当前平台暂不支持此文件维护操作。', type: 'error' },
-      { category: '异常提示', text: '本次无法完成可靠验证，可稍后重试。', type: 'error', action: '重试' },
-      { category: '异常提示', text: '文件维护失败，请稍后重试。', type: 'error', action: '重试' }
+    const steps = [
+      {
+        label: '正在读取安装信息',
+        result: '安装信息读取完成',
+        progress: 10,
+        duration: 900,
+        resultType: 'success'
+      },
+      {
+        label: '正在核对本地文件清单',
+        result: '本地文件清单正常',
+        progress: 32,
+        duration: 950,
+        resultType: 'success'
+      },
+      {
+        label: '正在检查游戏文件完整性',
+        result: '发现 2 个异常文件，已进入自动修复',
+        progress: 58,
+        duration: 1100,
+        resultType: 'warning'
+      },
+      {
+        label: '发现异常，正在自动修复',
+        result: '2 个异常文件已修复',
+        progress: 82,
+        duration: 1450,
+        resultType: 'success',
+        repairing: true
+      },
+      {
+        label: '正在完成最终校验',
+        result: '最终校验通过',
+        progress: 96,
+        duration: 1000,
+        resultType: 'success'
+      }
     ];
 
-    const baseStatuses = messages.filter((item) => item.category === '基础状态');
-    const reasons = messages.filter((item) => item.category !== '基础状态');
+    let currentStepIndex = 0;
+    let flowState = 'idle';
+    let flowTimer;
+    let interruptionConsumed = false;
 
-    const toastStack = document.getElementById('toastStack');
-    const toast = document.getElementById('toast');
-    const statusLine = document.getElementById('statusLine');
-    const reasonLine = document.getElementById('reasonLine');
-    const toastAction = document.getElementById('toastAction');
-    const toast2 = document.getElementById('toast2');
-    const statusLine2 = document.getElementById('statusLine2');
-    const reasonLine2 = document.getElementById('reasonLine2');
-    const toastAction2 = document.getElementById('toastAction2');
-    const counter = document.getElementById('counter');
-    const nextButton = document.getElementById('nextButton');
-    const singleModeButton = document.getElementById('singleModeButton');
-    const multiModeButton = document.getElementById('multiModeButton');
-    let mode = 'single';
-    let singleIndex = 0;
-    let singleIndex = messages.findIndex((item) =>
-      item.text === '安装状态已变化，请刷新后重新操作。'
-    );
-    let statusIndex = 0;
-    let reasonIndex = 0;
-    let transitionTimer;
-    let actionTimer;
-
-    const failureByAction = {
-      '重新验证': '本次无法完成可靠验证，可稍后重试。',
-      '开始验证': '本次无法完成可靠验证，可稍后重试。',
-      '修复': '无法准备或执行修复，请重新验证后重试。',
-      '确认修复': '文件维护失败，请稍后重试。',
-      '重试': '文件维护失败，请稍后重试。'
-    };
-
-    function clearSecondaryToast() {
-      window.clearTimeout(actionTimer);
-      toast2.hidden = true;
-      reasonLine2.hidden = true;
-      reasonLine2.textContent = '';
-      toastAction2.hidden = true;
-      toastAction2.textContent = '';
+    function setProgress(value) {
+      progressFill.style.width = `${value}%`;
+      progressTrack.setAttribute('aria-valuenow', String(value));
     }
 
-    function renderAction(item, disabled) {
-      if (item.action) {
-        toastAction.textContent = item.action;
-        toastAction.hidden = false;
-        toastAction.disabled = disabled;
-        toastAction.setAttribute('aria-disabled', String(disabled));
-      } else {
-        toastAction.hidden = true;
-        toastAction.disabled = false;
-        toastAction.removeAttribute('aria-disabled');
-        toastAction.textContent = '';
+    function setLatestResult(text, type) {
+      latestResult.dataset.result = type;
+      resultText.textContent = text;
+      resultIcon.className = type === 'warning'
+        ? 'ph-fill ph-warning-circle'
+        : 'ph-fill ph-check-circle';
+    }
+
+    function resetFlow() {
+      window.clearTimeout(flowTimer);
+      currentStepIndex = 0;
+      interruptionConsumed = false;
+      progressFill.style.width = '0%';
+      progressTrack.setAttribute('aria-valuenow', '0');
+      interruptActions.hidden = true;
+      latestResult.dataset.result = '';
+      resultIcon.className = 'ph ph-clock';
+      resultText.textContent = '正在准备检测任务';
+      currentIcon.className = 'ph ph-spinner-gap';
+      entryIcon.className = 'ph ph-shield-check entry-icon';
+    }
+
+    function beginDetection() {
+      resetFlow();
+      flowState = 'running';
+      detectionCard.dataset.state = 'running';
+      progressArea.hidden = false;
+      entryCopy.textContent = '正在检测外部导入的安装';
+      mainButton.textContent = '检测中';
+      mainButton.disabled = true;
+      runStep();
+    }
+
+    function runStep() {
+      if (currentStepIndex >= steps.length) {
+        completeDetection();
+        return;
       }
-    }
 
-    function renderCurrent() {
-      const isMulti = mode === 'multi';
-      singleModeButton.setAttribute('aria-pressed', String(!isMulti));
-      multiModeButton.setAttribute('aria-pressed', String(isMulti));
+      const step = steps[currentStepIndex];
+      currentIcon.className = step.repairing ? 'ph ph-wrench' : 'ph ph-spinner-gap';
+      currentLabel.textContent = step.label;
+      stepCount.textContent = `步骤 ${currentStepIndex + 1} / ${steps.length} · ${step.progress}%`;
+      setProgress(step.progress);
 
-      if (isMulti) {
-        const status = baseStatuses[statusIndex];
-        const reason = reasons[reasonIndex];
-        const actionDisabled = reason.category === '操作不可用原因';
-        toast.dataset.type = status.type;
-        toast.dataset.contentKind = 'status';
-        statusLine.textContent = status.text;
-        reasonLine.textContent = reason.text;
-        reasonLine.hidden = false;
-        renderAction(status, actionDisabled);
-        counter.textContent = `状态 ${String(statusIndex + 1).padStart(2, '0')} / ${baseStatuses.length} · 原因 ${String(reasonIndex + 1).padStart(2, '0')} / ${reasons.length}`;
-      } else {
-        const item = messages[singleIndex];
-        toast.dataset.type = item.type;
-        toast.dataset.contentKind = item.category === '基础状态' ? 'status' : 'reason';
-        statusLine.textContent = item.text;
-        reasonLine.hidden = true;
-        reasonLine.textContent = '';
-        renderAction(item, false);
-        counter.textContent = `${String(singleIndex + 1).padStart(2, '0')} / ${messages.length}`;
-      }
-    }
-
-    function transitionTo(callback) {
-      window.clearTimeout(transitionTimer);
-      toastStack.classList.add('is-changing');
-      transitionTimer = window.setTimeout(() => {
-        callback();
-        renderCurrent();
-        toastStack.classList.remove('is-changing');
-      }, 150);
-    }
-
-    function showNextMessage() {
-      transitionTo(() => {
-        clearSecondaryToast();
-        if (mode === 'multi') {
-          statusIndex = (statusIndex + 1) % baseStatuses.length;
-          reasonIndex = (reasonIndex + 1) % reasons.length;
-        } else {
-          singleIndex = (singleIndex + 1) % messages.length;
+      flowTimer = window.setTimeout(() => {
+        if (step.repairing && interruptToggle.checked && !interruptionConsumed) {
+          pauseDetection();
+          return;
         }
-      });
+
+        setLatestResult(step.result, step.resultType);
+        currentStepIndex += 1;
+        runStep();
+      }, step.duration);
     }
 
-    function setMode(nextMode) {
-      if (mode === nextMode) return;
-      transitionTo(() => { mode = nextMode; });
-      transitionTo(() => {
-        clearSecondaryToast();
-        mode = nextMode;
-      });
+    function pauseDetection() {
+      flowState = 'paused';
+      interruptionConsumed = true;
+      detectionCard.dataset.state = 'paused';
+      currentIcon.className = 'ph-fill ph-warning-circle';
+      currentLabel.textContent = '磁盘连接中断，检测任务已暂停';
+      stepCount.textContent = `步骤 ${currentStepIndex + 1} / ${steps.length} · 82%`;
+      setLatestResult('连接游戏库所在磁盘后可继续当前任务', 'warning');
+      mainButton.textContent = '继续修复';
+      mainButton.disabled = false;
+      interruptActions.hidden = false;
     }
 
-    function showActionFailure() {
-      if (toastAction.disabled || toastAction.hidden) return;
+    function continueDetection() {
+      flowState = 'running';
+      detectionCard.dataset.state = 'running';
+      mainButton.textContent = '修复中';
+      mainButton.disabled = true;
+      interruptActions.hidden = true;
+      currentIcon.className = 'ph ph-wrench';
+      currentLabel.textContent = '正在从中断位置继续修复';
 
-      const actionName = toastAction.textContent;
-      toastAction.textContent = actionName === '重试' ? '重试中' : '处理中';
-      toastAction.disabled = true;
-      toastAction.setAttribute('aria-disabled', 'true');
-
-      window.clearTimeout(actionTimer);
-      actionTimer = window.setTimeout(() => {
-        const failureText = failureByAction[actionName] || '当前操作失败，请稍后重试。';
-        toast2.dataset.type = 'error';
-        toast2.dataset.contentKind = 'reason';
-        statusLine2.textContent = failureText;
-        reasonLine2.hidden = true;
-        toastAction2.hidden = true;
-        toast2.hidden = false;
-
-        toastAction.textContent = actionName;
-        toastAction.disabled = false;
-        toastAction.setAttribute('aria-disabled', 'false');
-      }, 650);
+      flowTimer = window.setTimeout(() => {
+        setLatestResult(steps[currentStepIndex].result, 'success');
+        currentStepIndex += 1;
+        runStep();
+      }, 1200);
     }
 
-    nextButton.addEventListener('click', showNextMessage);
-    singleModeButton.addEventListener('click', () => setMode('single'));
-    multiModeButton.addEventListener('click', () => setMode('multi'));
-    toastAction.addEventListener('click', () => {
-      if (!toastAction.disabled) showNextMessage();
+    function completeDetection() {
+      flowState = 'complete';
+      detectionCard.dataset.state = 'complete';
+      setProgress(100);
+      currentIcon.className = 'ph-fill ph-check-circle';
+      currentLabel.textContent = '检测与修复已完成';
+      stepCount.textContent = `步骤 ${steps.length} / ${steps.length} · 100%`;
+      setLatestResult('游戏文件已完成验证，发现的问题已自动修复', 'success');
+      entryIcon.className = 'ph-fill ph-check-circle entry-icon';
+      entryCopy.textContent = '外部安装检测完成，游戏文件状态正常';
+      mainButton.textContent = '关闭';
+      mainButton.disabled = false;
+      interruptActions.hidden = true;
+    }
+
+    function closeDetection() {
+      window.clearTimeout(flowTimer);
+      flowState = 'idle';
+      detectionCard.dataset.state = 'idle';
+      progressArea.hidden = true;
+      entryIcon.className = 'ph ph-shield-check entry-icon';
+      entryCopy.textContent = '检测到外部导入的安装，建议先验证文件';
+      mainButton.textContent = '一键检测';
+      mainButton.disabled = false;
+      mainButton.focus();
+    }
+
+    mainButton.addEventListener('click', () => {
+      if (flowState === 'idle') beginDetection();
+      else if (flowState === 'paused') continueDetection();
+      else if (flowState === 'complete') closeDetection();
     });
-    toastAction.addEventListener('click', showActionFailure);
 
-    document.addEventListener('keydown', (event) => {
-      const spaceOutsideButton = event.key === ' ' && !event.target.closest('button');
-      if (event.key === 'ArrowRight' || spaceOutsideButton) {
-        event.preventDefault();
-        showNextMessage();
-      }
-    });
-
-    renderCurrent();
+    restartButton.addEventListener('click', beginDetection);
   </script>
 </body>
 </html>
