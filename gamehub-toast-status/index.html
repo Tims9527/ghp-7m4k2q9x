@@ -22,6 +22,7 @@
       --accent-soft: #dbeeff;
       --success: #83d34a;
       --warning: #f0bf5b;
+      --annotation-width: 380px;
     }
 
     * { box-sizing: border-box; }
@@ -54,7 +55,7 @@
       min-height: 100vh;
       display: grid;
       place-items: center;
-      padding: 24px;
+      padding: 24px calc(var(--annotation-width) + 24px) 24px 24px;
       background:
         radial-gradient(circle at 50% 45%, rgba(59, 88, 112, 0.08), transparent 34%),
         var(--canvas);
@@ -278,6 +279,221 @@
       user-select: none;
     }
 
+    .annotation-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 20;
+      width: var(--annotation-width);
+      height: 100vh;
+      overflow-y: auto;
+      padding: 26px 24px 40px;
+      border-left: 1px solid rgba(165, 188, 213, 0.13);
+      background:
+        linear-gradient(180deg, rgba(124, 202, 255, 0.035), transparent 180px),
+        #0d1014;
+      box-shadow: -24px 0 64px rgba(0, 0, 0, 0.28);
+      scrollbar-color: #394451 transparent;
+      scrollbar-width: thin;
+    }
+
+    .annotation-header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(165, 188, 213, 0.11);
+    }
+
+    .annotation-kicker {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .annotation-title {
+      margin: 0;
+      color: #e7f0fb;
+      font-size: 20px;
+      font-weight: 680;
+      line-height: 1.4;
+    }
+
+    .annotation-subtitle {
+      margin: 8px 0 0;
+      color: #788696;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .prototype-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 12px;
+      padding: 5px 9px;
+      border: 1px solid rgba(240, 191, 91, 0.22);
+      border-radius: 999px;
+      background: rgba(240, 191, 91, 0.07);
+      color: #bda66f;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .annotation-section {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(165, 188, 213, 0.09);
+    }
+
+    .annotation-section:last-child { border-bottom: 0; }
+
+    .annotation-heading {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 12px;
+      color: #cdd9e8;
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.4;
+    }
+
+    .annotation-index {
+      flex: 0 0 auto;
+      min-width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(124, 202, 255, 0.2);
+      border-radius: 7px;
+      background: rgba(124, 202, 255, 0.06);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .annotation-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .annotation-list li {
+      position: relative;
+      padding-left: 13px;
+      color: #8795a5;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .annotation-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #526172;
+    }
+
+    .annotation-list strong {
+      color: #b9c7d7;
+      font-weight: 620;
+    }
+
+    .element-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .element-card {
+      display: grid;
+      grid-template-columns: 23px minmax(0, 1fr);
+      gap: 9px;
+      padding: 10px 11px;
+      border: 1px solid rgba(165, 188, 213, 0.09);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .element-key {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: #19212a;
+      color: #91cfff;
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .element-name {
+      margin: 0;
+      color: #b7c5d5;
+      font-size: 12px;
+      font-weight: 620;
+      line-height: 1.4;
+    }
+
+    .element-description {
+      margin: 3px 0 0;
+      color: #748293;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .state-table {
+      display: grid;
+      overflow: hidden;
+      border: 1px solid rgba(165, 188, 213, 0.09);
+      border-radius: 10px;
+    }
+
+    .state-row {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 10px;
+      padding: 9px 11px;
+      color: #7c8a9a;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .state-row + .state-row { border-top: 1px solid rgba(165, 188, 213, 0.08); }
+    .state-row strong { color: #b5c3d3; font-weight: 620; }
+
+    .flow-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .flow-item {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      color: #8795a5;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .flow-number {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #171d24;
+      color: #8190a0;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
     .toggle {
       position: relative;
       width: 34px;
@@ -323,8 +539,14 @@
       transform: translateX(14px);
     }
 
-    @media (max-width: 620px) {
-      .stage { padding: 16px; }
+    @media (max-width: 1100px) {
+      :root { --annotation-width: 330px; }
+    }
+
+    @media (max-width: 760px) {
+      :root { --annotation-width: min(310px, 44vw); }
+      .stage { padding: 16px calc(var(--annotation-width) + 16px) 16px 16px; }
+      .annotation-panel { padding: 20px 16px 32px; }
 
       .entry-row {
         grid-template-columns: 28px minmax(0, 1fr);
@@ -342,6 +564,8 @@
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .state-row { grid-template-columns: 64px minmax(0, 1fr); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -397,6 +621,120 @@
       </div>
     </section>
   </main>
+
+  <aside class="annotation-panel" aria-label="原型标注说明">
+    <header class="annotation-header">
+      <p class="annotation-kicker">PROTOTYPE NOTES</p>
+      <h2 class="annotation-title">外部游戏顺序检测</h2>
+      <p class="annotation-subtitle">用于说明当前原型的触发条件、展示元素、交互与业务逻辑。</p>
+      <span class="prototype-badge">标注面板不计入正式产品界面</span>
+    </header>
+
+    <section class="annotation-section">
+      <h3 class="annotation-heading">
+        <span class="annotation-index">01</span>
+        触发规则
+      </h3>
+      <ul class="annotation-list">
+        <li>用户进入 <strong>Steam 游戏详情页</strong>时读取当前安装来源与验证状态。</li>
+        <li>检测到<strong>外部导入</strong>且尚未完成可靠验证时，展示检测入口。</li>
+        <li>已完成验证且安装状态未变化时，不重复展示该入口。</li>
+      </ul>
+    </section>
+
+    <section class="annotation-section">
+      <h3 class="annotation-heading">
+        <span class="annotation-index">02</span>
+        展示元素
+      </h3>
+      <div class="element-grid">
+        <article class="element-card">
+          <span class="element-key">A</span>
+          <div>
+            <p class="element-name">基础提示区</p>
+            <p class="element-description">提示 Icon、检测引导文案、主操作按钮。始终位于提示框上方。</p>
+          </div>
+        </article>
+        <article class="element-card">
+          <span class="element-key">B</span>
+          <div>
+            <p class="element-name">检测进度区</p>
+            <p class="element-description">点击“一键检测”后向下展开，展示当前步骤、步骤序号、百分比和进度条。</p>
+          </div>
+        </article>
+        <article class="element-card">
+          <span class="element-key">C</span>
+          <div>
+            <p class="element-name">最近检测结果</p>
+            <p class="element-description">正常项显示绿色完成状态；发现问题时显示异常信息并自动进入修复。</p>
+          </div>
+        </article>
+        <article class="element-card">
+          <span class="element-key">D</span>
+          <div>
+            <p class="element-name">中断演示开关</p>
+            <p class="element-description">仅供原型演示特殊状态，不属于正式功能与正式页面元素。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="annotation-section">
+      <h3 class="annotation-heading">
+        <span class="annotation-index">03</span>
+        交互规则
+      </h3>
+      <ul class="annotation-list">
+        <li>点击<strong>一键检测</strong>后，原提示框原地向下展开，不跳转页面、不出现弹窗。</li>
+        <li>检测期间按钮切换为<strong>检测中/修复中</strong>并禁用，防止重复触发。</li>
+        <li>正常流程按固定顺序自动执行，全程不需要用户确认。</li>
+        <li>任务中断时才出现<strong>继续修复</strong>与<strong>重新检测</strong>操作。</li>
+        <li>全部完成后按钮切换为<strong>关闭</strong>，点击后收起检测区域。</li>
+      </ul>
+    </section>
+
+    <section class="annotation-section">
+      <h3 class="annotation-heading">
+        <span class="annotation-index">04</span>
+        顺序检测逻辑
+      </h3>
+      <ol class="flow-list">
+        <li class="flow-item"><span class="flow-number">1</span><span>读取安装信息</span></li>
+        <li class="flow-item"><span class="flow-number">2</span><span>核对本地文件清单</span></li>
+        <li class="flow-item"><span class="flow-number">3</span><span>检查游戏文件完整性</span></li>
+        <li class="flow-item"><span class="flow-number">4</span><span>发现异常后自动修复</span></li>
+        <li class="flow-item"><span class="flow-number">5</span><span>完成最终校验并输出结果</span></li>
+      </ol>
+    </section>
+
+    <section class="annotation-section">
+      <h3 class="annotation-heading">
+        <span class="annotation-index">05</span>
+        状态与按钮
+      </h3>
+      <div class="state-table">
+        <div class="state-row"><strong>待检测</strong><span>一键检测</span></div>
+        <div class="state-row"><strong>检测中</strong><span>检测中（禁用）</span></div>
+        <div class="state-row"><strong>自动修复</strong><span>修复中（禁用）</span></div>
+        <div class="state-row"><strong>任务中断</strong><span>继续修复＋重新检测</span></div>
+        <div class="state-row"><strong>检测完成</strong><span>关闭</span></div>
+      </div>
+    </section>
+
+    <section class="annotation-section">
+      <h3 class="annotation-heading">
+        <span class="annotation-index">06</span>
+        其他规则
+      </h3>
+      <ul class="annotation-list">
+        <li>检测步骤必须串行执行，上一项完成后才能进入下一项。</li>
+        <li>进度百分比、步骤序号与实际任务状态必须保持一致。</li>
+        <li>检测到可自动处理的问题时直接修复，不增加二次确认。</li>
+        <li>任务中断后保留已完成步骤；继续任务时从中断位置恢复。</li>
+        <li>检测完成后记录验证结果；安装状态再次变化时重新触发检测。</li>
+      </ul>
+    </section>
+  </aside>
 
   <script>
     const detectionCard = document.getElementById('detectionCard');
