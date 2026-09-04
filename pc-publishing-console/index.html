@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC发行运营后台演示</title>
+<style>
+:root{--nav:#17202b;--nav2:#202b38;--bg:#eef1f5;--panel:#fff;--line:#dfe4ea;--text:#172230;--muted:#697586;--blue:#356fd6;--blue-bg:#eaf1ff;--green:#23815d;--green-bg:#e8f6ef;--amber:#a96a15;--amber-bg:#fff4df;--red:#bd4a4a;--red-bg:#fff0ef;--note:#fbfaf7;--note-line:#e7e0d4;--shadow:0 10px 30px rgba(26,39,55,.08)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{height:100%;display:grid;grid-template-columns:220px minmax(680px,1fr) 360px;overflow:hidden}.sidebar{background:var(--nav);color:#d8e0ea;padding:18px 14px;overflow:auto}.brand{display:flex;align-items:center;gap:11px;height:48px;padding:0 10px 18px;border-bottom:1px solid rgba(255,255,255,.09)}.brand-mark{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#f5f8fc;color:#17202b;font-weight:900}.brand strong{display:block;font-size:14px}.brand small{display:block;margin-top:3px;color:#8390a1;font-size:10px}.nav-group{margin-top:22px}.nav-label{padding:0 10px 8px;color:#7f8da0;font-size:10px;font-weight:700;letter-spacing:.14em}.nav-parent{display:flex;align-items:center;gap:9px;padding:10px;border-radius:9px;background:rgba(255,255,255,.055);font-size:13px;font-weight:700}.nav-parent i{width:19px;height:19px;display:grid;place-items:center;border:1px solid #718096;border-radius:5px;font-style:normal;font-size:10px}.nav-items{display:grid;gap:3px;margin-top:7px}.nav-btn{width:100%;border:0;border-radius:8px;background:transparent;color:#9facbc;text-align:left;padding:10px 12px 10px 38px;font-size:12px;position:relative}.nav-btn:before{content:"";position:absolute;left:20px;top:15px;width:5px;height:5px;border:1px solid #708095;border-radius:50%}.nav-btn:hover{background:rgba(255,255,255,.055);color:#fff}.nav-btn.active{background:#2c5fae;color:#fff}.nav-btn.active:before{background:#fff;border-color:#fff}.sidebar-foot{margin-top:30px;padding:14px 10px;border-top:1px solid rgba(255,255,255,.08);color:#758397;font-size:10px;line-height:1.6}.workspace{min-width:0;overflow:auto}.topbar{position:sticky;top:0;z-index:5;height:64px;display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}.crumb{font-size:12px;color:var(--muted)}.crumb strong{color:var(--text)}.top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}.env{padding:5px 9px;border-radius:6px;background:#edf7f2;color:#287457;font-size:10px;font-weight:700}.avatar{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#27384d;color:#fff;font-size:10px}.content{padding:22px 24px 48px}.page{display:none}.page.active{display:block}.page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}.page-head h1{margin:0;font-size:24px;letter-spacing:-.025em}.page-head p{margin:6px 0 0;color:var(--muted);font-size:12px}.primary,.secondary,.danger,.ghost{height:36px;border-radius:8px;padding:0 13px;font-size:11px;font-weight:700}.primary{border:1px solid #2f62b7;background:var(--blue);color:#fff}.secondary{border:1px solid #ccd4de;background:#fff;color:#344254}.danger{border:1px solid #d9a0a0;background:#fff;color:var(--red)}.ghost{border:0;background:transparent;color:var(--blue)}.primary:disabled{opacity:.48;cursor:not-allowed}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.metric{padding:15px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.metric small{display:block;color:var(--muted);font-size:10px}.metric strong{display:block;margin-top:8px;font-size:23px}.metric span{display:block;margin-top:4px;font-size:9px;color:#8692a2}.panel{border:1px solid var(--line);border-radius:11px;background:var(--panel);box-shadow:0 1px 2px rgba(30,45,60,.025);overflow:hidden}.panel+.panel{margin-top:14px}.panel-head{display:flex;align-items:center;gap:10px;min-height:52px;padding:10px 14px;border-bottom:1px solid var(--line)}.panel-head h2{margin:0;font-size:13px}.panel-head p{margin:3px 0 0;color:var(--muted);font-size:10px}.panel-head .actions{margin-left:auto;display:flex;gap:7px}.filters{display:flex;gap:8px;align-items:center}.field{height:34px;border:1px solid #d7dde5;border-radius:7px;background:#fff;padding:0 10px;color:#455266;font-size:11px;outline:none}.field.search{width:210px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:11px}th{padding:10px 12px;background:#f7f9fb;color:#687588;text-align:left;font-size:9px;letter-spacing:.04em;white-space:nowrap}td{padding:12px;border-top:1px solid #edf0f3;vertical-align:middle;white-space:nowrap}tr[data-select]{cursor:pointer}tr[data-select]:hover{background:#f7faff}tr.selected{background:#eef4ff}.tag{display:inline-flex;align-items:center;height:22px;padding:0 7px;border-radius:5px;font-size:9px;font-weight:700}.tag.green{background:var(--green-bg);color:var(--green)}.tag.amber{background:var(--amber-bg);color:var(--amber)}.tag.red{background:var(--red-bg);color:var(--red)}.tag.blue{background:var(--blue-bg);color:var(--blue)}.tag.gray{background:#eef1f4;color:#667386}.split{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}.detail{padding:15px}.detail h3{margin:0 0 13px;font-size:14px}.kv{display:grid;grid-template-columns:100px 1fr;gap:9px 12px;margin:0}.kv dt{color:var(--muted);font-size:10px}.kv dd{margin:0;font-size:11px}.check-list{display:grid;gap:8px;margin-top:15px}.check{display:flex;align-items:center;padding:9px 10px;border:1px solid #e5e9ee;border-radius:8px}.check span:first-child{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:var(--green-bg);color:var(--green);font-size:10px;font-weight:900}.check strong{margin-left:8px;font-size:10px}.check em{margin-left:auto;color:var(--muted);font-style:normal;font-size:9px}.timeline{padding:15px}.timeline-step{position:relative;padding:0 0 19px 23px}.timeline-step:before{content:"";position:absolute;left:6px;top:5px;width:7px;height:7px;border-radius:50%;background:#b4becb}.timeline-step:after{content:"";position:absolute;left:9px;top:14px;width:1px;height:calc(100% - 7px);background:#dce2e9}.timeline-step:last-child:after{display:none}.timeline-step.done:before{background:var(--green)}.timeline-step.current:before{background:var(--blue);box-shadow:0 0 0 4px #e7efff}.timeline-step b{display:block;font-size:10px}.timeline-step small{display:block;margin-top:4px;color:var(--muted);font-size:9px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:16px}.form-row{display:grid;gap:6px}.form-row.full{grid-column:1/-1}.form-row label{color:#5f6c7d;font-size:10px;font-weight:650}.input{height:38px;border:1px solid #d7dde5;border-radius:7px;padding:0 10px;background:#fff;font-size:11px}.hint{font-size:9px;color:#8a96a5}.callout{margin:0 16px 16px;padding:11px 12px;border-left:3px solid var(--blue);background:#f1f6ff;color:#516174;font-size:10px;line-height:1.6}.release-current{display:grid;grid-template-columns:1fr auto;gap:15px;padding:17px}.release-current h3{margin:0;font-size:18px}.release-current p{margin:7px 0 0;color:var(--muted);font-size:10px}.release-actions{display:flex;gap:8px;align-items:center}.bars{padding:16px}.bar-row{display:grid;grid-template-columns:90px 1fr 55px;gap:10px;align-items:center;margin-bottom:12px;font-size:10px}.bar{height:7px;border-radius:6px;background:#e8edf2;overflow:hidden}.bar i{display:block;height:100%;background:#557ebd;border-radius:6px}.bucket-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.bucket{padding:15px;border:1px solid var(--line);border-radius:10px;background:#fff}.bucket .bucket-icon{width:32px;height:27px;border:1px solid #8ea1ba;border-radius:5px 5px 8px 8px;background:#edf3fa;position:relative}.bucket .bucket-icon:before{content:"";position:absolute;left:4px;top:-5px;width:13px;height:5px;border:1px solid #8ea1ba;border-bottom:0;border-radius:4px 4px 0 0;background:#edf3fa}.bucket h3{margin:12px 0 4px;font-size:12px}.bucket p{margin:0;color:var(--muted);font-size:9px;line-height:1.5}.bucket code{display:block;margin-top:10px;padding:8px;border-radius:6px;background:#f3f5f8;color:#546174;font-size:8px;word-break:break-all}.tree{padding:15px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.75;color:#4e5d70}.annotation{overflow:auto;border-left:1px solid var(--note-line);background:var(--note);padding:20px 18px 40px}.anno-head{padding-bottom:15px;border-bottom:1px solid var(--note-line)}.anno-head small{color:#9a7c4f;font-size:9px;font-weight:800;letter-spacing:.15em}.anno-head h2{margin:8px 0 5px;font-size:18px}.anno-head p{margin:0;color:#80766a;font-size:10px;line-height:1.55}.anno-section{margin-top:17px}.anno-section h3{margin:0 0 8px;color:#755f43;font-size:11px}.anno-section ul{margin:0;padding-left:17px}.anno-section li{margin:0 0 6px;color:#625d55;font-size:10px;line-height:1.55}.anno-note{margin-top:17px;padding:11px;border:1px solid #e2d6c5;border-radius:8px;background:#fffdf8;color:#675f55;font-size:9px;line-height:1.6}.toast{position:fixed;left:50%;bottom:25px;z-index:20;transform:translate(-50%,15px);opacity:0;padding:10px 14px;border-radius:8px;background:#17202b;color:#fff;font-size:11px;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.modal-mask{position:fixed;inset:0;z-index:15;display:grid;place-items:center;background:rgba(12,19,27,.48)}.modal-mask.hidden{display:none}.modal{width:420px;border-radius:12px;background:#fff;box-shadow:0 28px 80px rgba(0,0,0,.25);overflow:hidden}.modal header{padding:16px 18px;border-bottom:1px solid var(--line)}.modal h3{margin:0;font-size:15px}.modal main{padding:16px 18px}.modal textarea{width:100%;height:100px;resize:none;border:1px solid #d7dde5;border-radius:8px;padding:10px;font-size:11px}.modal footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--line);background:#f8fafb}@media(max-width:1180px){.app{grid-template-columns:200px minmax(650px,1fr)}.annotation{display:none}}@media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{display:none}.metrics{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}}
+/* ui-ux-pro-max review pass: readability, focus and reduced motion */
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(53,111,214,.3);outline-offset:2px}
+.primary,.secondary,.danger,.ghost{min-height:40px;font-size:12px}.nav-btn{min-height:40px}.metric small,.panel-head p,.kv dt,.timeline-step small,.bucket p,.anno-section li,.anno-head p{font-size:11px}.metric span,.check em,.tag,.anno-note,.bucket code{font-size:10px}table{font-size:12px}th{font-size:10px}.field,.input{min-height:40px;font-size:12px}.anno-section h3{font-size:12px}.toast{font-size:12px}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(max-width:1500px) and (min-width:1181px){.split{grid-template-columns:1fr}.panel-head{flex-wrap:wrap}.panel-head h2{white-space:nowrap}.panel-head .actions{margin-left:0}.filters{flex-wrap:wrap}.detail{min-height:240px}}
+/* custom select: avoids the inconsistent macOS native popup */
+.native-select-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.selectx{position:relative;min-width:132px}.selectx-trigger{width:100%;min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;border:1px solid #d2d9e3;border-radius:8px;background:#fff;color:#263244;font-size:12px;text-align:left;box-shadow:0 1px 1px rgba(25,39,55,.025);transition:border-color .18s,box-shadow .18s,background .18s}.selectx-trigger:hover{border-color:#aeb9c8;background:#fbfcfe}.selectx-trigger[aria-expanded="true"]{border-color:var(--blue);box-shadow:0 0 0 3px rgba(53,111,214,.14)}.selectx-arrow{width:7px;height:7px;border-right:1.5px solid #627087;border-bottom:1.5px solid #627087;transform:rotate(45deg) translateY(-2px);transition:transform .18s;flex:0 0 auto}.selectx-trigger[aria-expanded="true"] .selectx-arrow{transform:rotate(225deg) translate(-1px,-1px)}.selectx-menu{position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;display:none;padding:5px;border:1px solid #d7dde6;border-radius:10px;background:#fff;box-shadow:0 16px 42px rgba(22,34,49,.16)}.selectx.open .selectx-menu{display:grid}.selectx-option{min-height:38px;border:0;border-radius:7px;padding:8px 10px;background:transparent;color:#344154;text-align:left;font-size:12px}.selectx-option:hover,.selectx-option:focus-visible{background:#f1f5fb}.selectx-option[aria-selected="true"]{background:#eaf1ff;color:#245dbb;font-weight:700}.form-row>.selectx{width:100%}.filters>.selectx{min-width:138px}.form-panel{overflow:visible}
+.game-name{display:flex;align-items:center;gap:11px}.game-cover{width:38px;height:38px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(145deg,#263d59,#446c9f);color:#fff;font-size:11px;font-weight:800}.game-cover.orange{background:linear-gradient(145deg,#68472f,#ba7c4f)}.game-cover.green{background:linear-gradient(145deg,#28594f,#4b8f7b)}.game-name b{display:block}.game-name small{display:block;margin-top:3px;color:var(--muted)}.game-hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:19px}.game-identity{display:flex;align-items:center;gap:14px}.game-identity .game-cover{width:52px;height:52px;border-radius:12px}.game-identity h2{margin:0 0 5px;font-size:19px}.game-identity p{margin:0;color:var(--muted);font-size:11px}.game-meta{display:flex;gap:24px}.game-meta div{min-width:100px}.game-meta small{display:block;color:var(--muted);font-size:9px}.game-meta strong{display:block;margin-top:5px;font-size:12px}.workflow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.workflow-card{min-height:126px;padding:16px;border:1px solid var(--line);border-radius:11px;background:#fff;text-align:left;transition:border-color .18s,box-shadow .18s,transform .18s}.workflow-card:hover{border-color:#aebfdb;box-shadow:var(--shadow);transform:translateY(-1px)}.workflow-card span{display:block;color:var(--blue);font-size:10px;font-weight:750}.workflow-card h3{margin:10px 0 5px;font-size:14px}.workflow-card p{margin:0;color:var(--muted);font-size:10px;line-height:1.55}.workflow-card em{display:inline-block;margin-top:10px;color:#53637a;font-size:9px;font-style:normal}.context-strip{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 12px;border:1px solid #d7e1ef;border-radius:9px;background:#f7faff;color:#44546a;font-size:11px}.context-strip b{color:#1c2b3e}.context-strip .ghost{margin-left:auto}@media(max-width:980px){.workflow-grid{grid-template-columns:1fr 1fr}.game-hero{grid-template-columns:1fr}.game-meta{flex-wrap:wrap}}
+.scope-panel{margin-bottom:14px;overflow:visible}.scope-bar{display:grid;grid-template-columns:minmax(220px,1.15fr) minmax(180px,1fr) minmax(132px,.6fr);gap:10px;padding:14px}.scope-field{display:grid;gap:6px}.scope-field label{font-size:10px;font-weight:700;color:#5f6d80}.scope-help{padding:0 14px 13px;color:#7a8798;font-size:10px}.empty-row td{text-align:center;color:var(--muted);padding:34px}.modal.modal-lg{width:min(680px,calc(100vw - 40px))}.modal-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-block{padding:12px;border:1px solid #e1e6ed;border-radius:9px;background:#fbfcfe}.modal-block h4{margin:0 0 10px;font-size:12px}.modal-block.full{grid-column:1/-1}.preflight{display:grid;gap:8px}.preflight-item{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid #e2e7ed;border-radius:8px}.preflight-icon{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:800}.preflight-item.fail .preflight-icon{background:var(--red-bg);color:var(--red)}.preflight-item b{font-size:11px}.preflight-item small{display:block;margin-top:2px;color:var(--muted);font-size:9px}.modal-message{margin-top:12px;padding:10px;border-radius:8px;background:#f2f6fc;color:#506077;font-size:10px;line-height:1.55}.modal-message.fail{background:var(--red-bg);color:#913e3e}.modal footer .primary:disabled{opacity:.42;cursor:not-allowed}.detail-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.detail-title small{display:block;margin-top:4px;color:var(--muted);font-size:10px}@media(max-width:760px){.scope-bar,.modal-body-grid{grid-template-columns:1fr}.modal-block.full{grid-column:auto}}
+#page-listing>.split,#page-schedule>.form-panel,#page-monitor,#page-storage{display:none!important}
+.game-picker{position:relative}.game-picker-input{padding-right:36px}.game-picker-clear{position:absolute;right:5px;top:5px;width:30px;height:30px;border:0;border-radius:6px;background:transparent;color:#758298;font-size:16px}.game-picker-clear:hover{background:#eef2f7;color:#2e3d52}.game-picker-menu{position:absolute;z-index:50;top:calc(100% + 6px);left:0;right:0;display:none;padding:6px;border:1px solid #d5dde8;border-radius:10px;background:#fff;box-shadow:0 18px 45px rgba(22,34,49,.18)}.game-picker.open .game-picker-menu{display:grid}.game-picker-option{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;padding:8px 10px;border:0;border-radius:7px;background:transparent;color:#2f3e53;text-align:left}.game-picker-option:hover,.game-picker-option:focus-visible{background:#eef4ff}.game-picker-option b{font-size:12px}.game-picker-option small{color:#748196;font-size:10px}.game-picker-empty{padding:12px;color:#7d8998;font-size:10px;line-height:1.5}.game-picker-hint{font-size:9px;color:#8793a3}
+.primary:disabled,.secondary:disabled,.danger:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.5)}
+.nav-root-btn{width:100%;min-height:42px;display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:10px;border:0;border-radius:9px;background:transparent;color:#aeb9c7;text-align:left;font-size:13px;font-weight:700}.nav-root-btn i{width:19px;height:19px;display:grid;place-items:center;border:1px solid #718096;border-radius:5px;font-style:normal;font-size:10px}.nav-root-btn:hover{background:rgba(255,255,255,.055);color:#fff}.nav-root-btn.active{background:#2c5fae;color:#fff}.scope-bar{grid-template-columns:minmax(230px,1.2fr) minmax(180px,1fr) minmax(128px,.55fr) 148px}.scope-actions{display:flex;align-items:flex-end;gap:8px}.scope-actions .primary,.scope-actions .secondary{flex:1}.game-picker-clear{display:none}
+@media(max-width:1020px){.scope-bar{grid-template-columns:1fr 1fr}.scope-actions{align-items:end}}@media(max-width:760px){.scope-bar{grid-template-columns:1fr}}
+.toast{top:78px;bottom:auto;z-index:80;transform:translate(-50%,-12px);box-shadow:0 10px 30px rgba(15,25,38,.2)}.toast.show{transform:translate(-50%,0)}.scope-actions{align-items:flex-start;padding-top:20px}.game-picker:has(.game-picker-input:not(:placeholder-shown)) .game-picker-clear{display:grid;place-items:center}.game-picker.open .game-picker-menu:has(.game-picker-empty){display:none}.nav-parent{width:100%;border:0;color:#d8e0ea;text-align:left;cursor:pointer}.nav-parent .nav-chevron{margin-left:auto;width:7px;height:7px;border-right:1.5px solid #8998aa;border-bottom:1.5px solid #8998aa;transform:rotate(45deg);transition:transform .18s}.nav-parent[aria-expanded="false"] .nav-chevron{transform:rotate(-45deg)}.nav-items.collapsed{display:none}
+.scope-bar{align-items:start}.scope-field{grid-template-rows:16px 40px;gap:8px;min-width:0}.scope-field>.game-picker-hint{display:none}.scope-actions{padding-top:24px;align-items:start}.scope-field .input,.game-picker,.game-picker-input,.clearable-input{width:100%;min-width:0}.game-picker-input{padding-right:36px}.game-picker-input::-webkit-search-cancel-button{display:none}.clearable-input{position:relative}.clearable-input input{width:100%;padding-right:32px}.text-clear{position:absolute;right:5px;top:5px;width:30px;height:30px;border:0;border-radius:5px;background:transparent;color:#7a8798;font-size:16px}.text-clear[hidden]{display:none}.text-clear:hover{background:#eef2f7}.demo-data-note{font-size:11px;color:#748196;margin:0 0 14px}.game-picker-menu{max-height:280px;overflow:auto}
+
+/* Product UI and optional review layer. Review copy never occupies business content. */
+:root{--review-width:320px}
+.app{grid-template-columns:200px minmax(0,1fr)}
+.annotation{display:none}
+body.review-on .app{grid-template-columns:200px minmax(0,1fr) var(--review-width)}
+body.review-on .annotation{display:block;position:relative;z-index:25;padding:72px 18px 32px}
+.review-toggle{position:fixed;right:18px;top:12px;z-index:90;display:flex;align-items:center;gap:9px;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font-size:12px;font-weight:600}
+.review-toggle i{width:28px;height:16px;border-radius:10px;background:#a2adba;position:relative}
+.review-toggle i:after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .18s}
+.review-toggle[aria-checked="true"] i{background:var(--blue)}
+.review-toggle[aria-checked="true"] i:after{transform:translateX(12px)}
+.top-actions{padding-right:132px}body.review-on .top-actions{padding-right:0}
+.review-pin{display:none}
+body.review-on .review-pin{display:inline-flex;vertical-align:middle;align-items:center;justify-content:center;width:24px;height:24px;flex:0 0 24px;margin-left:6px;padding:0;border:1px solid #d5bc91;border-radius:50%;background:#fff5df;color:#76531f;font-size:10px;font-weight:750;line-height:1;cursor:pointer}
+body.review-on .review-pin:before{content:attr(data-number)}
+body.review-on .review-pin:hover,body.review-on .review-pin[aria-pressed="true"]{background:#8a6126;color:white;border-color:#8a6126}
+.review-card{margin-top:10px;padding:13px 12px;border:1px solid var(--note-line);border-radius:9px;background:#fffdf9;scroll-margin-top:12px}
+.review-card.is-selected{border-color:#a77936;box-shadow:0 0 0 2px #e9d8bd}
+.review-card h3{display:flex;align-items:baseline;gap:8px;margin:0 0 7px;font-size:12px;color:#5e4b31}
+.review-card h3 span{color:#967346;font-size:10px}
+.review-card p{margin:0;color:#635e54;font-size:12px;line-height:1.75;overflow-wrap:anywhere}
+.review-card p+p{margin-top:7px}
+.anno-head small{font-size:10px}.anno-head p{font-size:12px;line-height:1.65}
+body.review-on:after{content:"";position:fixed;top:0;right:0;width:var(--review-width);height:64px;z-index:85;background:var(--note);border-bottom:1px solid var(--note-line);pointer-events:none}
+.review-general{margin-top:16px;padding:12px;border-top:1px solid var(--note-line);color:#716555;font-size:11px;line-height:1.7}.review-general summary{cursor:pointer;font-weight:650}.review-general p{margin:10px 0 0}
+.review-target{outline:2px solid #b08a51!important;outline-offset:4px}
+.modal-close{width:36px;height:36px;flex:0 0 36px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:0;border-radius:7px;background:transparent;color:#627087}
+.modal-close:hover{background:#eef2f7;color:var(--text)}
+.modal-close svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.8;fill:none}
+.modal>header{position:relative}.modal>header>.modal-close{position:absolute;right:12px;top:8px}
+.modal footer:empty{display:none}
+.preflight-item small[hidden],.modal-message[hidden]{display:none}
+.modal{max-height:calc(100dvh - 48px);display:flex;flex-direction:column;max-width:calc(100% - 32px)}
+.modal main{overflow:auto;min-height:0}.modal header,.modal footer{flex-shrink:0}
+body.review-on .modal-mask{right:var(--review-width)}
+.page-head h1{line-height:1.4}.scope-field label{height:16px;display:flex;align-items:center}
+.scope-field label .review-pin{width:20px;height:20px;flex-basis:20px}
+.kv{grid-template-columns:minmax(90px,.85fr) minmax(0,1.3fr)}.kv dd{overflow-wrap:anywhere}
+.panel-head:has(>.review-pin){gap:4px}
+@media(min-width:1281px){body.review-on .scope-bar{grid-template-columns:minmax(150px,1.2fr) minmax(140px,1fr) minmax(120px,.7fr) 140px}}
+@media(max-width:1280px){body.review-on .scope-bar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}body.review-on .metrics{grid-template-columns:1fr 1fr}body.review-on .release-current{grid-template-columns:1fr}body.review-on .split{grid-template-columns:1fr}}
+@media(max-width:1000px){:root{--review-width:290px}body.review-on .app{grid-template-columns:156px minmax(0,1fr) var(--review-width)}body.review-on .content{padding:18px 16px}body.review-on .scope-bar{grid-template-columns:1fr}body.review-on .scope-actions{padding-top:0}body.review-on .modal-body-grid{grid-template-columns:1fr}}
+@media(max-width:820px){.app,body.review-on .app{grid-template-columns:minmax(0,1fr)}body.review-on .annotation{position:fixed;right:0;top:64px;bottom:0;width:min(290px,80vw);padding-top:18px;box-shadow:-10px 0 30px #17202b24}body.review-on .modal-mask{right:0}body.review-on .top-actions{padding-right:132px}body.review-on:after{display:none}.content{padding:18px 14px}.topbar{padding:0 14px}.env,.avatar{display:none}.modal-body-grid{grid-template-columns:1fr}.modal-block.full{grid-column:auto}.review-toggle{right:12px}}
+
+.review-module{position:relative}
+body.review-on .review-module{padding-right:42px}
+body.review-on .review-module>.module-review-pin{position:absolute;top:12px;right:10px;margin:0}
+body.review-on .metrics.review-module{padding-right:0}
+body.review-on .metrics.review-module>.module-review-pin{top:-10px;right:8px}
+body.review-on .modal footer.review-module{padding-right:48px}
+.review-field-list{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--note-line)}
+.review-field-list>div+div{margin-top:10px}.review-field-list dt{color:#675335;font-size:11px;font-weight:650}.review-field-list dd{margin:3px 0 0;color:#635e54;font-size:11px;line-height:1.7}
+
+/* QA creation and shared publication management */
+.workflow-section{padding:14px;border:1px solid var(--line);border-radius:9px;background:#fbfcfe}
+.workflow-section+.workflow-section{margin-top:12px}.workflow-section h4{font-size:12px;margin:0 0 12px}
+.modal-mask{grid-template-columns:minmax(0,1fr);justify-items:center}.modal{min-width:0}
+.workflow-grid-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.workflow-section>.form-row{margin-top:12px}
+.workflow-section textarea{height:auto;min-height:80px;max-height:180px;resize:vertical;font:inherit;font-size:12px}
+.workflow-section .input{width:100%;min-width:0}.scope-checks{padding:12px 0;border:0;margin:10px 0 0;display:flex;gap:10px 16px;flex-wrap:wrap}
+.scope-checks legend{font-size:11px;color:#5f6c7d;font-weight:650}.scope-checks label{font-size:12px;display:flex;align-items:center;gap:4px}
+.scope-checks input{accent-color:var(--blue)}.form-error{margin:12px 0 0;padding:10px 12px;border-radius:7px;background:var(--red-bg);color:var(--red);font-size:12px;line-height:1.6}
+.form-error[hidden]{display:none}.workflow-empty{font-size:12px;color:var(--muted);padding:8px 0}.preflight-result{margin-left:auto;font-size:11px;color:var(--muted)}
+.publication-filters{grid-template-columns:repeat(2,minmax(0,1fr))!important}.publication-query-actions{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end}
+.publication-query-actions button{min-width:76px}.record-count{font-size:11px;color:var(--muted);margin-left:8px}
+.publication-table{min-width:780px}.publication-table td small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.publication-table th:last-child,.publication-table td:last-child{position:sticky;right:0;min-width:150px;background:#fff;box-shadow:-5px 0 8px #1b293a08}
+.publication-table th:last-child{background:#f7f9fb}.publication-table .ghost{padding:0 8px}.action-red{color:var(--red)}
+.audit-log article+article{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}.audit-log b{font-size:12px}.audit-log small{display:block;margin-top:4px;font-size:10px;color:var(--muted)}.audit-log p{font-size:12px;line-height:1.6;margin:6px 0 0;overflow-wrap:anywhere}
+.identity-demo{margin:0 0 14px;border:1px solid var(--note-line);border-radius:8px}.identity-demo label{display:block;margin:12px 0 6px}.identity-demo select{width:100%;font-size:11px}
+@media(max-width:760px){.workflow-grid-form{grid-template-columns:1fr}.publication-filters{grid-template-columns:1fr!important}}
+
+
+.publication-table{min-width:0;table-layout:fixed;font-size:11px}
+.publication-table th,.publication-table td{padding:11px 8px;white-space:normal;overflow-wrap:anywhere}
+.publication-table th:nth-child(1){width:24%}.publication-table th:nth-child(2){width:11%}.publication-table th:nth-child(3){width:21%}.publication-table th:nth-child(4){width:14%}.publication-table th:nth-child(5){width:13%}.publication-table th:last-child{width:17%}
+.publication-table th:last-child,.publication-table td:last-child{position:static;min-width:0;box-shadow:none}
+.publication-table td:last-child .ghost{display:block;min-height:30px;height:auto;padding:6px 0;line-height:1.3;text-align:left}
+.publication-table .tag{height:auto;min-height:22px;padding:4px 5px;white-space:nowrap}
+#workflowSubtitle{display:block;margin-top:5px;color:var(--muted);font-size:11px}#workflowSubtitle:empty{display:none}
+.publication-table td:nth-child(4) small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.state-contract{margin-top:14px;padding-top:12px;border-top:1px solid var(--note-line)}
+.state-contract h4{margin:0 0 8px;font-size:12px;color:#675335}.state-contract h4:not(:first-child){margin-top:14px}
+.state-contract dl{margin:0}.state-contract dl>div{padding:9px 0;border-bottom:1px solid #eee4d5}.state-contract dt{font-size:12px;font-weight:700;color:#675335}.state-contract dd{margin:4px 0 0;font-size:11px;line-height:1.7;color:#635e54}.state-contract .state-note{margin-top:12px;font-size:11px}
+button:disabled{cursor:not-allowed;opacity:.45}
+
+.record-time{font-variant-numeric:tabular-nums;min-width:140px}.record-time small{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+.publication-query-actions{grid-column:auto;align-items:end;padding-top:24px}
+.publication-table th:nth-child(1){width:28%}.publication-table th:nth-child(2){width:24%}.publication-table th:nth-child(3){width:18%}.publication-table th:nth-child(4){width:14%}.publication-table th:last-child{width:16%}
+.publication-table td:nth-child(3) small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.package-filters{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)!important}.package-filters .publication-query-actions{grid-column:1/-1;padding-top:0}
+.package-table{table-layout:fixed}.package-table th,.package-table td{white-space:normal;overflow-wrap:anywhere;padding:12px 8px}.package-table th:nth-child(1){width:22%}.package-table th:nth-child(2){width:22%}.package-table th:nth-child(3){width:19%}.package-table th:nth-child(4){width:21%}.package-table th:last-child{width:16%}
+.package-table td small{display:block;color:var(--muted);font-size:10px;margin-top:5px}.package-table td .ghost{display:block;min-height:32px;height:auto;padding:5px 0;text-align:left}.package-table .tag{height:auto;min-height:22px;padding:4px 6px;white-space:nowrap}
+@media(max-width:760px){.package-filters{grid-template-columns:1fr!important}.package-table{min-width:600px}}
+</style>
+</head>
+<body class="review-on">
+<button type="button" class="review-toggle" id="reviewToggle" role="switch" aria-label="标注点" aria-checked="true" aria-controls="reviewPanel"><span>标注点</span><i aria-hidden="true"></i><span id="reviewToggleState">开</span></button>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">G</div><div><strong>PC发行运营后台</strong><small>Operations Console</small></div></div>
+    <div class="nav-group">
+      <div class="nav-label">业务中心</div>
+      <button class="nav-parent" id="packageMenuToggle" type="button" aria-expanded="true" aria-controls="packageSubmenu"><i>包</i> 游戏包管理<span class="nav-chevron" aria-hidden="true"></span></button>
+      <nav class="nav-items" id="packageSubmenu">
+        <button class="nav-btn active" data-page="build" aria-current="page">构建审核</button>
+        <button class="nav-btn" data-page="qa">QA 测试</button>
+        <button class="nav-btn" data-page="listing">上架审核</button>
+        <button class="nav-btn" data-page="schedule">定时发布</button>
+        <button class="nav-btn" data-page="versions">版本管理</button>
+      </nav>
+    </div>
+    <div class="sidebar-foot">演示范围：合作游戏从构建审核、QA、上架审核到定时发布、版本暂停与回滚。</div>
+  </aside>
+  <main class="workspace">
+    <header class="topbar"><div class="crumb"><span id="crumbRoot">游戏包管理</span> / <strong id="crumb">构建审核</strong></div><div class="top-actions"><span class="env">Production</span><span class="avatar">OP</span></div></header>
+    <div class="content">
+      <section class="page" id="page-games">
+        <div class="page-head"><div><h1>合作游戏</h1><p>所有已准入游戏的统一入口；APPID 是构建、商品、权益和发布记录的归属主键。</p></div><button class="primary" data-toast="已打开新游戏准入流程">新增合作游戏</button></div>
+        <div class="metrics"><div class="metric"><small>合作游戏</small><strong>24</strong><span>已创建 APPID</span></div><div class="metric"><small>准备发行</small><strong>5</strong><span>Build 或审核处理中</span></div><div class="metric"><small>已正式上线</small><strong>16</strong><span>Production 有效</span></div><div class="metric"><small>需要处理</small><strong>7</strong><span>跨游戏待办</span></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>游戏列表</h2><p>进入游戏后查看该 APPID 下的 Build、QA、Release 与发布历史</p></div><div class="actions filters"><input class="field search" placeholder="搜索游戏 / APPID / 合作方"><select class="field"><option>全部状态</option><option>发行中</option><option>已上线</option><option>已暂停</option></select></div></div><div class="table-wrap"><table><thead><tr><th>游戏 / APPID</th><th>合作方</th><th>发行平台</th><th>当前正式版本</th><th>发行状态</th><th>待处理</th><th>操作</th></tr></thead><tbody><tr><td><div class="game-name"><span class="game-cover">NF</span><div><b>Neon Frontier</b><small>app_2001</small></div></div></td><td>Northlake Studio</td><td>macOS</td><td>1.3.0 · bld_3108</td><td><span class="tag green">已上线</span></td><td><span class="tag amber">2 项</span></td><td><button class="ghost" data-action="enter-game">进入发行管理</button></td></tr><tr><td><div class="game-name"><span class="game-cover orange">PO</span><div><b>Paper Orbit</b><small>app_1842</small></div></div></td><td>Blue Pine Games</td><td>macOS</td><td>2.1.4 · bld_1022</td><td><span class="tag blue">待发布</span></td><td><span class="tag amber">1 项</span></td><td><button class="ghost" data-toast="已切换到 Paper Orbit">进入发行管理</button></td></tr><tr><td><div class="game-name"><span class="game-cover green">SH</span><div><b>Silent Harbor</b><small>app_1730</small></div></div></td><td>Elm Works</td><td>macOS</td><td>—</td><td><span class="tag amber">测试中</span></td><td><span class="tag amber">4 项</span></td><td><button class="ghost" data-toast="已切换到 Silent Harbor">进入发行管理</button></td></tr></tbody></table></div></div>
+      </section>
+      <section class="page" id="page-game">
+        <div class="page-head"><div><h1>游戏发行工作台</h1><p>当前所有操作均限定在 Neon Frontier（app_2001）。</p></div><button class="secondary" data-page-link="games">返回游戏列表</button></div>
+        <div class="panel game-hero"><div class="game-identity"><span class="game-cover">NF</span><div><h2>Neon Frontier</h2><p>APPID app_2001 · Northlake Studio · 平台一发</p></div></div><div class="game-meta"><div><small>当前 Production</small><strong>1.3.0 · bld_3108</strong></div><div><small>支持系统</small><strong>macOS Universal</strong></div><div><small>销售状态</small><strong><span class="tag green">正常销售</span></strong></div></div></div>
+        <div class="workflow-grid"><button class="workflow-card" data-page-link="build"><span>01 · BUILD</span><h3>构建审核</h3><p>查看本游戏全部 Build、自动检查结果和不可变存储路径。</p><em>1 个待处理 →</em></button><button class="workflow-card" data-page-link="qa"><span>02 · QA</span><h3>QA 测试</h3><p>管理 Internal Release、QA 任务、问题和测试结论。</p><em>1 个进行中 →</em></button><button class="workflow-card" data-page-link="listing"><span>03 · REVIEW</span><h3>上架审核</h3><p>核对商品、授权、地区、DLC 和待发布 Build。</p><em>等待运营审核 →</em></button><button class="workflow-card" data-page-link="schedule"><span>04 · RELEASE</span><h3>定时发布</h3><p>创建 Production 定时发布，并查看当前游戏的计划与历史。</p><em>查看发布记录 →</em></button><button class="workflow-card" data-page-link="versions"><span>05 · VERSION</span><h3>版本管理</h3><p>查看当前与历史版本，执行暂停或回滚。</p><em>3 个保留版本 →</em></button></div>
+      </section>
+      <section class="page active" id="page-build">
+        <div class="page-head"><div><h1>构建审核</h1><p>查看自动检查结果，决定构建是否可以进入 QA。</p></div></div>
+        <div class="panel scope-panel"><div class="scope-bar"><div class="scope-field"><label for="buildGameFilter">选择游戏</label><select class="input" id="buildGameFilter" data-filter-page="build"><option value="">全部合作游戏</option><option value="app_2001">Neon Frontier · app_2001</option><option value="app_1842">Paper Orbit · app_1842</option><option value="app_1730">Silent Harbor · app_1730</option></select></div><div class="scope-field"><label for="buildSearch">搜索构建</label><input class="input" id="buildSearch" data-filter-page="build" placeholder="Build ID / 版本号"></div><div class="scope-field"><label for="buildStateFilter">处理状态</label><select class="input" id="buildStateFilter" data-filter-page="build"><option value="">全部状态</option><option value="待人工确认">待审核</option><option value="检查失败">检查失败</option><option value="READY_FOR_QA">已通过</option></select></div></div><div class="scope-help">选择具体游戏后，仅展示该 APPID 下的 Build；点击“详情”查看检查项和处理操作。</div></div>
+        <div class="metrics"><div class="metric"><small>待处理</small><strong>6</strong><span>自动检查已完成</span></div><div class="metric"><small>检查失败</small><strong>2</strong><span>等待开发者修复</span></div><div class="metric"><small>今日通过</small><strong>12</strong><span>进入 READY_FOR_QA</span></div><div class="metric"><small>平均处理时长</small><strong>38m</strong><span>近 7 日</span></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>构建列表</h2><p>所有 Build 都通过 APPID 归属于具体游戏</p></div></div><div class="table-wrap"><table><thead><tr><th>游戏 / APPID</th><th>Build ID</th><th>版本</th><th>系统</th><th>包体</th><th>状态</th><th>操作</th></tr></thead><tbody id="buildRows"></tbody></table></div></div>
+      </section>
+      <section class="page" id="page-qa">
+        <div class="page-head"><div><h1>QA 测试</h1><p>Internal Release 下载、测试结果与问题回传。</p></div><button class="primary" data-action="create-qa">创建测试任务</button></div>
+        <div class="panel scope-panel"><div class="scope-bar"><div class="scope-field"><label for="qaGameFilter">选择游戏</label><select class="input" id="qaGameFilter" data-filter-page="qa"><option value="">全部合作游戏</option><option value="app_2001">Neon Frontier · app_2001</option><option value="app_1842">Paper Orbit · app_1842</option><option value="app_1730">Silent Harbor · app_1730</option></select></div><div class="scope-field"><label for="qaSearch">搜索任务</label><input class="input" id="qaSearch" data-filter-page="qa" placeholder="QA任务号 / Build ID"></div><div class="scope-field"><label for="qaStateFilter">测试状态</label><select class="input" id="qaStateFilter" data-filter-page="qa"><option value="">全部状态</option><option value="测试中">测试中</option><option value="已通过">已通过</option><option value="已退回">已退回</option></select></div></div><div class="scope-help">QA 测试必须关联 APPID 和 Build ID；进入详情后查看测试节点、报告并提交结论。</div></div>
+        <div class="panel"><div class="panel-head"><div><h2>测试任务</h2><p>QA 使用 PC 客户端下载该游戏的不可变 Build</p></div></div><div class="table-wrap"><table><thead><tr><th>游戏 / APPID</th><th>任务</th><th>Build</th><th>测试范围</th><th>负责人</th><th>状态</th><th>操作</th></tr></thead><tbody id="qaRows"><tr data-app="app_2001" data-state="测试中"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>QA-260903-18</td><td>bld_3108</td><td>安装 / 更新 / 启动</td><td>Lin</td><td><span class="tag amber" id="qaStatus">测试中</span></td><td><button class="ghost" data-detail="qa">详情</button></td></tr><tr data-app="app_1842" data-state="已通过"><td><b>Paper Orbit</b><br><small>app_1842</small></td><td>QA-260903-17</td><td>bld_1022</td><td>完整回归</td><td>Mei</td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="qa-done">详情</button></td></tr><tr data-app="app_1730" data-state="已退回"><td><b>Silent Harbor</b><br><small>app_1730</small></td><td>QA-260902-11</td><td>bld_2880</td><td>安装 / 启动</td><td>Chen</td><td><span class="tag red">已退回</span></td><td><button class="ghost" data-detail="qa-failed">详情</button></td></tr></tbody></table></div></div>
+      </section>
+      <section class="page" id="page-listing">
+        <div class="page-head"><div><h1>上架审核</h1><p>确认授权、商品、地区和构建状态，形成 RELEASE_READY。</p></div></div>
+        <div class="panel scope-panel"><div class="scope-bar"><div class="scope-field"><label for="listingGameFilter">选择游戏</label><select class="input" id="listingGameFilter" data-filter-page="listing"><option value="">请选择合作游戏</option><option value="app_2001">Neon Frontier · app_2001</option><option value="app_1842">Paper Orbit · app_1842</option><option value="app_1730">Silent Harbor · app_1730</option></select></div><div class="scope-field"><label for="listingSearch">搜索审核单</label><input class="input" id="listingSearch" data-filter-page="listing" aria-label="搜索审核单号或 Build ID" placeholder="审核单 ID / Build ID"></div><div class="scope-field"><label for="listingStateFilter">审核状态</label><select class="input" id="listingStateFilter" data-filter-page="listing"><option value="">全部状态</option><option value="待审核">待审核</option><option value="已通过">已通过</option><option value="已退回">已退回</option></select></div></div><div class="scope-help">选择游戏后展示该 APPID 的审核单；详情中核对资质、商品、地区、QA 和包体结果。</div></div>
+        <div class="panel" id="listingTable"><div class="panel-head"><div><h2>上架审核列表</h2><p>审核单、商品和目标 Build 必须关联同一 APPID</p></div></div><div class="table-wrap"><table><thead><tr><th>游戏 / APPID</th><th>审核单</th><th>商品</th><th>目标 Build</th><th>QA</th><th>状态</th><th>操作</th></tr></thead><tbody id="listingRows"><tr data-app="app_2001" data-state="待审核"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>REV-260903-09</td><td>标准版 / 豪华版</td><td>bld_3108</td><td><span class="tag green">已通过</span></td><td><span class="tag amber">待审核</span></td><td><button class="ghost" data-detail="listing">详情</button></td></tr><tr data-app="app_1842" data-state="已通过"><td><b>Paper Orbit</b><br><small>app_1842</small></td><td>REV-260902-16</td><td>游戏本体</td><td>bld_1022</td><td><span class="tag green">已通过</span></td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="listing-done">详情</button></td></tr><tr data-app="app_1730" data-state="已退回"><td><b>Silent Harbor</b><br><small>app_1730</small></td><td>REV-260901-04</td><td>游戏本体</td><td>bld_2880</td><td><span class="tag red">未通过</span></td><td><span class="tag red">已退回</span></td><td><button class="ghost" data-detail="listing-failed">详情</button></td></tr></tbody></table></div></div>
+        <div class="split"><div class="panel"><div class="panel-head"><div><h2>Neon Frontier · 豪华版</h2><p>APPID app_2001 · Build bld_3108</p></div><span class="tag amber" id="listingStatus">待运营审核</span></div><div class="detail"><dl class="kv"><dt>发行商</dt><dd>Northlake Studio</dd><dt>销售区域</dt><dd>美国、加拿大、欧洲、俄罗斯</dd><dt>正式版本</dt><dd>1.3.0 · macOS Universal</dd><dt>QA 结果</dt><dd><span class="tag green">已通过</span></dd><dt>完整快照</dt><dd><span class="tag green">已生成</span></dd><dt>包体路径</dt><dd>games/app_2001/builds/bld_3108/macos/universal/</dd></dl><div class="check-list"><div class="check"><span>✓</span><strong>发行与销售授权</strong><em>已核验</em></div><div class="check"><span>✓</span><strong>商品、版本与 DLC</strong><em>已配置</em></div><div class="check"><span>✓</span><strong>地区、价格和退款说明</strong><em>已确认</em></div><div class="check"><span>✓</span><strong>Build、Manifest 与签名</strong><em>完整</em></div></div></div><div class="panel-head"><div class="actions"><button class="danger" data-action="reject">退回修改</button><button class="primary" data-action="approve-listing">审核通过</button></div></div></div><aside class="panel timeline"><h3>审核记录</h3><div class="timeline-step done"><b>主体与合同</b><small>2026-08-28</small></div><div class="timeline-step done"><b>QA 测试</b><small>2026-09-03</small></div><div class="timeline-step current"><b>运营上架审核</b><small>当前节点</small></div><div class="timeline-step"><b>定时发布</b><small>审核后可配置</small></div></aside></div>
+      </section>
+      <section class="page" id="page-schedule">
+        <div class="page-head"><div><h1>定时发布</h1><p>选择 RELEASE_READY Build，设置 Production 生效时间。</p></div><button class="primary" data-action="create-release">创建定时发布</button></div>
+        <div class="panel scope-panel"><div class="scope-bar"><div class="scope-field"><label for="scheduleGameFilter">选择游戏</label><select class="input" id="scheduleGameFilter" data-filter-page="schedule"><option value="app_2001">Neon Frontier · app_2001</option><option value="app_1842">Paper Orbit · app_1842</option><option value="app_1730">Silent Harbor · app_1730</option></select></div><div class="scope-field"><label for="scheduleSearch">搜索发布记录</label><input class="input" id="scheduleSearch" data-filter-page="schedule" placeholder="Build ID / 版本号"></div><div class="scope-field"><label for="scheduleStateFilter">发布状态</label><select class="input" id="scheduleStateFilter" data-filter-page="schedule"><option value="">全部状态</option><option value="SCHEDULED">待执行</option><option value="成功">已发布</option><option value="已完成">已回滚</option></select></div></div><div class="scope-help">创建发布时实时检查：包体已准备、QA 已通过、游戏资质和商品上架审核均已通过。</div></div>
+        <div class="panel form-panel"><div class="panel-head"><div><h2>发布配置</h2><p>到点只激活 Release 指针，游戏包不会移动</p></div></div><div class="form-grid"><div class="form-row"><label>游戏</label><select class="input"><option>Neon Frontier · app_2001</option></select></div><div class="form-row"><label>目标 Build</label><select class="input"><option>bld_3108 · 1.3.0 · RELEASE_READY</option></select></div><div class="form-row"><label>发布渠道</label><select class="input"><option>Production</option></select></div><div class="form-row"><label>系统架构</label><select class="input"><option>macOS Universal</option></select></div><div class="form-row"><label>上架时间</label><input class="input" id="scheduleTime" type="datetime-local" value="2026-09-10T10:00"></div><div class="form-row"><label>时区</label><select class="input"><option>UTC+8 Asia/Shanghai</option><option>UTC</option></select></div><div class="form-row full"><label>发布说明</label><input class="input" value="正式发布 1.3.0，新增剧情章节与性能优化"></div></div><div class="callout">到达发布时间后：Production.active_build_id 指向 bld_3108。不会复制、移动或重新压缩 Cloud Storage 中的游戏包。</div></div>
+        <div class="panel"><div class="panel-head"><div><h2>当前游戏的发布计划</h2><p>只显示所选 APPID 尚未执行的定时任务</p></div></div><div class="table-wrap"><table><thead><tr><th>APPID</th><th>Build</th><th>上架时间</th><th>渠道</th><th>状态</th><th>操作</th></tr></thead><tbody id="scheduleRows"><tr><td>app_2001</td><td>bld_3142</td><td>2026-09-10 10:00 UTC+8</td><td>Production</td><td><span class="tag blue">SCHEDULED</span></td><td><button class="ghost" data-action="cancel-release">取消</button></td></tr></tbody></table></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>发布历史</h2><p>跟随游戏 APPID 永久留痕，包含自动发布、人工发布、暂停和回滚</p></div><button class="secondary" data-toast="已导出 Neon Frontier 发布历史">导出记录</button></div><div class="table-wrap"><table><thead><tr><th>生效时间</th><th>版本 / Build</th><th>事件</th><th>操作人</th><th>结果</th></tr></thead><tbody><tr><td>2026-09-03 10:00 UTC</td><td>1.3.0 · bld_3108</td><td>定时发布</td><td>系统任务</td><td><span class="tag green">成功</span></td></tr><tr><td>2026-08-17 08:30 UTC</td><td>1.2.2 · bld_2981</td><td>正式发布</td><td>ops.lin</td><td><span class="tag green">成功</span></td></tr><tr><td>2026-08-03 13:42 UTC</td><td>1.2.1 · bld_2855</td><td>版本回滚</td><td>ops.mei</td><td><span class="tag amber">已完成</span></td></tr></tbody></table></div></div>
+      </section>
+      <section class="page" id="page-versions">
+        <div class="page-head"><div><h1>版本管理</h1><p>查看当前 Production、历史 Build、暂停及回滚。</p></div></div>
+        <div class="panel scope-panel"><div class="scope-bar"><div class="scope-field"><label for="versionGameFilter">选择游戏</label><select class="input" id="versionGameFilter" data-filter-page="versions"><option value="app_2001">Neon Frontier · app_2001</option><option value="app_1842">Paper Orbit · app_1842</option><option value="app_1730">Silent Harbor · app_1730</option></select></div><div class="scope-field"><label for="versionSearch">搜索版本</label><input class="input" id="versionSearch" data-filter-page="versions" placeholder="版本号 / Build ID"></div><div class="scope-field"><label for="versionStateFilter">版本状态</label><select class="input" id="versionStateFilter" data-filter-page="versions"><option value="">全部状态</option><option value="当前正式版">当前正式版</option><option value="稳定版本">稳定版本</option><option value="历史版本">历史版本</option></select></div></div><div class="scope-help">仅展示所选 APPID 的版本记录；点击“详情”查看 Manifest、发布时间和操作日志。</div></div>
+        <div class="panel release-current"><div><span class="tag green" id="releaseTag">ACTIVE</span><h3 id="currentVersion">Neon Frontier · 1.3.0</h3><p id="currentBuild">Production → bld_3108 · 2026-09-03 10:00 UTC</p></div><div class="release-actions"><button class="danger" data-action="pause">暂停版本</button><button class="secondary" data-action="rollback">回滚</button></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>版本历史</h2><p>历史 Build 文件保持不变，回滚只切换 Production 指针</p></div></div><div class="table-wrap"><table><thead><tr><th>版本</th><th>Build ID</th><th>发布时间</th><th>快照</th><th>状态</th><th>操作</th></tr></thead><tbody><tr><td>1.3.0</td><td>bld_3108</td><td>2026-09-03</td><td>128.4 GB</td><td><span class="tag green">当前正式版</span></td><td>—</td></tr><tr><td>1.2.2</td><td>bld_2981</td><td>2026-08-17</td><td>126.8 GB</td><td><span class="tag blue">稳定版本</span></td><td><button class="ghost" data-action="rollback-old">回滚至此</button></td></tr><tr><td>1.2.1</td><td>bld_2855</td><td>2026-08-03</td><td>126.2 GB</td><td><span class="tag gray">历史版本</span></td><td><button class="ghost" data-toast="已打开 Build 详情">查看</button></td></tr></tbody></table></div></div>
+      </section>
+      <section class="page" id="page-monitor">
+        <div class="page-head"><div><h1>下载监控</h1><p>查看 Cloud CDN 下载质量、区域差异和异常。</p></div><div class="filters"><select class="field"><option>最近24小时</option><option>最近7天</option></select><select class="field"><option>全部游戏</option><option>Neon Frontier</option></select></div></div>
+        <div class="metrics"><div class="metric"><small>下载成功率</small><strong>98.7%</strong><span>较昨日 +0.4%</span></div><div class="metric"><small>平均速度</small><strong>32.6 MB/s</strong><span>全球用户</span></div><div class="metric"><small>CDN 命中率</small><strong>91.2%</strong><span>Chunk 缓存</span></div><div class="metric"><small>更新回滚</small><strong>0.34%</strong><span>43 次</span></div></div>
+        <div class="split"><div class="panel"><div class="panel-head"><div><h2>重点地区下载表现</h2></div></div><div class="bars"><div class="bar-row"><span>美国</span><div class="bar"><i style="width:91%"></i></div><b>45.2</b></div><div class="bar-row"><span>俄罗斯</span><div class="bar"><i style="width:55%;background:#b68245"></i></div><b>18.7</b></div><div class="bar-row"><span>德国</span><div class="bar"><i style="width:76%"></i></div><b>34.1</b></div><div class="bar-row"><span>日本</span><div class="bar"><i style="width:70%"></i></div><b>30.4</b></div></div></div><aside class="panel"><div class="panel-head"><div><h2>异常摘要</h2></div></div><div class="detail"><div class="check"><span style="background:var(--red-bg);color:var(--red)">!</span><strong>俄罗斯 5xx 升高</strong><em>1.4%</em></div><div class="check"><span>✓</span><strong>Manifest 签名</strong><em>正常</em></div><div class="check"><span>✓</span><strong>Cloud Storage 回源</strong><em>正常</em></div><div class="check"><span style="background:var(--amber-bg);color:var(--amber)">!</span><strong>403 授权过期</strong><em>186</em></div></div></aside></div>
+      </section>
+      <section class="page" id="page-storage">
+        <div class="page-head"><div><h1>存储管理</h1><p>只读查看 Bucket、路径和生命周期；运营不直接移动文件。</p></div><button class="secondary" data-toast="已生成存储报表">导出报表</button></div>
+        <div class="bucket-grid"><div class="bucket"><div class="bucket-icon"></div><h3>上传待检查 Bucket</h3><p>保存未通过检查的开发者输入，不接 CDN。</p><code>gpc-build-upload-prod-us-project</code></div><div class="bucket"><div class="bucket-icon"></div><h3>构建制品 Bucket</h3><p>保存不可变 Build、Manifest、Chunk 和快照。</p><code>gpc-game-artifact-prod-us-project</code></div><div class="bucket"><div class="bucket-icon"></div><h3>公共发行物 Bucket</h3><p>保存客户端、上传组件和 SDK。</p><code>gpc-public-release-prod-us-project</code></div></div>
+        <div class="split" style="margin-top:14px"><div class="panel"><div class="panel-head"><div><h2>构建制品路径</h2><p>同一 Build 被 Internal、Beta、Production 指针引用</p></div></div><div class="tree">games/app_2001/builds/bld_3108/macos/universal/<br>├── manifests/<br>│&nbsp;&nbsp;├── file-manifest.v1.json<br>│&nbsp;&nbsp;└── chunk-manifest.v1.json<br>├── signatures/manifest.v1.sig<br>├── snapshots/full-build.tar.zst<br>└── metadata/build.json<br><br>objects/app_2001/base/sha256/a8/a81c...</div></div><aside class="panel"><div class="panel-head"><div><h2>生命周期</h2></div></div><div class="detail"><dl class="kv"><dt>失败上传</dt><dd>7 天</dd><dt>拒绝构建</dt><dd>30 天</dd><dt>其他测试 Build</dt><dd>90 天无活动</dd><dt>当前 Production</dt><dd>不自动删除</dd><dt>Soft Delete</dt><dd>7 天</dd></dl></div></aside></div>
+      </section>
+    </div>
+  </main>
+  <aside class="annotation" id="reviewPanel" aria-label="产品标注"><div class="anno-head"><small>产品标注</small><h2 id="annoTitle">构建审核</h2><p id="annoIntro"></p></div><div id="annoBody"></div></aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-mask hidden" id="modal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><header><h3 id="modalTitle">退回原因</h3><button class="modal-close" type="button" aria-label="关闭弹窗" title="关闭" data-action="close-modal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header><main><label for="modalText" style="display:block;margin-bottom:7px;font-size:12px;color:#5f6c7d">处理原因</label><textarea id="modalText" placeholder="填写处理原因，开发者和相关负责人将收到通知"></textarea></main><footer><button class="secondary" data-action="close-modal">取消</button><button class="primary" data-action="confirm-modal">确认提交</button></footer></section></div>
+<div class="modal-mask hidden" id="detailModal"><section class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle"><header><div class="detail-title"><div><h3 id="detailModalTitle">记录详情</h3><small id="detailModalSub"></small></div><button class="modal-close" type="button" aria-label="关闭弹窗" title="关闭" data-action="close-detail"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div></header><main id="detailModalBody"></main><footer id="detailModalFooter"></footer></section></div>
+<div class="modal-mask hidden" id="releaseModal"><section class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="releaseModalTitle"><header><div class="detail-title"><div><h3 id="releaseModalTitle">创建定时发布</h3><small id="releaseModalSub">Neon Frontier · app_2001</small></div><button class="modal-close" type="button" aria-label="关闭弹窗" title="关闭" data-action="close-release"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div></header><main><div class="modal-body-grid"><section class="modal-block full"><h4>发布前置检查</h4><div class="preflight" id="releasePreflight"></div><div class="modal-message" id="releaseCheckMessage"></div></section><div class="form-row"><label for="releaseBuild">目标 Build</label><select class="input" id="releaseBuild"><option>bld_3108 · 1.3.0 · RELEASE_READY</option></select></div><div class="form-row"><label for="releaseChannel">发布渠道</label><select class="input" id="releaseChannel"><option>Production</option></select></div><div class="form-row"><label for="releaseTime">上架时间</label><input class="input" id="releaseTime" type="datetime-local" value="2026-09-10T10:00"></div><div class="form-row"><label for="releaseTimezone">时区</label><select class="input" id="releaseTimezone"><option>UTC+8 Asia/Shanghai</option><option>UTC</option></select></div><div class="form-row full"><label for="releaseNote">发布说明</label><input class="input" id="releaseNote" value="正式发布 1.3.0，新增剧情章节与性能优化"></div></div></main><footer><button class="secondary" data-action="close-release">取消</button><button class="primary" id="confirmRelease" data-action="confirm-release">确认创建发布计划</button></footer></section></div>
+<div class="modal-mask hidden" id="workflowModal"><section class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="workflowTitle"><header><div class="detail-title"><div><h3 id="workflowTitle"></h3><small id="workflowSubtitle"></small></div><button class="modal-close" type="button" aria-label="关闭弹窗" title="关闭" data-action="close-workflow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div></header><main id="workflowBody"></main><footer id="workflowFooter"></footer></section></div>
+<script>
+const builds=[
+ {game:'Neon Frontier',app:'app_2001',build:'bld_3108',version:'1.3.0',os:'macOS Universal',size:'128.4 GB',status:'待人工确认',cls:'amber',time:'今天 09:32',publisher:'Northlake Studio'},
+ {game:'Neon Frontier',app:'app_2001',build:'bld_3096',version:'1.2.9',os:'macOS Universal',size:'127.9 GB',status:'READY_FOR_QA',cls:'green',time:'昨天 18:06',publisher:'Northlake Studio'},
+ {game:'Neon Frontier',app:'app_2001',build:'bld_3088',version:'1.2.9-rc2',os:'macOS arm64',size:'96.2 GB',status:'检查失败',cls:'red',time:'昨天 14:21',publisher:'Northlake Studio'},
+ {game:'Neon Frontier',app:'app_2001',build:'bld_3071',version:'1.2.9-rc1',os:'macOS Universal',size:'127.6 GB',status:'READY_FOR_QA',cls:'green',time:'09-01 16:44',publisher:'Northlake Studio'},
+ {game:'Neon Frontier',app:'app_2001',build:'bld_3055',version:'1.2.8',os:'macOS Universal',size:'126.9 GB',status:'READY_FOR_QA',cls:'green',time:'08-29 11:20',publisher:'Northlake Studio'},
+ {game:'Neon Frontier',app:'app_2001',build:'bld_3032',version:'1.2.8-rc1',os:'macOS arm64',size:'95.5 GB',status:'检查失败',cls:'red',time:'08-27 20:15',publisher:'Northlake Studio'},
+ {game:'Paper Orbit',app:'app_1842',build:'bld_1022',version:'2.1.4',os:'macOS arm64',size:'42.8 GB',status:'检查失败',cls:'red',time:'今天 08:45',publisher:'Blue Pine Games'},
+ {game:'Paper Orbit',app:'app_1842',build:'bld_1018',version:'2.1.3',os:'macOS arm64',size:'42.6 GB',status:'READY_FOR_QA',cls:'green',time:'昨天 09:14',publisher:'Blue Pine Games'},
+ {game:'Paper Orbit',app:'app_1842',build:'bld_1012',version:'2.1.3-rc1',os:'macOS arm64',size:'42.5 GB',status:'待人工确认',cls:'amber',time:'08-31 17:35',publisher:'Blue Pine Games'},
+ {game:'Silent Harbor',app:'app_1730',build:'bld_2880',version:'0.9.8',os:'macOS Universal',size:'76.1 GB',status:'待人工确认',cls:'amber',time:'昨天 22:18',publisher:'Elm Works'}
+];
+const annotations={
+ games:{title:'合作游戏',intro:'以游戏 APPID 为入口查看合作方、发行进度和跨模块待办。',sections:{'后台功能说明':['查看全部合作游戏和当前发行阶段','按游戏名、APPID、合作方或状态查询','进入单游戏发行工作台','发起新增游戏准入和创建 APPID'],'展示元素':['游戏名称、APPID、合作方和支持平台','当前Production版本与发行状态','Build、QA、审核、发布等待办数量'],'交互说明':['点击进入发行管理后，后续数据限定到该APPID','全局待办菜单仍可跨游戏批量处理','APPID创建后不可修改或重复使用'],'其他说明':['APPID是平台内游戏的唯一业务主键','Build、Release、SKU、DLC和权益都必须关联APPID','合作游戏列表是发行运营的总入口']}},
+ game:{title:'游戏发行工作台',intro:'单个游戏的发行总览，统一承接 Build、QA、审核、Release 和下载数据。',sections:{'后台功能说明':['查看当前游戏发行状态','进入构建、QA、上架、发布、版本和下载模块','聚合当前游戏所有待办'],'展示元素':['游戏名、APPID、合作方和合作模式','当前Production Build、系统和销售状态','各发行环节状态和待办数量'],'交互说明':['从此页进入模块时自动携带APPID筛选条件','返回合作游戏列表后可以切换其他游戏','URL应保存APPID，支持刷新和分享'],'其他说明':['页面数据模型为 Game(APPID) → Build → Release','一个APPID可以有多个Build和Release','任一Build不得脱离APPID独立存在']}},
+ build:{title:'构建审核',intro:'自动检查完成后，由运营确认构建信息和异常，决定是否进入 QA。',sections:{'后台功能说明':['查询待处理 Build','查看自动检查和包体信息','通过后进入 READY_FOR_QA','失败时填写原因并退回开发者'],'展示元素':['游戏名、APPID、Build ID、版本和系统','包体大小、上传人和处理时间','哈希、病毒、签名、公证及启动程序检查','不可变构建路径'],'交互说明':['点击表格行切换右侧详情','通过前必须确认所有必要检查完成','退回必须填写原因，通知开发者','不允许在后台替换或修改文件'],'其他说明':['构建审核不是游戏内容 QA','检查通过时文件已位于构建制品 Bucket','通过操作只改变 Build 状态，不移动文件']}},
+ qa:{title:'QA 测试',intro:'创建 Internal Release，让 QA 客户端下载与未来正式发布相同的 Build。',sections:{'后台功能说明':['创建测试任务和负责人','配置 Internal Release、测试账号和白名单','记录下载、安装、更新、启动和功能测试结果','QA通过后进入运营审核'],'展示元素':['测试任务、Build、测试范围和负责人','测试状态和问题数量','测试节点和操作日志'],'交互说明':['QA通过后状态改为 QA_APPROVED','QA退回需要问题、复现步骤和日志','修复必须创建新 Build 并重新测试'],'其他说明':['QA后台不直接下载文件','QA使用PC客户端从Cloud CDN下载','禁止覆盖已经测试的 Build']}},
+ listing:{title:'上架审核',intro:'检查发行授权、商品和已通过 QA 的 Build，为定时发布做准备。',sections:{'后台功能说明':['审核授权、SKU、DLC、地区和价格','确认 QA 结果与完整快照','通过后生成 RELEASE_READY 状态','退回商品资料或包体修改'],'展示元素':['主体与授权、销售地区、版本和 Build','QA结果、Manifest、签名和快照状态','审核项和历史记录'],'交互说明':['审核通过后开放定时发布入口','仅修改文案价格不需要重新QA','修改二进制、启动配置、签名必须新建Build'],'其他说明':['运营审核不会移动游戏包','商品审核与Build审核分别留痕','所有退回原因需要通知开发者']}},
+ schedule:{title:'定时发布',intro:'绑定所选游戏的 RELEASE_READY Build，设置 Production 生效时间。',sections:{'后台功能说明':['选择游戏和该APPID下的目标Build','设置Channel、系统、架构、时间和时区','创建或取消SCHEDULED Release','查看该游戏完整发布历史'],'展示元素':['APPID、Build状态、当前Production和previous release','上架时间、时区、渠道和说明','待执行发布计划与历史事件'],'交互说明':['选择游戏后只加载该APPID的RELEASE_READY Build','ACTIVE前允许取消，生效后使用暂停/回滚','发布、取消、暂停和回滚均写入游戏发布历史'],'其他说明':['发布历史跟随APPID，不跟随某一张运营任务单','到点只原子切换Production指针，不移动包体','任务失败时保持原Production版本']}},
+ versions:{title:'版本管理',intro:'管理当前正式版本、暂停和回滚，文件始终保持不可变。',sections:{'后台功能说明':['查看当前和历史 Production Release','暂停问题版本的新下载授权','选择上一稳定 Build 回滚','查看完整快照和版本记录'],'展示元素':['Active Build、版本、发布时间和状态','历史Build、快照大小和回滚入口','暂停/回滚操作记录'],'交互说明':['暂停需要填写原因和影响范围','回滚前检查历史Manifest和Chunk完整','回滚后Production指针指向旧Build'],'其他说明':['暂停不删除Cloud Storage对象','回滚不把旧包复制回正式文件夹','已经签发的2小时授权可能短期继续有效']}},
+ monitor:{title:'下载监控',intro:'观察全球下载质量，重点关注美国和俄罗斯。',sections:{'后台功能说明':['查看成功率、速度、命中率和回滚率','按游戏、Build、国家和时间筛选','定位403、404、5xx和回源异常','导出下载和成本数据'],'展示元素':['全球指标、重点区域速度条','CDN命中和Cloud Storage回源','授权过期、哈希失败和回滚异常'],'交互说明':['点击异常进入对应Build或地区明细','筛选条件影响全部图表和表格','严重异常可跳转版本管理执行暂停'],'其他说明':['俄罗斯下载需使用真实用户数据判断','限速属于客户端能力，不在此处配置','CDN日志不保存完整签名URL和Token']}},
+ storage:{title:'存储管理',intro:'运营只读查看 Bucket、对象路径和生命周期，危险操作由运维审批。',sections:{'后台功能说明':['查看三个生产Bucket及容量','查看Build路径、Manifest和Chunk引用','查看生命周期和清理计划','导出存储与成本报表'],'展示元素':['上传、构建制品和公共发行物Bucket','APPID/Build ID不可变路径','快照、Manifest、签名和Chunk','测试包和历史版本保留规则'],'交互说明':['运营不能移动、覆盖或直接删除文件','删除Build前必须检查Chunk引用','当前Production和上一稳定版本不可自动删除'],'其他说明':['第一期日志使用Cloud Logging，可按需归档','Internal/Beta/Production不是三个Bucket','上传待检查文件不能接CDN']}}
+};
+let selectedBuild=0,modalAction='';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function closeSelects(except){$$('.selectx.open').forEach(x=>{if(x!==except){x.classList.remove('open');x.querySelector('.selectx-trigger').setAttribute('aria-expanded','false')}})}
+function enhanceSelect(select,index){
+ if(select.classList.contains('business-select'))return;
+ if(select.dataset.enhanced)return;select.dataset.enhanced='true';select.classList.add('native-select-hidden');
+ const root=document.createElement('div');root.className='selectx';
+ const trigger=document.createElement('button');trigger.type='button';trigger.className='selectx-trigger';trigger.setAttribute('aria-haspopup','listbox');trigger.setAttribute('aria-expanded','false');trigger.innerHTML=`<span></span><i class="selectx-arrow" aria-hidden="true"></i>`;
+ const menu=document.createElement('div');menu.className='selectx-menu';menu.setAttribute('role','listbox');menu.id=`selectx-menu-${index}`;trigger.setAttribute('aria-controls',menu.id);
+ [...select.options].forEach((option,i)=>{const item=document.createElement('button');item.type='button';item.className='selectx-option';item.setAttribute('role','option');item.dataset.value=option.value;item.textContent=option.textContent;item.setAttribute('aria-selected',String(option.selected));item.onclick=()=>{select.selectedIndex=i;trigger.querySelector('span').textContent=option.textContent;menu.querySelectorAll('.selectx-option').forEach((o,j)=>o.setAttribute('aria-selected',String(j===i)));root.classList.remove('open');trigger.setAttribute('aria-expanded','false');select.dispatchEvent(new Event('change',{bubbles:true}));trigger.focus()};menu.appendChild(item)});
+ trigger.querySelector('span').textContent=select.options[select.selectedIndex]?.textContent||'请选择';
+ trigger.onclick=e=>{e.stopPropagation();const opening=!root.classList.contains('open');closeSelects(root);root.classList.toggle('open',opening);trigger.setAttribute('aria-expanded',String(opening));if(opening)menu.querySelector('[aria-selected="true"]')?.focus()};
+ root.append(trigger,menu);select.insertAdjacentElement('afterend',root);
+}
+function closeGamePickers(except){$$('.game-picker.open').forEach(x=>{if(x!==except)x.classList.remove('open')})}
+function enhanceGameSearch(select,index){
+ if(select.dataset.enhanced)return;
+ select.dataset.enhanced='game-search';select.classList.add('native-select-hidden');select.tabIndex=-1;select.setAttribute('aria-hidden','true');
+ const options=[...select.options].filter(o=>o.value).map(o=>({value:o.value,label:o.textContent,name:o.textContent.split(' · ')[0]}));
+ const root=document.createElement('div');root.className='game-picker';
+ const input=document.createElement('input');input.className='input game-picker-input';input.type='search';input.autocomplete='off';input.placeholder='输入游戏名称或 APPID';input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-label','搜索并选择游戏');
+ const menu=document.createElement('div');menu.className='game-picker-menu';menu.id='game-picker-menu-'+index;menu.setAttribute('role','listbox');input.setAttribute('aria-controls',menu.id);
+ const clear=document.createElement('button');clear.type='button';clear.className='game-picker-clear';clear.setAttribute('aria-label','清除游戏输入');clear.title='清除';clear.textContent='×';
+ const close=()=>{root.classList.remove('open');input.setAttribute('aria-expanded','false')};
+ const choose=o=>{select.value=o.value;input.value=o.label;select.dispatchEvent(new Event('change',{bubbles:true}));input.focus();close()};
+ const render=()=>{const key=input.value.trim().toLowerCase();menu.replaceChildren();if(!key){close();return}const matches=options.filter(o=>o.label.toLowerCase().includes(key)||o.value.toLowerCase().includes(key)).slice(0,20);if(!matches.length){close();return}matches.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='game-picker-option';b.setAttribute('role','option');b.textContent=o.label;b.onclick=e=>{e.stopPropagation();choose(o)};menu.appendChild(b)});root.classList.add('open');input.setAttribute('aria-expanded','true')};
+ input.value=options.find(o=>o.value===select.value)?.label||'';close();
+ input.onfocus=()=>{closeGamePickers(root);if(!select.value)render()};
+ input.oninput=()=>{select.value='';select.dispatchEvent(new Event('change',{bubbles:true}));render()};
+ input.onkeydown=e=>{if(e.key==='Escape')close();if(e.key==='ArrowDown'){e.preventDefault();menu.querySelector('button')?.focus()}if(e.key==='Enter'){e.preventDefault();if(select.value){executeQuery(select.dataset.filterPage);close()}else menu.querySelector('button')?.click()}};
+ clear.onclick=e=>{e.stopPropagation();input.value='';select.value='';select.dispatchEvent(new Event('change',{bubbles:true}));input.focus();close()};
+ root.append(input,clear,menu);select.insertAdjacentElement('afterend',root);
+}
+function enhanceGameSearches(){$$('select[id$="GameFilter"]').forEach((select,index)=>{enhanceGameSearch(select,index);const input=select.nextElementSibling?.querySelector('.game-picker-input');if(input){input.id=`${select.id}SearchInput`;select.closest('.scope-field')?.querySelector('label')?.setAttribute('for',input.id)}});$$('.game-picker').forEach(p=>p.onclick=e=>e.stopPropagation())}
+function enhanceSelects(){$$('select').forEach(enhanceSelect)}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1800)}
+function renderAnno(k){renderReviewNotes(k)}
+function route(k){if(k==='qa')k='build';$$('.nav-btn,.nav-root-btn').forEach(b=>{const active=b.dataset.page===k||(k==='game'&&b.dataset.page==='games');b.classList.toggle('active',active);active?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});$$('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${k}`));const isGameEntry=k==='games'||k==='game';$('#crumbRoot').textContent=isGameEntry?'合作游戏':'游戏包管理';$('#crumb').textContent=k==='games'?'游戏列表':k==='game'?'Neon Frontier · app_2001':annotations[k].title;renderAnno(k);const h=$(`#page-${k} h1`);if(h){h.tabIndex=-1;h.focus()}closeSelects();closeGamePickers()}
+function selectBuild(row){selectedBuild=Number(row.dataset.select);renderBuilds();renderBuildDetail()}
+function renderBuilds(){if(packageReady){renderPackages();return}const tb=$('#buildRows');if(!tb)return;const {app,q,state,gameText}=appliedBuildQuery;const unique=new Map();builds.forEach((b,i)=>{if(!unique.has(buildIdentity(b)))unique.set(buildIdentity(b),{...b,i})});const list=[...unique.values()].filter(b=>(!app||b.app===app)&&(!gameText||`${b.game} ${b.app}`.toLowerCase().includes(gameText))&&(!state||b.status===state)&&(!q||`${b.game} ${b.app} ${b.build} ${b.version}`.toLowerCase().includes(q)));tb.innerHTML=list.length?list.map(b=>`<tr data-app="${b.app}" data-build="${b.build}" data-state="${b.status}"><td><b>${b.game}</b><br><small>${b.app}</small></td><td>${b.build}</td><td>${b.version}</td><td>${b.os}</td><td>${b.size}</td><td><span class="tag ${b.cls}">${b.status}</span></td><td><button class="ghost" data-detail="build" data-index="${b.i}">详情</button></td></tr>`).join(''):`<tr class="empty-row"><td colspan="7">没有符合条件的构建记录</td></tr>`;bindDetails(tb);renderReviewNotes()}
+function renderBuildDetail(){const b=builds[selectedBuild];$('#buildDetail').innerHTML=`<h3>${b.game}</h3><dl class="kv"><dt>Build ID</dt><dd>${b.build}</dd><dt>发行商</dt><dd>${b.publisher}</dd><dt>文件路径</dt><dd>games/${b.app}/builds/${b.build}/macos/</dd></dl><div class="check-list"><div class="check"><span>✓</span><strong>Manifest 与 Chunk</strong><em>完整</em></div><div class="check"><span>✓</span><strong>病毒扫描</strong><em>通过</em></div><div class="check"><span>✓</span><strong>macOS 签名与公证</strong><em>通过</em></div><div class="check"><span>✓</span><strong>启动程序</strong><em>已识别</em></div></div><div style="display:flex;gap:8px;margin-top:15px"><button class="danger" data-action="reject">退回</button><button class="primary" data-action="approve-build" ${b.cls==='red'?'disabled':''}>通过并进入QA</button></div>`;bindActions($('#buildDetail'))}
+function openModal(title,action){modalAction=action;$('#modalTitle').textContent=title;$('#modalText').value='';$('#modal').classList.remove('hidden');renderReviewNotes();setTimeout(()=>$('#modalText').focus(),0)}
+function closeModal(){$('#modal').classList.add('hidden');renderReviewNotes()}
+function closeDetail(){$('#detailModal').classList.add('hidden');renderReviewNotes()}
+function closeRelease(){$('#releaseModal').classList.add('hidden');renderReviewNotes()}
+function bindActions(root=document){root.querySelectorAll('[data-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.toast));root.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>handleAction(b.dataset.action,b))}
+function bindDetails(root=document){root.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>b.dataset.detail==='record'?openRecordDetail(b):openDetail(b.dataset.detail,b))}
+function openRecordDetail(button){const row=button.closest('tr'),headers=[...row.closest('table').querySelectorAll('thead th')];$('#detailModalTitle').textContent='历史记录详情';$('#detailModalSub').textContent=row.dataset.app;$('#detailModalBody').replaceChildren();const dl=document.createElement('dl');dl.className='kv';[...row.cells].slice(0,-1).forEach((cell,i)=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=headers[i]?.textContent||'记录';dd.textContent=cell.textContent;dl.append(dt,dd)});$('#detailModalBody').appendChild(dl);$('#detailModalFooter').innerHTML='';bindActions($('#detailModal'));$('#detailModal').classList.remove('hidden');renderReviewNotes()}
+function seedDemoRecords(){
+ const apps=['app_2001','app_1842','app_1730'];
+ const add=(body,app,state,cells)=>{const row=document.createElement('tr');row.dataset.app=app;row.dataset.state=state;cells.forEach(text=>{const td=document.createElement('td');td.textContent=text;row.appendChild(td)});const td=document.createElement('td');td.innerHTML='<button class="ghost" data-detail="record">详情</button>';row.appendChild(td);body.appendChild(row)};
+ apps.forEach((app,ai)=>{
+  const base=builds.find(b=>b.app===app);
+  for(let i=builds.filter(b=>b.app===app).length;i<8;i++)builds.push({...base,build:`bld_demo_${ai+1}_${i+1}`,version:`${ai+1}.0.${i}`,status:i%3===0?'检查失败':'READY_FOR_QA',cls:i%3===0?'red':'green',time:`08-${String(28-i).padStart(2,'0')} 10:20`});
+  const history=builds.filter(b=>b.app===app);
+  for(const [id,type] of [['qaRows','QA'],['listingRows','REV']]){const body=$('#'+id);for(let i=body.querySelectorAll(`[data-app="${app}"]`).length;i<8;i++){const b=history[i],state=i%3===0?'已退回':'已通过',record=`${type}-DEMO-${ai+1}-${String(i+1).padStart(3,'0')}`;add(body,app,state,type==='QA'?[`${base.game} · ${app}`,record,b.build,['完整回归','增量更新 / 回滚','启动 / 验权'][i%3],['Lin','Mei','Chen'][i%3],state]:[`${base.game} · ${app}`,record,'游戏本体',b.build,state==='已通过'?'已通过':'未通过',state])}}
+  const releases=$('#releaseHistoryRows');for(let i=releases.querySelectorAll(`[data-app="${app}"]`).length;i<8;i++)add(releases,app,'成功',[`2026-08-${String(28-i).padStart(2,'0')} 10:00 UTC`,`${history[i].version} · ${history[i].build}`,'历史发布','ops.mei','成功']);
+  const versions=$('#versionRows');for(let i=versions.querySelectorAll(`[data-app="${app}"]`).length;i<8;i++)add(versions,app,app==='app_1730'?'测试版本':'历史版本',[history[i].version,history[i].build,`2026-08-${String(28-i).padStart(2,'0')}`,history[i].size,app==='app_1730'?'测试版本':'历史版本']);
+ });
+ // This unlaunched game only has test-channel history; do not imply a Production release.
+ $$('#releaseHistoryRows tr[data-app="app_1730"]').forEach(r=>r.cells[2].textContent='Internal 测试发布');
+ const versionState=$('#versionStateFilter');versionState.add(new Option('测试版本','测试版本'));
+ const note=document.createElement('p');note.className='demo-data-note';note.textContent='演示数据：每个游戏含 8 条构建、测试、审核、发布历史及版本记录，操作不连接生产系统。';$('.content').prepend(note);
+}
+function enhanceTextClears(){
+ $$('input:not([type="datetime-local"]):not([type="hidden"])').filter(i=>!i.classList.contains('game-picker-input')).forEach(input=>{const wrap=document.createElement('div');wrap.className='clearable-input';input.before(wrap);wrap.appendChild(input);const button=document.createElement('button');button.type='button';button.className='text-clear';button.setAttribute('aria-label','清除输入内容');button.textContent='×';wrap.appendChild(button);const sync=()=>button.hidden=!input.value;input.addEventListener('input',sync);button.onclick=()=>{input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()};sync()});
+}
+function detailChecks(items){return `<div class="check-list">${items.map(x=>`<div class="check"><span>${x[0]}</span><strong>${x[1]}</strong><em>${x[2]}</em></div>`).join('')}</div>`}
+function openDetail(kind,el){let title='记录详情',sub='',body='',footer='';if(kind==='build'){selectedBuild=Number(el.dataset.index);const b=builds[selectedBuild];title=`${b.game} · ${b.build}`;sub=`${b.app} · ${b.version} · ${b.status}`;body=`<div class="modal-body-grid"><section class="modal-block"><h4>构建信息</h4><dl class="kv"><dt>APPID</dt><dd>${b.app}</dd><dt>Build ID</dt><dd>${b.build}</dd><dt>系统</dt><dd>${b.os}</dd><dt>包体</dt><dd>${b.size}</dd><dt>提交时间</dt><dd>${b.time}</dd></dl></section><section class="modal-block"><h4>不可变制品</h4><dl class="kv"><dt>发行商</dt><dd>${b.publisher}</dd><dt>文件路径</dt><dd>games/${b.app}/builds/${b.build}/macos/</dd></dl></section><section class="modal-block full"><h4>自动检查</h4>${detailChecks([['✓','Manifest 与 Chunk','完整'],['✓','病毒扫描','通过'],['✓','macOS 签名与公证','通过'],['✓','启动程序','已识别']])}</section></div>`;footer=`<button class="danger" data-action="reject">退回</button><button class="primary" data-action="approve-build" ${b.cls==='red'?'disabled':''}>通过并进入 QA</button>`}else if(kind.startsWith('qa')){title=kind==='qa'?'Neon Frontier · QA 测试详情':'QA 测试详情';sub=kind==='qa'?'app_2001 · QA-260903-18 · bld_3108':'测试任务与报告';body=`<div class="modal-body-grid"><section class="modal-block"><h4>测试对象</h4><dl class="kv"><dt>游戏</dt><dd>${kind==='qa'?'Neon Frontier':'历史任务'}</dd><dt>关联 Build</dt><dd>${kind==='qa'?'bld_3108':'见任务列表'}</dd><dt>Internal</dt><dd>已创建</dd><dt>QA 白名单</dt><dd>已配置</dd></dl></section><section class="modal-block"><h4>测试范围</h4><dl class="kv"><dt>下载安装</dt><dd>必测</dd><dt>增量更新</dt><dd>必测</dd><dt>启动验权</dt><dd>必测</dd><dt>失败回滚</dt><dd>必测</dd></dl></section><section class="modal-block full"><h4>测试节点</h4>${detailChecks([['✓','Build 自动检查通过','READY_FOR_QA'],['✓','Internal Release 已创建','白名单可下载'],[kind==='qa'?'•':'✓','QA 执行结果',kind==='qa'?'测试中':'已结束']])}</section></div>`;if(kind==='qa')footer='<button class="danger" data-action="qa-fail">退回</button><button class="primary" data-action="qa-pass">测试通过</button>'}else if(kind.startsWith('listing')){title='上架审核详情';sub=kind==='listing'?'Neon Frontier · app_2001 · REV-260903-09':'历史审核单';body=`<div class="modal-body-grid"><section class="modal-block"><h4>游戏与商品</h4><dl class="kv"><dt>发行商</dt><dd>Northlake Studio</dd><dt>商品</dt><dd>标准版、豪华版</dd><dt>销售区域</dt><dd>美国、加拿大、欧洲、俄罗斯</dd><dt>目标 Build</dt><dd>bld_3108</dd></dl></section><section class="modal-block"><h4>审核结论</h4>${detailChecks([['✓','主体与发行资质','已核验'],['✓','商品、价格和地区','已确认'],['✓','QA 测试','已通过'],['✓','包体与完整快照','已准备']])}</section></div>`;if(kind==='listing')footer='<button class="danger" data-action="reject">退回修改</button><button class="primary" data-action="approve-listing">审核通过</button>'}else if(kind.startsWith('version')){title='正式版本详情';sub='Neon Frontier · app_2001';body=`<div class="modal-body-grid"><section class="modal-block"><h4>版本信息</h4><dl class="kv"><dt>版本</dt><dd>${kind==='version'?'1.3.0':kind==='version-stable'?'1.2.2':'1.2.1'}</dd><dt>Build ID</dt><dd>${kind==='version'?'bld_3108':kind==='version-stable'?'bld_2981':'bld_2855'}</dd><dt>渠道</dt><dd>Production</dd><dt>Manifest</dt><dd>签名有效</dd></dl></section><section class="modal-block"><h4>操作记录</h4><dl class="kv"><dt>发布时间</dt><dd>2026-09-03</dd><dt>发布人</dt><dd>ops.lin</dd><dt>文件状态</dt><dd>不可变保留</dd></dl></section></div>`;if(kind==='version-stable')footer='<button class="secondary" data-action="rollback-old">回滚至此版本</button>'}else if(kind==='release'){title='发布记录详情';sub='Neon Frontier · app_2001';body=`<div class="modal-body-grid"><section class="modal-block"><h4>发布对象</h4><dl class="kv"><dt>Build</dt><dd>bld_3108</dd><dt>渠道</dt><dd>Production</dd></dl></section><section class="modal-block"><h4>执行记录</h4><dl class="kv"><dt>执行结果</dt><dd>成功</dd><dt>审计事件</dt><dd>已记录</dd></dl></section></div>`}$('#detailModalTitle').textContent=title;$('#detailModalSub').textContent=sub;$('#detailModalBody').innerHTML=body;$('#detailModalFooter').innerHTML=footer;bindActions($('#detailModal'));$('#detailModal').classList.remove('hidden');renderReviewNotes()}
+function syncEnhancedSelect(select,label){if(!select)return;select.options[0].textContent=label;select.nextElementSibling?.querySelector('.selectx-trigger span')?.replaceChildren(label)}
+function openRelease(){const app=$('#scheduleGameFilter')?.value||'app_2001';const meta={app_2001:{game:'Neon Frontier',build:'bld_3108 · 1.3.0 · RELEASE_READY',checks:[true,true,true,true]},app_1842:{game:'Paper Orbit',build:'bld_1022 · 2.1.4',checks:[true,true,false,true]},app_1730:{game:'Silent Harbor',build:'bld_2880 · 0.9.8',checks:[true,false,false,false]}}[app];const rows=[['包体准备完成','Manifest、Chunk、签名和完整快照可用'],['QA 测试通过','目标 Build 已获得 QA_APPROVED'],['游戏发行资质通过','主体、授权和销售区域审核有效'],['商品上架审核通过','SKU、价格、地区和退款说明已通过']];const ready=meta.checks.every(Boolean);$('#releaseModalSub').textContent=`${meta.game} · ${app}`;$('#releasePreflight').innerHTML=rows.map((r,i)=>`<div class="preflight-item ${meta.checks[i]?'':'fail'}"><span class="preflight-icon">${meta.checks[i]?'✓':'!'}</span><div><b>${r[0]}</b><small>${meta.checks[i]?r[1]:'未满足：请先完成对应审核'}</small></div></div>`).join('');const msg=$('#releaseCheckMessage');msg.textContent=ready?'全部前置条件已满足，可以设置发布时间并创建发布计划。':'存在未通过项，本次发布被阻断；完成对应流程后系统将自动重新检查。';msg.className=`modal-message ${ready?'':'fail'}`;$('#confirmRelease').disabled=!ready;syncEnhancedSelect($('#releaseBuild'),meta.build);$('#releaseModal').classList.remove('hidden');renderReviewNotes()}
+function prepareStaticRows(){
+ const qaBody=$('#qaRows');if(qaBody)qaBody.insertAdjacentHTML('beforeend','<tr data-app="app_2001" data-state="已通过"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>QA-260902-15</td><td>bld_3096</td><td>完整回归</td><td>Mei</td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="qa-done">详情</button></td></tr><tr data-app="app_2001" data-state="已退回"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>QA-260901-12</td><td>bld_3088</td><td>启动 / 验权</td><td>Lin</td><td><span class="tag red">已退回</span></td><td><button class="ghost" data-detail="qa-failed">详情</button></td></tr><tr data-app="app_2001" data-state="已通过"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>QA-260831-08</td><td>bld_3071</td><td>增量更新 / 回滚</td><td>Chen</td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="qa-done">详情</button></td></tr><tr data-app="app_2001" data-state="已通过"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>QA-260829-06</td><td>bld_3055</td><td>安装 / 启动</td><td>Mei</td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="qa-done">详情</button></td></tr>');
+ const listingBody=$('#listingRows');if(listingBody)listingBody.insertAdjacentHTML('beforeend','<tr data-app="app_2001" data-state="已通过"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>REV-260901-07</td><td>DLC 剧情包</td><td>bld_3096</td><td><span class="tag green">已通过</span></td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="listing-done">详情</button></td></tr><tr data-app="app_2001" data-state="已退回"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>REV-260830-12</td><td>豪华版</td><td>bld_3088</td><td><span class="tag red">未通过</span></td><td><span class="tag red">已退回</span></td><td><button class="ghost" data-detail="listing-failed">详情</button></td></tr><tr data-app="app_2001" data-state="已通过"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>REV-260828-03</td><td>游戏本体</td><td>bld_3071</td><td><span class="tag green">已通过</span></td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="listing-done">详情</button></td></tr><tr data-app="app_2001" data-state="已通过"><td><b>Neon Frontier</b><br><small>app_2001</small></td><td>REV-260825-18</td><td>游戏本体</td><td>bld_3055</td><td><span class="tag green">已通过</span></td><td><span class="tag green">已通过</span></td><td><button class="ghost" data-detail="listing-done">详情</button></td></tr>');
+ $('#scheduleRows')?.insertAdjacentHTML('beforeend','<tr><td>app_2001</td><td>bld_3096</td><td>2026-09-12 18:00 UTC+8</td><td>Beta</td><td><span class="tag blue">SCHEDULED</span></td><td><button class="ghost" data-action="cancel-release">取消</button></td></tr><tr><td>app_2001</td><td>bld_3071</td><td>2026-09-15 09:00 UTC+8</td><td>Production</td><td><span class="tag blue">SCHEDULED</span></td><td><button class="ghost" data-action="cancel-release">取消</button></td></tr>');
+ const scheduleRows=$$('#scheduleRows tr'),scheduleHead=$('#scheduleRows')?.closest('table')?.querySelector('thead tr');if(scheduleHead&&!scheduleHead.innerText.includes('Release ID'))scheduleHead.insertAdjacentHTML('afterbegin','<th>Release ID</th>');scheduleRows.forEach((r,i)=>{r.dataset.app='app_2001';r.dataset.state='SCHEDULED';if(r.children.length===6)r.insertAdjacentHTML('afterbegin',`<td>REL-260903-${12+i}</td>`);const cell=r.lastElementChild;if(cell&&!cell.querySelector('[data-detail]'))cell.insertAdjacentHTML('afterbegin','<button class="ghost" data-detail="release">详情</button>')});
+ const historyBody=$$('#page-schedule table tbody')[1];if(historyBody){historyBody.id='releaseHistoryRows';historyBody.querySelectorAll('tr').forEach(r=>{r.dataset.app='app_2001';r.dataset.state=r.innerText.includes('回滚')?'已完成':'成功';const cell=document.createElement('td');cell.innerHTML='<button class="ghost" data-detail="release">详情</button>';r.appendChild(cell)});const head=historyBody.closest('table').querySelector('thead tr');if(head&&!head.innerText.includes('操作'))head.insertAdjacentHTML('beforeend','<th>操作</th>');historyBody.insertAdjacentHTML('beforeend','<tr data-app="app_1842" data-state="成功"><td>2026-09-01 09:00 UTC</td><td>2.1.3 · bld_1008</td><td>正式发布</td><td>ops.chen</td><td><span class="tag green">成功</span></td><td><button class="ghost" data-detail="release">详情</button></td></tr>')}
+ const versionBody=$('#page-versions table tbody');if(versionBody){versionBody.id='versionRows';versionBody.querySelectorAll('tr').forEach((r,i)=>{r.dataset.app='app_2001';r.dataset.state=r.querySelector('.tag')?.textContent||'';r.lastElementChild.innerHTML=`<button class="ghost" data-detail="${i===0?'version':i===1?'version-stable':'version-old'}">详情</button>`});versionBody.insertAdjacentHTML('beforeend','<tr data-app="app_2001" data-state="历史版本"><td>1.2.0</td><td>bld_2714</td><td>2026-07-18</td><td>124.8 GB</td><td><span class="tag gray">历史版本</span></td><td><button class="ghost" data-detail="version-old">详情</button></td></tr><tr data-app="app_2001" data-state="历史版本"><td>1.1.5</td><td>bld_2598</td><td>2026-06-26</td><td>121.3 GB</td><td><span class="tag gray">历史版本</span></td><td><button class="ghost" data-detail="version-old">详情</button></td></tr><tr data-app="app_1842" data-state="当前正式版"><td>2.1.3</td><td>bld_1008</td><td>2026-09-01</td><td>42.6 GB</td><td><span class="tag green">当前正式版</span></td><td><button class="ghost" data-detail="version">详情</button></td></tr>')}
+ bindDetails();
+}
+const filterDefs={qa:{game:'#qaGameFilter',search:'#qaSearch',state:'#qaStateFilter',rows:'#qaRows tr'},listing:{game:'#listingGameFilter',search:'#listingSearch',state:'#listingStateFilter',rows:'#listingRows tr'},schedule:{game:'#scheduleGameFilter',search:'#scheduleSearch',state:'#scheduleStateFilter',rows:'#scheduleRows tr, #releaseHistoryRows tr'},versions:{game:'#versionGameFilter',search:'#versionSearch',state:'#versionStateFilter',rows:'#versionRows tr'}};
+function applyStaticFilter(page){const d=filterDefs[page];if(!d)return;const app=$(d.game)?.value||'',q=($(d.search)?.value||'').trim().toLowerCase(),state=$(d.state)?.value||'';$$(`${d.rows.split(',').map(s=>`${s.trim()}[data-filter-empty]`).join(',')}`).forEach(r=>r.remove());const rows=$$(d.rows);rows.forEach(r=>{const ok=!!app&&r.dataset.app===app&&(!state||r.dataset.state===state)&&(!q||r.innerText.toLowerCase().includes(q));r.hidden=!ok});[...new Set(rows.map(r=>r.parentElement))].forEach(body=>{const records=[...body.children].filter(r=>!r.dataset.filterEmpty);if(records.length&&!records.some(r=>!r.hidden)){const row=document.createElement('tr');row.dataset.filterEmpty='true';row.className='empty-row';row.innerHTML=`<td colspan="${body.closest('table').querySelectorAll('thead th').length}">${app?'没有符合当前条件的记录':'请先搜索并选择游戏'}</td>`;body.appendChild(row)}});if(page==='versions')updateVersionSummary(app);}
+function updateVersionSummary(app){const data={app_2001:['Neon Frontier · 1.3.0','Production → bld_3108 · 2026-09-03 10:00 UTC','ACTIVE','green'],app_1842:['Paper Orbit · 2.1.3','Production → bld_1008 · 2026-09-01 09:00 UTC','ACTIVE','green'],app_1730:['Silent Harbor · 尚未发布','Production 尚未创建','NOT_RELEASED','gray']}[app]||['请先搜索并选择游戏','选中游戏后展示当前 Production','NO_GAME','gray'];$('#currentVersion').textContent=data[0];$('#currentBuild').textContent=data[1];$('#releaseTag').textContent=data[2];$('#releaseTag').className=`tag ${data[3]}`}
+function updateReleaseAvailability(){const button=$('[data-action="create-release"]');if(button){button.disabled=false;button.title=''}}
+function updateContextActions(page){const selected=$(`#${page==='versions'?'version':page}GameFilter`)?.value;if(page==='qa'){const b=$('#page-qa .page-head .primary');if(b){b.disabled=false;b.title=''}}if(page==='versions'){$$('#page-versions .release-actions button').forEach(b=>{b.disabled=!selected;b.title=b.disabled?'请先搜索并选择游戏':''})}}
+function wirePageFilters(){$$('select[id$="GameFilter"]').forEach(el=>{el.value='';el.addEventListener('change',()=>{if(!el.value&&el.dataset.filterPage!=='build'){applyStaticFilter(el.dataset.filterPage)}if(el.dataset.filterPage==='schedule')updateReleaseAvailability();updateContextActions(el.dataset.filterPage)})});Object.keys(filterDefs).forEach(applyStaticFilter);updateReleaseAvailability();['qa','versions'].forEach(updateContextActions)}
+function wireGameListFilter(){const panel=$('#page-games .panel'),search=panel?.querySelector('input'),state=panel?.querySelector('select'),rows=panel?[...panel.querySelectorAll('tbody tr')]:[];if(!search||!state)return;rows.forEach(r=>{r.dataset.state=r.querySelector('td:nth-child(5)')?.innerText.trim()||''});const run=()=>{const q=search.value.trim().toLowerCase(),s=state.value;rows.forEach(r=>{const running=['待发布','测试中'].includes(r.dataset.state);r.hidden=!!q&&!r.innerText.toLowerCase().includes(q)||!!s&&!(s==='发行中'?running:r.dataset.state===s)})};search.addEventListener('input',run);state.addEventListener('change',run)}
+function applyFilterCopy(){const labels={build:['构建记录','Build ID / 版本号'],qa:['测试任务','QA 任务 ID / Build ID'],listing:['上架审核单','审核单 ID / Build ID'],schedule:['发布记录','Release ID / Build ID'],versions:['版本记录','版本号 / Build ID']};Object.entries(labels).forEach(([p,c])=>{const game=$(`#${p==='versions'?'version':p}GameFilter`),search=$(`#${p==='versions'?'version':p}Search`);if(game){game.closest('.scope-field').querySelector('label').textContent='搜索并选择游戏';if(!game.parentElement.querySelector('.game-picker-hint'))game.insertAdjacentHTML('afterend','<small class="game-picker-hint">支持游戏名称模糊搜索 / APPID 精确搜索</small>')}if(search){search.closest('.scope-field').querySelector('label').textContent=c[0];search.placeholder=c[1]}})}
+function resolveGameSelection(page){const game=$(`#${page==='versions'?'version':page}GameFilter`);if(!game)return false;if(game.value)return true;const input=game.nextElementSibling?.querySelector('.game-picker-input'),key=(input?.value||'').toLowerCase().replace(/[\s·._-]/g,'');if(!key)return false;const matches=[...game.options].filter(o=>o.value).filter(o=>`${o.textContent}${o.value}`.toLowerCase().replace(/[\s·._-]/g,'').includes(key));if(matches.length===1){game.value=matches[0].value;input.value=matches[0].textContent;game.dispatchEvent(new Event('change',{bubbles:true}));closeGamePickers();return true}return false}
+function executeQuery(page){if(page==='build'){applyBuildQuery();return}const game=$(`#${page==='versions'?'version':page}GameFilter`);if(!resolveGameSelection(page)){toast((game?.nextElementSibling?.querySelector('.game-picker-input')?.value||'').trim()?'请从搜索结果中选择具体游戏':'请先搜索并选择游戏');game?.nextElementSibling?.querySelector('.game-picker-input')?.focus();return}page==='build'?renderBuilds():applyStaticFilter(page)}
+function resetQuery(page){const game=$(`#${page==='versions'?'version':page}GameFilter`),search=$(`#${page==='versions'?'version':page}Search`),state=$(`#${page==='versions'?'version':page}StateFilter`);if(game){game.value='';const input=game.nextElementSibling?.querySelector('.game-picker-input');if(input)input.value=''}if(search)search.value='';if(state){state.selectedIndex=0;const trigger=state.nextElementSibling?.querySelector('.selectx-trigger span');if(trigger)trigger.textContent=state.options[0].textContent}page==='build'?applyBuildQuery():applyStaticFilter(page);if(page==='schedule')updateReleaseAvailability();updateContextActions(page)}
+function createQueryActions(){['build','qa','listing','versions'].forEach(page=>{const bar=$(`#page-${page} .scope-bar`);if(!bar||bar.querySelector('.scope-actions'))return;const actions=document.createElement('div');actions.className='scope-actions';actions.innerHTML=`<button class="secondary" type="button">重置</button><button class="primary" type="button">查询</button>`;const [reset,query]=actions.querySelectorAll('button');reset.onclick=()=>resetQuery(page);query.onclick=()=>executeQuery(page);bar.appendChild(actions);$(`#${page==='versions'?'version':page}Search`)?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();executeQuery(page)}})})}
+function wirePackageMenu(){const toggle=$('#packageMenuToggle'),menu=$('#packageSubmenu');if(!toggle||!menu)return;toggle.onclick=()=>{const expanded=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!expanded));menu.classList.toggle('collapsed',expanded)}}
+function action(a,el){if(a==='enter-game'){route('game')}else if(a==='reject'){openModal('填写退回原因','reject-confirm')}else if(a==='approve-build'){builds[selectedBuild].status='READY_FOR_QA';builds[selectedBuild].cls='green';renderBuilds();renderBuildDetail();toast('构建已进入 READY_FOR_QA')}else if(a==='qa-pass'){$('#qaStatus').textContent='已通过';$('#qaStatus').className='tag green';toast('QA 已通过，进入上架审核')}else if(a==='qa-fail'){openModal('填写 QA 问题','qa-fail-confirm')}else if(a==='approve-listing'){$('#listingStatus').textContent='RELEASE_READY';$('#listingStatus').className='tag green';toast('审核通过，可以创建定时发布')}else if(a==='create-release'){const t=$('#scheduleTime').value.replace('T',' ');$('#scheduleRows').insertAdjacentHTML('afterbegin',`<tr><td>app_2001</td><td>bld_3108</td><td>${t}</td><td>Production</td><td><span class="tag blue">SCHEDULED</span></td><td><button class="ghost" data-action="cancel-release">取消</button></td></tr>`);bindActions($('#scheduleRows'));toast('定时发布已创建')}else if(a==='cancel-release'){const row=el.closest('tr');row.querySelector('.tag').textContent='CANCELLED';row.querySelector('.tag').className='tag gray';el.disabled=true;toast('已取消定时发布')}else if(a==='pause'){openModal('填写暂停原因','pause-confirm')}else if(a==='rollback'||a==='rollback-old'){openModal('确认回滚至 1.2.2 · bld_2981','rollback-confirm')}else if(a==='close-modal'){closeModal()}else if(a==='confirm-modal'){const reason=$('#modalText').value.trim();if(!reason){toast('请填写处理原因');return}closeModal();if(modalAction==='rollback-confirm'){$('#currentVersion').textContent='Neon Frontier · 1.2.2';$('#currentBuild').textContent='Production → bld_2981 · 已回滚';$('#releaseTag').textContent='ROLLED BACK';$('#releaseTag').className='tag amber';toast('已回滚至 1.2.2')}else if(modalAction==='pause-confirm'){$('#releaseTag').textContent='PAUSED';$('#releaseTag').className='tag red';toast('已暂停签发新的下载授权')}else{toast('已提交处理结果')}}}
+function handleAction(a,el){if(handleBusinessAction(a,el))return;if(a==='enter-game'){route('game')}else if(a==='reject'){closeDetail();openModal('填写退回原因','reject-confirm')}else if(a==='approve-build'){builds[selectedBuild].status='READY_FOR_QA';builds[selectedBuild].cls='green';closeDetail();renderBuilds();toast('构建已进入 READY_FOR_QA')}else if(a==='qa-pass'){const row=$('#qaStatus')?.closest('tr');if(row){row.dataset.state='已通过';$('#qaStatus').textContent='已通过';$('#qaStatus').className='tag green'}closeDetail();toast('QA 已通过，已进入上架审核')}else if(a==='qa-fail'){closeDetail();openModal('填写 QA 问题','qa-fail-confirm')}else if(a==='approve-listing'){const row=$('#listingRows tr[data-app="app_2001"]');if(row){row.dataset.state='已通过';const tags=row.querySelectorAll('.tag');const tag=tags[tags.length-1];tag.textContent='已通过';tag.className='tag green'}closeDetail();toast('审核通过，该 Build 已满足发布资质')}else if(a==='create-release'){openRelease()}else if(a==='confirm-release'){const app=$('#scheduleGameFilter').value,t=$('#releaseTime').value.replace('T',' '),build=app==='app_2001'?'bld_3108':app==='app_1842'?'bld_1022':'bld_2880';$('#scheduleRows').insertAdjacentHTML('afterbegin',`<tr data-app="${app}" data-state="SCHEDULED"><td>${app}</td><td>${build}</td><td>${t}</td><td>Production</td><td><span class="tag blue">SCHEDULED</span></td><td><button class="ghost" data-action="cancel-release">取消</button></td></tr>`);bindActions($('#scheduleRows'));closeRelease();applyStaticFilter('schedule');toast('定时发布计划已创建')}else if(a==='cancel-release'){const row=el.closest('tr');row.dataset.state='CANCELLED';row.querySelector('.tag').textContent='CANCELLED';row.querySelector('.tag').className='tag gray';el.disabled=true;toast('已取消定时发布')}else if(a==='pause'){openModal('填写暂停原因','pause-confirm')}else if(a==='rollback'||a==='rollback-old'){closeDetail();openModal('确认回滚至上一稳定版本','rollback-confirm')}else if(a==='close-modal'){closeModal()}else if(a==='close-detail'){closeDetail()}else if(a==='close-release'){closeRelease()}else if(a==='confirm-modal'){const reason=$('#modalText').value.trim();if(!reason){toast('请填写处理原因');return}closeModal();if(modalAction==='rollback-confirm'){$('#currentVersion').textContent='Neon Frontier · 1.2.2';$('#currentBuild').textContent='Production → bld_2981 · 已回滚';$('#releaseTag').textContent='ROLLED BACK';$('#releaseTag').className='tag amber';toast('已回滚至上一稳定版本')}else if(modalAction==='pause-confirm'){$('#releaseTag').textContent='PAUSED';$('#releaseTag').className='tag red';toast('已暂停签发新的下载授权')}else{toast('已提交处理结果')}}}
+
+// Shared review definitions: repeated fields reuse one note and one number per view.
+let reviewReady=false,reviewPage='build';
+const removedReviewCopy=new Map();
+const fieldNotes={
+ '游戏 / APPID':['game','游戏与 APPID','APPID 是游戏的唯一归属标识。构建、测试任务、审核单、发布记录和版本都必须归属同一游戏。'],
+ 'APPID':['game','游戏与 APPID','APPID 是游戏的唯一归属标识。构建、测试任务、审核单、发布记录和版本都必须归属同一游戏。'],
+ '游戏':['game','游戏与 APPID','APPID 是游戏的唯一归属标识。构建、测试任务、审核单、发布记录和版本都必须归属同一游戏。'],
+ 'Build ID':['build','Build ID','一次构建的唯一标识。已提交的构建制品不可覆盖；修改二进制、启动配置或签名时须创建新 Build。'],
+ 'Build':['build','Build ID','一次构建的唯一标识。已提交的构建制品不可覆盖；修改二进制、启动配置或签名时须创建新 Build。'],
+ '目标 Build':['build','Build ID','一次构建的唯一标识。已提交的构建制品不可覆盖；修改二进制、启动配置或签名时须创建新 Build。'],
+ '关联 Build':['build','Build ID','一次构建的唯一标识。已提交的构建制品不可覆盖；修改二进制、启动配置或签名时须创建新 Build。'],
+ '版本':['version','版本号','面向运营和玩家展示的版本标签；定位具体制品以 Build ID 为准。'],
+ '版本 / Build':['version-build','版本 / Build','同时展示版本标签和对应构建 ID，用于定位一次发布的具体制品。'],
+ '系统':['platform','系统与架构','目标操作系统及支持的处理器架构；Universal 表示通用架构包。'],
+ '包体':['size','包体大小','该 Build 的包体体积；玩家实际增量下载量取决于本地已有文件与 Chunk。'],
+ '快照':['snapshot','完整快照','用于灾备、审计和构建恢复的完整包体大小；快速回滚主要依赖 Manifest 和 Chunk。'],
+ 'Manifest':['manifest','Manifest','描述构建文件及内容块的清单；签名有效表示清单可验证，下载和回滚还需核对所引用内容的完整性。'],
+ '发布时间':['published','发布时间','此条版本的正式生效时间。应取对应 Release 的实际激活记录，并明确展示时区；与创建计划时填写的上架时间区分。'],
+ '生效时间':['published','发布时间','此条版本的正式生效时间。应取对应 Release 的实际激活记录，并明确展示时区；与创建计划时填写的上架时间区分。'],
+ '发布人':['operator','发布人 / 操作人','触发该次发布或变更的账号；自动执行时记录系统任务，供审计追溯。'],
+ '操作人':['operator','发布人 / 操作人','触发该次发布或变更的账号；自动执行时记录系统任务，供审计追溯。'],
+ '文件状态':['file-state','文件状态','“不可变保留”表示该 Build 制品仍保留且不可覆盖，不代表当前正式版，也不代表可以无限期保留。是否可回滚还取决于完整性和兼容性检查。'],
+ '渠道':['channel','发布渠道','Internal 用于白名单测试，Beta 用于测试发布，Production 用于正式发布；渠道通过 Release 引用 Build，不对应不同包体文件夹。'],
+ '发布渠道':['channel','发布渠道','Internal 用于白名单测试，Beta 用于测试发布，Production 用于正式发布；渠道通过 Release 引用 Build，不对应不同包体文件夹。'],
+ 'Internal':['internal','Internal Release','QA 使用的测试渠道发布记录；测试账号通过白名单授权，由客户端下载关联的 Build。'],
+ 'QA 白名单':['whitelist','QA 白名单','允许获取 Internal 下载授权的测试账号范围。'],
+ 'Release ID':['release','Release ID','一次发布记录的唯一标识，关联游戏、目标 Build、渠道、计划时间和执行结果。'],
+ '任务':['task','QA 任务','关联 Build 的测试任务编号，用于跟踪负责人、问题和测试结论。'],
+ '审核单':['review','审核单','一次上架审核记录的编号；商品资料审核和 Build 审核分别留痕。'],
+ '测试范围':['test-scope','测试范围','记录本次覆盖的测试项，包含下载、安装、增量更新、启动验权及失败回滚。'],
+ '下载安装':['download-test','下载安装','验证客户端下载授权、文件校验和安装流程。'],
+ '增量更新':['update-test','增量更新','验证仅下载缺失内容并完成更新，更新后文件与目标清单一致。'],
+ '启动验权':['entitlement-test','启动验权','验证启动时的用户权益及版本权限检查。'],
+ '失败回滚':['client-rollback','失败回滚','验证更新或首次启动失败后恢复本地旧版本；与运营切换服务端 Release 指针的回滚分开记录。'],
+ '负责人':['owner','负责人','负责推进当前任务并提交测试结论的成员。'],
+ '商品':['sku','商品','该游戏的本体、版本或 DLC 商品；商品审核和包体审核属于不同流程。'],
+ 'QA':['qa-result','QA 结果','关联 Build 的测试结论，是正式发布前置条件之一。'],
+ '发行商':['publisher','发行商','该游戏关联的发行主体，供资质与授权审核核对。'],
+ '销售区域':['regions','销售区域','授权允许销售的国家或地区范围。'],
+ '提交时间':['submitted','提交时间','开发者提交当前构建的时间，区别于审核时间和发布生效时间。'],
+ '文件路径':['path','文件路径','只读定位当前 Build 的不可变制品；运营不能通过此页面移动、覆盖或直接删除文件。'],
+ '上架时间':['scheduled','上架时间','计划激活该 Release 的时间；执行时再次校验发布条件，通过后切换对应渠道指针。'],
+ '时区':['timezone','时区','解释输入的计划时间；生产实现应统一存储时间基准，展示时保留明确时区。'],
+ '发布说明':['release-note','发布说明','本次发布的变更描述，随发布记录留存。'],
+ '事件':['event','发布事件','标识正式发布、定时发布、暂停或回滚等动作。'],
+ '结果':['result','执行结果','记录一次发布事件的执行结论；失败时应保留原 Production 版本并提供失败原因。'],
+ '执行结果':['result','执行结果','记录一次发布事件的执行结论；失败时应保留原 Production 版本并提供失败原因。'],
+ '审计事件':['audit','审计事件','记录操作对象、操作人、时间、处理原因和变更前后值，供事后追溯。']
+};
+const rollbackNote='默认依据 previous_release_id 回到上一稳定版本。可保留多个历史版本，但单次回滚只指向一个目标版本，不会逐个回退。若本体与 DLC 存在依赖，需要先校验兼容性；必要时按 Content Set 联合恢复本体及相关 DLC。当前演示仍使用固定目标，尚未实现任意历史版本选择与完整联动。';
+const pageStateNotes={build:'待人工确认：等待运营检查；READY_FOR_QA：允许进入 QA；检查失败：需修复并重新提交。',qa:'待测试：尚未开始；测试中：执行测试；已通过和已退回表示测试结论。修复包体须提交新 Build。',listing:'待审核、已通过和已退回表示上架审核进度；发布还需同时满足包体、QA、发行资质和商品审核条件。',schedule:'SCHEDULED：等待生效；CANCELLED：执行前取消；成功或已完成为历史事件结果。生效后的版本通过暂停或回滚处理。',versions:'当前正式版：Production 当前引用版本；稳定版本：默认回滚候选；历史版本：保留的旧版本；测试版本：未正式发布的测试记录。'};
+function reviewEscape(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function prepareReviewLayer(){
+ // Explanatory copy is collected by its owning section and removed from the business DOM.
+ $$('.page').forEach(page=>{
+  const copy=[];
+  page.querySelectorAll('.page-head p,.panel-head p,.metric span,.bucket p,.workflow-card p,.callout,.hint').forEach(el=>{
+   const owner=el.closest('.page-head,.panel-head,.metric,.bucket,.workflow-card,.form-panel');
+   const target=owner?.querySelector('h1,h2,h3,small')||owner;
+   if(target&&el.textContent.trim())copy.push({target,title:target.textContent.trim(),text:el.textContent.trim()});
+   el.remove();
+  });
+  page.querySelectorAll('.scope-help,.game-picker-hint').forEach(el=>el.remove());
+  removedReviewCopy.set(page.id,copy);
+ });
+ $('.sidebar-foot')?.remove();$('.demo-data-note')?.remove();
+ reviewReady=true;
+ $('#reviewToggle').onclick=()=>{
+  const enabled=!document.body.classList.contains('review-on');
+  document.body.classList.toggle('review-on',enabled);
+  $('#reviewToggle').setAttribute('aria-checked',String(enabled));
+  $('#reviewToggleState').textContent=enabled?'开':'关';
+  $('#reviewPanel').setAttribute('aria-hidden',String(!enabled));
+  $$('.review-target').forEach(el=>el.classList.remove('review-target'));
+ };
+ renderReviewNotes();
+}
+function renderReviewNotes(page){
+ if(page)reviewPage=page;
+ if(!reviewReady)return;
+ $$('.review-pin').forEach(el=>el.remove());
+ $$('.review-target').forEach(el=>el.classList.remove('review-target'));
+ const modal=['modal','workflowModal','releaseModal','detailModal'].map(id=>$('#'+id)).find(el=>!el.classList.contains('hidden'));
+ const root=modal||$('#page-'+reviewPage),notes=[];
+ if(!root)return;
+ const isVisible=el=>{for(let node=el;node&&node!==root.parentElement;node=node.parentElement){if(getComputedStyle(node).display==='none')return false}return true};
+ const copied=removedReviewCopy.get(root.id)||[];
+ const collectFields=elements=>{
+  const fields=new Map();
+  elements.forEach(el=>{
+   const label=el.textContent.trim().replace(/\s*\*$/,''),def=fieldNotes[label];
+   if(def&&!fields.has(def[0]))fields.set(def[0],{title:def[1],text:def[2]});
+   if(label==='状态'&&!fields.has('state'))fields.set('state',{title:'状态',text:pageStateNotes[reviewPage]||'当前记录所处的业务状态。'});
+  });
+  return [...fields.values()];
+ };
+ const addModule=(element,title,body=[],fieldElements=[],anchor)=>{
+  if(!element||!isVisible(element))return;
+  const number=notes.length+1,fields=collectFields(fieldElements);
+  const note={number,title,body:[...new Set(body.filter(Boolean))],fields};notes.push(note);
+  const pin=document.createElement('button');pin.type='button';pin.className='review-pin';pin.dataset.number=number;
+  pin.setAttribute('aria-label',`标注 ${number}：${title}`);pin.setAttribute('aria-controls',`review-note-${number}`);pin.setAttribute('aria-pressed','false');
+  pin.onclick=e=>{e.stopPropagation();selectReviewNote(number)};
+  if(anchor)anchor.appendChild(pin);
+  else{element.classList.add('review-module');pin.classList.add('module-review-pin');element.appendChild(pin)}
+ };
+ const title=modal?root.querySelector('h3')?.textContent:annotations[reviewPage]?.title;
+ if(modal)root.querySelector('[role="dialog"]').setAttribute('aria-label',title);
+ $('#annoTitle').textContent=title||'产品标注';
+ $('#annoIntro').textContent=modal?'按功能模块查看字段和操作说明。只读详情隐藏底部操作栏，右上角图标、Escape 或遮罩可关闭。':(annotations[reviewPage]?.intro||'')+' 点击模块编号查看说明。';
+ if(modal?.id==='workflowModal'){
+  root.querySelectorAll('.workflow-section').forEach(section=>{const heading=section.querySelector('h4');addModule(section,heading.textContent,[workflowGuides[section.dataset.guide]],[...section.querySelectorAll('dt,.form-row>label')],heading)});
+ }else if(modal?.id==='modal'){
+  const body=['填写处理原因后确认提交，原因随操作留痕。'];
+  if(modalAction==='rollback-confirm')body.push(rollbackNote);
+  if(modalAction==='pause-confirm')body.push('停止签发新下载授权；已签发授权在有效期内可能继续可用。');
+  addModule(root.querySelector('main'),'处理原因',body);
+ }else if(modal?.id==='releaseModal'){
+  const preflight=root.querySelector('.modal-block');
+  addModule(preflight,'发布前置检查',['包体、QA、发行资质与商品审核须全部通过，否则阻断提交。'],[],preflight.querySelector('h4'));
+  const rules=['Manifest、Chunk、签名和完整快照须可用。','目标 Build 须获得 QA_APPROVED。','主体、发行授权和销售区域须审核有效。','SKU、价格、地区和退款说明须通过商品审核。'];
+  root.querySelectorAll('.preflight-item').forEach((item,index)=>{notes[0].fields.push({title:item.querySelector('b').textContent,text:rules[index]});if(!item.classList.contains('fail'))item.querySelector('small').hidden=true});
+  const message=$('#releaseCheckMessage');message.hidden=!message.classList.contains('fail');
+  addModule(root.querySelector('.form-row'),'发布设置',['设置目标构建、渠道、上架时间、时区和发布说明，确认后创建计划。'],[...root.querySelectorAll('.form-row>label')]);
+ }else if(modal){
+  const blocks=[...root.querySelectorAll('.modal-block')];
+  if(blocks.length){
+   blocks.forEach(block=>{
+    const heading=block.querySelector('h4'),body=[];
+    if(heading?.textContent==='自动检查')body.push('核对清单与内容块、病毒扫描、签名公证和启动程序检查结果，通过必要检查后才可进入 QA。');
+    if(heading?.textContent==='测试节点')body.push('跟踪构建检查、Internal Release 和 QA 执行结果，形成当前任务的测试结论。');
+    if(heading?.textContent==='审核结论')body.push('核对发行资质、商品地区、QA 结论与包体准备情况，形成该审核单的结论。');
+    addModule(block,heading?.textContent||'记录信息',body,[...block.querySelectorAll('dt')],heading);
+   });
+  }else addModule(root.querySelector('main'),'记录信息',[],[...root.querySelectorAll('dt')]);
+  const footer=root.querySelector('footer');
+  if(footer?.querySelector('[data-action]')){
+   const actions=footer.querySelector('[data-action="rollback-old"]')?[rollbackNote]:['在此提交当前记录的处理结果；退回时必须填写原因。'];
+   addModule(footer,'处理操作',actions);
+  }
+ }else{
+  const modules=[...root.querySelectorAll(':scope > .scope-panel,:scope > .metrics,:scope > .panel:not(.scope-panel),:scope > .split > .panel,:scope > .bucket-grid')];
+  modules.filter(isVisible).forEach(module=>{
+   if(module.classList.contains('scope-panel')){
+    addModule(module,'查询与筛选',[reviewPage==='build'?'默认展示全部游戏的包体记录，以 APPID + Build ID 为联合唯一标识。游戏、Build、版本关键词及处理状态为可选条件；点击查询生效，重置恢复全部。':reviewPage==='schedule'?'默认汇总可管理的游戏发布记录。可按游戏名称、APPID、Release ID、状态和来源筛选，点击查询后生效；重置恢复全部记录。':'搜索并选择游戏，填写记录关键词和状态后点击查询；重置清空本页条件。查询结果限定在所选 APPID。']);
+   }else if(module.classList.contains('metrics')){
+    const fields=[...module.querySelectorAll('.metric')].map(metric=>({title:metric.querySelector('small')?.textContent||'指标',text:copied.find(c=>metric.contains(c.target))?.text||'当前业务统计值。'}));
+    addModule(module,'统计概览',['汇总本模块关键指标。']);notes[notes.length-1].fields=fields;
+   }else if(module.classList.contains('release-current')){
+    addModule(module,'当前版本与操作',['展示当前 Production 版本、关联 Build、生效时间及发布状态。','暂停停止签发新下载授权，已签发授权在有效期内可能继续可用。',rollbackNote]);
+   }else{
+    const heading=module.querySelector('.panel-head h2,h2,h3'),body=copied.filter(c=>module.contains(c.target)).map(c=>c.text);
+    const labels=[...module.querySelectorAll('thead th,dt')];
+    const fields=collectFields(labels);
+    // Field definitions already cover ownership; avoid repeating the same rule in the overview.
+    const descriptions=body.filter(text=>!(fields.some(f=>f.title==='游戏与 APPID')&&/APPID/.test(text)));
+    addModule(module,heading?.textContent||'存储概览',descriptions,labels,heading);
+   }
+  });
+ }
+ $('#annoBody').innerHTML=notes.map(n=>`<section class="review-card" id="review-note-${n.number}" tabindex="-1"><h3><span>${String(n.number).padStart(2,'0')}</span>${reviewEscape(n.title)}</h3>${n.body.map(p=>`<p>${reviewEscape(p)}</p>`).join('')}${n.fields.length?`<dl class="review-field-list">${n.fields.map(f=>`<div><dt>${reviewEscape(f.title)}</dt><dd>${reviewEscape(f.text)}</dd></div>`).join('')}</dl>`:''}</section>`).join('');
+ $('#annoBody').insertAdjacentHTML('beforeend','<details class="review-general"><summary>原型范围与数据说明</summary><p>覆盖自动构建与客户端测试记录、上架审核、发布管理、版本暂停与回滚；下载监控和存储管理内容仍待完善入口。每个游戏初始含 8 条包体记录；构建成功自动进入测试，只有测试通过的记录进入上架审核；发布管理汇总跨游戏的开发者和运营记录。数据仅在本地模拟，刷新会恢复初始数据，未连接生产系统。</p></details>');
+ appendStateContract(notes,modal);$('#reviewPanel').scrollTop=0;
+}
+function selectReviewNote(number){
+ $$('.review-card').forEach(el=>el.classList.toggle('is-selected',el.id===`review-note-${number}`));
+ $$('.review-pin').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.number)===number)));
+ const card=$(`#review-note-${number}`);if(card){card.scrollIntoView({block:'nearest'});card.focus({preventScroll:true})}
+}
+
+// Local workflow models. Release provenance comes from the acting identity, never a form field.
+let businessReady=false, workflowKind='', publicationFilters={}, publicationDetailId=null;
+let businessSequence=100;
+const qaTasks=new Map();
+const gameCatalog={
+ app_2001:{name:'Neon Frontier',type:'角色扮演',publisher:'Northlake Studio',licensed:true},
+ app_1842:{name:'Paper Orbit',type:'休闲益智',publisher:'Blue Pine Games',licensed:true},
+ app_1730:{name:'Silent Harbor',type:'冒险',publisher:'Elm Works',licensed:false}
+};
+const publicationRecords=[
+ {id:'REL-260904-21',app:'app_2001',build:'bld_3096',source:'开发者',creator:'dev.northlake',state:'待上架',at:'2026-09-10T02:00:00Z'},
+ {id:'REL-260904-22',app:'app_1842',build:'bld_1018',source:'开发者',creator:'dev.bluepine',state:'待上架',at:'2026-09-12T10:00:00Z'},
+ {id:'REL-260904-23',app:'app_2001',build:'bld_3108',source:'运营',creator:'ops.lin',state:'已上架',at:'2026-09-03T10:00:00Z'},
+ {id:'REL-260904-24',app:'app_1842',build:'bld_1008',source:'开发者',creator:'dev.bluepine',state:'已上架',at:'2026-09-01T09:00:00Z'},
+ {id:'REL-260904-25',app:'app_1730',build:'bld_2880',source:'开发者',creator:'dev.elm',state:'已取消',at:'2026-09-02T02:00:00Z'},
+ {id:'REL-260904-26',app:'app_2001',build:'bld_2981',source:'运营',creator:'ops.mei',state:'已下架',at:'2026-08-17T08:30:00Z'},
+ {id:'REL-260904-27',app:'app_1842',build:'bld_1012',source:'运营',creator:'ops.chen',state:'已取消',at:'2026-08-29T02:00:00Z'},
+ {id:'REL-260904-28',app:'app_2001',build:'bld_2855',source:'开发者',creator:'dev.northlake',state:'已替换',at:'2026-08-03T13:42:00Z'}
+].map(r=>({...r,plannedAt:r.at,activatedAt:['已上架','已下架','已替换'].includes(r.state)?r.at:null,mode:'定时上架',note:'版本发布',logs:[{time:r.at,actor:r.creator,event:'创建发布',reason:'提交发布计划'},...(r.state==='待上架'?[]:[{time:r.at,actor:r.state==='已下架'?'ops.mei':'系统',event:r.state,reason:r.state==='已下架'?'运营主动下架':r.state==='已取消'?'发布计划调整':'历史发布记录'}])]}));
+const workflowGuides={
+ qaObject:'先选择游戏，再选择该游戏已通过构建审核的 Build。创建入口不依赖列表筛选。任务与 Build 必须属于同一 APPID。',
+ qaContent:'填写任务名称、负责人和测试范围，截止时间及说明可选。创建后生成 QA 任务和关联 Internal Release，测试账号由 QA 白名单管理。',
+ qaRecord:'任务详情读取实际创建的数据；待测试可开始测试，测试中可提交通过或退回结论。',
+ qaResult:'测试结论必须填写说明；操作只作用于当前任务和关联 Build。',
+ publishObject:'本后台仅供运营使用，可查看和控制所有游戏。开发者在独立的开发者后台提交发布，记录同步至此；运营可对这些记录单方面取消或下架。此处新建记录的来源固定为运营。',
+ publishChecks:'包体、QA、发行资质和商品审核必须全部通过。选择 Build 后重新核验；提交和定时生效时再次检查。',
+ publishSettings:'支持立即上架和定时上架。定时时间必须晚于当前时间，按所选时区转换。创建后在统一列表显示；本地演示仅在页面打开时检查到期任务，不提供真实后台调度。',
+ publishRecord:'统一查看开发者后台与运营创建的 Release。待上架可取消；上架中只查看处理进度；服务端包体处理和发布生效完成后才是已上架，可由运营下架。新发布成功前旧上架记录保持不变。',
+ publishAction:'取消仅适用于待上架记录。下架停止商店展示和新销售，保留已购权益及包体；不等于暂停下载或回滚。重新上架通过新建发布记录完成。',
+ audit:'保留创建、上架、取消及下架等操作的时间、操作人和处理原因。记录不会因取消或下架而删除。'
+};
+const businessEscape=value=>reviewEscape(value??'');
+const gameOptions=apps=>'<option value="">请选择游戏</option>'+apps.map(app=>`<option value="${app}">${gameCatalog[app].name} · ${app}</option>`).join('');
+const actorName=()=>'ops.lin';
+const mayManagePublication=record=>!!gameCatalog[record.app];
+const nowISO=()=>new Date().toISOString();
+const nextBusinessId=prefix=>`${prefix}-${new Date(Date.now()+8*3600000).toISOString().slice(2,10).replaceAll('-','')}-${++businessSequence}`;
+const formatTime=iso=>iso?new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))+' UTC+8':'—';
+const futureLocal=()=>new Date(Date.now()+86400000+8*3600000).toISOString().slice(0,16);
+function publicationChecks(app,buildId){
+ const build=builds.find(b=>b.app===app&&b.build===buildId);
+ const qa=[...qaTasks.values()].find(t=>t.app===app&&t.build===buildId);
+ const listing=[...document.querySelectorAll('#listingRows tr[data-app]')].find(r=>r.dataset.app===app&&r.cells[3]?.textContent===buildId);
+ return [!!build&&build.status==='READY_FOR_QA',qa?.state==='已通过',!!gameCatalog[app]?.licensed,listing?.dataset.state==='已通过'];
+}
+function initBusinessWorkflows(){
+ const page=$('#page-schedule');
+ page.innerHTML=`<div class="page-head"><div><h1>发布管理</h1></div><button class="primary" data-action="create-release">创建发布</button></div>
+ <div class="panel scope-panel"><div class="scope-bar publication-filters">
+ <div class="scope-field"><label for="pubSearch">游戏 / 发布记录</label><input id="pubSearch" class="input" placeholder="游戏名称 / APPID / Release ID"></div>
+ <div class="scope-field"><label for="pubState">发布状态</label><select id="pubState" class="input business-select"><option value="">全部状态</option>${['待上架','上架中','已上架','已取消','已下架','已替换','发布失败'].map(x=>`<option>${x}</option>`).join('')}</select></div>
+ <div class="scope-field"><label for="pubSource">创建来源</label><select id="pubSource" class="input business-select"><option value="">全部来源</option><option>开发者</option><option>运营</option></select></div>
+ <div class="publication-query-actions"><button class="secondary" data-action="pub-reset">重置</button><button class="primary" data-action="pub-query">查询</button></div></div></div>
+ <div class="panel"><div class="panel-head"><h2>发布记录</h2><span class="record-count" id="publicationCount"></span></div><div class="table-wrap"><table class="publication-table"><thead><tr><th>游戏 / APPID</th><th>上架时间</th><th>创建来源</th><th>发布状态</th><th>操作</th></tr></thead><tbody id="publicationRows"></tbody></table></div></div>`;
+ delete filterDefs.schedule;
+ annotations.schedule.title='发布管理';annotations.schedule.intro='统一管理开发者与运营创建的发布记录，处理定时上架、取消发布和手动下架。';
+ $('[data-page="schedule"]').textContent='发布管理';
+ Object.assign(fieldNotes,{
+  '创建来源':['source','创建来源','区分开发者和运营；创建人由实际操作身份记录，不能由表单任意填写。'],
+  '计划上架时间':['planned-time','计划上架时间','创建定时计划时设定的目标时间，生效后仍保留供审计对比。'],
+  '实际生效时间':['activated-time','实际生效时间','发布实际执行成功的时间；取消或尚未执行的计划没有实际生效时间。'],
+  '发布状态':['publication-state','发布状态','待上架可取消；上架中为服务端执行过程，仅查看进度；处理完成后才是已上架，可下架；所有终态保留审计记录。'],
+  '任务名称':['qa-name','任务名称','用于识别本次测试目标的任务标题。'],
+  '截止时间':['deadline','截止时间','期望完成测试的时间，可不填写。'],
+  '测试说明':['qa-note','测试说明','补充测试重点、前置环境或问题背景。']
+ });
+ $('#qaStateFilter').add(new Option('待测试','待测试'));
+ migrateTimedRecords();businessReady=true;renderPublications();
+ setInterval(runPublicationScheduler,1000);
+}
+function renderPublications(){
+ if(!businessReady)return;
+ const f=publicationFilters;
+ const records=publicationRecords.filter(r=>mayManagePublication(r)&&(!f.q||`${gameCatalog[r.app].name} ${r.app} ${r.id} ${r.build}`.toLowerCase().includes(f.q))&&(!f.state||r.state===f.state)&&(!f.source||r.source===f.source));
+ $('#publicationCount').textContent=`${records.length} 条`;
+ $('#publicationRows').innerHTML=records.length?records.map(r=>`<tr data-publication="${r.id}"><td><b>${businessEscape(gameCatalog[r.app].name)}</b><small>${r.app}</small><small>${r.id}</small></td><td>${formatTime(r.at).split(' ')[0]}<small>${formatTime(r.at).split(' ').slice(1).join(' ')}</small></td><td>${r.source}<small>${r.creator}</small></td><td><span class="tag ${r.state==='已上架'?'green':r.state==='上架中'?'amber':r.state==='待上架'?'blue':r.state==='发布失败'?'red':'gray'}">${r.state}</span></td><td><button class="ghost" data-action="pub-detail" data-id="${r.id}">详情</button>${r.state==='待上架'?`<button class="ghost" data-action="pub-cancel" data-id="${r.id}">取消发布</button>`:r.state==='已上架'?`<button class="ghost action-red" data-action="pub-off" data-id="${r.id}">下架</button>`:r.state==='上架中'?'<button class="ghost" disabled title="服务端正在执行上架，完成前不能取消或下架">上架中</button>':''}</td></tr>`).join(''):'<tr class="empty-row"><td colspan="5">没有符合条件的发布记录</td></tr>';
+ bindActions($('#page-schedule'));
+ if(reviewPage==='schedule')renderReviewNotes();
+}
+function queryPublications(reset=false){
+ if(reset){['pubSearch','pubState','pubSource'].forEach(id=>$('#'+id).value='');$('#pubSearch').dispatchEvent(new Event('input',{bubbles:true}))}
+ publicationFilters={q:$('#pubSearch').value.trim().toLowerCase(),state:$('#pubState').value,source:$('#pubSource').value};renderPublications();
+}
+function workflowSection(title,guide,content){return `<section class="workflow-section" data-guide="${guide}"><h4>${title}</h4>${content}</section>`}
+function formField(id,label,control){return `<div class="form-row"><label for="${id}">${label}</label>${control}</div>`}
+function showWorkflow(title,body,footer='',kind='detail'){
+ workflowKind=kind;if(kind!=='publication-detail')publicationDetailId=null;$('#workflowTitle').textContent=title;$('#workflowSubtitle').textContent=kind==='publication-create'?`${'运营'} · ${actorName()}`:'';$('#workflowBody').innerHTML=body;$('#workflowFooter').innerHTML=footer;
+ $('#workflowModal').classList.remove('hidden');bindActions($('#workflowModal'));renderReviewNotes();$('#workflowModal .modal-close').focus();
+}
+function closeWorkflow(){$('#workflowModal').classList.add('hidden');workflowKind='';publicationDetailId=null;renderReviewNotes()}
+function workflowError(message){const error=$('#workflowError');if(error){error.textContent=message;error.hidden=false;error.focus()}else toast(message)}
+const workflowErrorBox='<p id="workflowError" class="form-error" role="alert" tabindex="-1" hidden></p>';
+function populateWorkflowBuilds(){
+ const app=$('#wfGame').value,select=$('#wfBuild');
+ const choices=builds.filter(b=>b.app===app&&b.status==='READY_FOR_QA');
+ select.innerHTML='<option value="">'+(app?(choices.length?'请选择 Build':'暂无通过构建审核的 Build'):'请先选择游戏')+'</option>'+choices.map(b=>`<option value="${b.build}">${b.build} · ${b.version}</option>`).join('');
+ select.disabled=!choices.length;
+ if(workflowKind==='publication-create')renderWorkflowPreflight();
+}
+function openQACreate(){
+ const object=workflowSection('测试对象','qaObject',`<div class="workflow-grid-form">${formField('wfGame','游戏 *',`<select id="wfGame" class="input" required>${gameOptions(Object.keys(gameCatalog))}</select>`)}${formField('wfBuild','Build *','<select id="wfBuild" class="input" required disabled><option value="">请先选择游戏</option></select>')}</div>`);
+ const content=workflowSection('任务内容','qaContent',`<div class="workflow-grid-form">${formField('wfName','任务名称 *','<input id="wfName" class="input" maxlength="80" required>')}${formField('wfOwner','负责人 *','<input id="wfOwner" class="input" placeholder="输入负责人姓名或账号" maxlength="80" required>')}${formField('wfDue','截止时间','<input id="wfDue" class="input" type="datetime-local">')}</div><fieldset class="scope-checks"><legend>测试范围 *</legend>${['下载安装','增量更新','启动验权','失败回滚','完整回归'].map(x=>`<label><input type="checkbox" name="qaScope" value="${x}"> ${x}</label>`).join('')}</fieldset>${formField('wfNote','测试说明','<textarea id="wfNote" rows="3" maxlength="1000"></textarea>')}`);
+ showWorkflow('创建测试任务',`<form id="workflowForm" novalidate>${object}${content}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">取消</button><button class="primary" type="submit" form="workflowForm">创建任务</button>','qa-create');
+ $('#wfGame').onchange=populateWorkflowBuilds;
+ $('#workflowForm').onsubmit=e=>{e.preventDefault();createQATask()};
+}
+function createQATask(){
+ const app=$('#wfGame').value,build=$('#wfBuild').value,name=$('#wfName').value.trim(),owner=$('#wfOwner').value.trim(),scopes=[...$('#workflowForm').querySelectorAll('[name="qaScope"]:checked')].map(x=>x.value);
+ if(!app||!build||!name||!owner||!scopes.length){workflowError('请选择游戏和 Build，填写任务名称、负责人，并至少选择一项测试范围。');return}
+ if(!builds.some(b=>b.app===app&&b.build===build&&b.status==='READY_FOR_QA')){workflowError('所选 Build 尚未通过构建审核，请重新选择。');return}
+ const id=nextBusinessId('QA');
+ const task={id,app,build,name,owner,scopes,due:$('#wfDue').value,note:$('#wfNote').value.trim(),state:'待测试',internal:`INT-${businessSequence}`,created:nowISO(),started:null,completed:null,updated:nowISO(),result:''};
+ qaTasks.set(id,task);renderQATaskRow(task);
+ // A successful create explicitly shows its new record; opening or editing the form never queries the list.
+ $('#qaGameFilter').value=app;const picker=$('#qaGameFilter').nextElementSibling?.querySelector('.game-picker-input');if(picker)picker.value=`${gameCatalog[app].name} · ${app}`;
+ $('#qaSearch').value=id;$('#qaSearch').dispatchEvent(new Event('input',{bubbles:true}));$('#qaStateFilter').selectedIndex=0;const trigger=$('#qaStateFilter').nextElementSibling?.querySelector('.selectx-trigger span');if(trigger)trigger.textContent='全部状态';$('#qaStateFilter').nextElementSibling?.querySelectorAll('.selectx-option').forEach(option=>option.setAttribute('aria-selected',String(option.dataset.value==='')));
+ applyStaticFilter('qa');closeWorkflow();toast('测试任务已创建');
+}
+function renderQATaskRow(task){
+ let row=[...$('#qaRows').querySelectorAll('tr')].find(r=>r.dataset.qaId===task.id);if(!row){row=document.createElement('tr');$('#qaRows').prepend(row)}
+ row.dataset.qaId=task.id;row.dataset.app=task.app;row.dataset.state=task.state;
+ row.innerHTML=`<td><b>${gameCatalog[task.app].name}</b><br><small>${task.app}</small></td><td><b>${businessEscape(task.name)}</b><br><small>${task.id}</small></td><td>${task.build}</td><td>${task.scopes.join(' / ')}</td><td>${businessEscape(task.owner)}</td><td><span class="tag ${task.state==='已通过'?'green':task.state==='已退回'?'red':'blue'}">${task.state}</span></td>${recordTimeCell(task.created)}${recordTimeCell(task.completed)}<td><button class="ghost" data-action="qa-task-detail" data-id="${task.id}">详情</button></td>`;bindActions(row);
+}
+function keyValues(rows){return '<dl class="kv">'+rows.map(([k,v])=>`<dt>${businessEscape(k)}</dt><dd>${businessEscape(v||'—')}</dd>`).join('')+'</dl>'}
+function openQATask(id){
+ const t=qaTasks.get(id);if(!t)return;
+ const body=workflowSection('测试对象','qaRecord',keyValues([['游戏',gameCatalog[t.app].name],['APPID',t.app],['Build ID',t.build],['Internal',t.internal],['状态',t.state]]))+workflowSection('任务内容','qaContent',keyValues([['任务名称',t.name],['负责人',t.owner],['测试范围',t.scopes.join(' / ')],['截止时间',t.due?t.due.replace('T',' ')+' UTC+8':'—'],['测试说明',t.note],['测试结论',t.result]]))+workflowSection('时间记录','taskTimes',keyValues([['创建时间',formatTime(t.created)],['开始时间',formatTime(t.started)],['完成时间',formatTime(t.completed)],['更新时间',formatTime(t.updated)]]));
+ const footer=t.state==='待测试'?`<button class="primary" data-action="qa-start" data-id="${id}">开始测试</button>`:t.state==='测试中'?`<button class="danger" data-action="qa-result-fail" data-id="${id}">退回</button><button class="primary" data-action="qa-result-pass" data-id="${id}">测试通过</button>`:'';
+ showWorkflow('测试任务详情',body,footer);
+}
+function openQAResult(id,pass){
+ const t=qaTasks.get(id);if(!t||t.state!=='测试中')return;
+ showWorkflow(pass?'提交测试通过':'退回测试任务',`<form id="workflowForm">${workflowSection('测试结论','qaResult',formField('wfResult','结论说明 *','<textarea id="wfResult" required maxlength="1000"></textarea>'))}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">取消</button><button class="primary" type="submit" form="workflowForm">确认提交</button>','qa-result');
+ $('#workflowForm').onsubmit=e=>{e.preventDefault();const result=$('#wfResult').value.trim();if(!result){workflowError('请填写结论说明。');return}if(t.state!=='测试中')return;t.state=pass?'已通过':'已退回';t.completed=nowISO();t.updated=t.completed;t.result=result;renderQATaskRow(t);applyStaticFilter('qa');closeWorkflow();toast('测试结论已保存')};
+}
+function openPublicationCreate(){
+ const apps=Object.keys(gameCatalog);
+ const object=workflowSection('发布对象','publishObject',`<div class="workflow-grid-form">${formField('wfGame','游戏 *',`<select id="wfGame" class="input" required>${gameOptions(apps)}</select>`)}${formField('wfBuild','Build *','<select id="wfBuild" class="input" required disabled><option value="">请先选择游戏</option></select>')}</div>`);
+ const checks=workflowSection('发布前置检查','publishChecks','<div id="workflowPreflight" class="preflight"><div class="workflow-empty">请选择游戏和 Build</div></div>');
+ const settings=workflowSection('上架设置','publishSettings',`<div class="workflow-grid-form">${formField('wfMode','上架方式','<select id="wfMode" class="input"><option value="scheduled">定时上架</option><option value="now">立即上架</option></select>')}${formField('wfTime','上架时间 *',`<input id="wfTime" class="input" type="datetime-local" value="${futureLocal()}" required>`)}${formField('wfTimezone','时区','<select id="wfTimezone" class="input"><option value="8">UTC+8 Asia/Shanghai</option><option value="0">UTC</option></select>')}</div>${formField('wfPublishNote','发布说明 *','<textarea id="wfPublishNote" rows="2" maxlength="1000" required></textarea>')}`);
+ showWorkflow('创建发布',`<form id="workflowForm" novalidate>${object}${checks}${settings}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">取消</button><button class="primary" id="workflowSubmit" type="submit" form="workflowForm">创建发布</button>','publication-create');
+ $('#wfGame').onchange=populateWorkflowBuilds;$('#wfBuild').onchange=renderWorkflowPreflight;
+ $('#wfMode').onchange=()=>{const scheduled=$('#wfMode').value==='scheduled';$('#wfTime').disabled=!scheduled;$('#wfTimezone').disabled=!scheduled};
+ $('#workflowForm').onsubmit=e=>{e.preventDefault();createPublication()};
+}
+function renderWorkflowPreflight(){
+ const app=$('#wfGame').value,build=$('#wfBuild').value;
+ const values=publicationChecks(app,build),names=['包体准备','QA 测试','发行资质','商品审核'];
+ $('#workflowPreflight').innerHTML=build?values.map((pass,i)=>`<div class="preflight-item ${pass?'':'fail'}"><span class="preflight-icon">${pass?'✓':'!'}</span><b>${names[i]}</b><span class="preflight-result">${pass?'已通过':'未通过'}</span></div>`).join(''):'<div class="workflow-empty">请选择游戏和 Build</div>';
+ $('#workflowSubmit').disabled=!!build&&!values.every(Boolean);
+}
+function createPublication(){
+ const app=$('#wfGame').value,build=$('#wfBuild').value,mode=$('#wfMode').value,note=$('#wfPublishNote').value.trim();
+ if(!app||!build||!note){workflowError('请选择游戏和 Build，并填写发布说明。');return}
+ if(!mayManagePublication({app})||!publicationChecks(app,build).every(Boolean)){workflowError('没有操作权限或发布前置检查未通过。');return}
+ let at=nowISO();
+ if(mode==='scheduled'){
+  const input=$('#wfTime').value;
+  if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(input)){workflowError('请选择上架时间。');return}
+  const zone=Number($('#wfTimezone').value),millis=Date.parse(input+`+${String(zone).padStart(2,'0')}:00`);
+  if(!Number.isFinite(millis)||millis<=Date.now()){workflowError('定时上架时间必须晚于当前时间。');return}at=new Date(millis).toISOString();
+ }
+ if(mode==='now'&&publicationRecords.some(r=>r.app===app&&r.state==='上架中')){workflowError('该游戏正在上架，请等待当前任务完成。');return}
+ if(publicationRecords.some(r=>r.app===app&&r.build===build&&r.state==='待上架'&&Date.parse(r.at)===Date.parse(at))){workflowError('该游戏已有相同 Build 和时间的发布计划。');return}
+ const r={id:nextBusinessId('REL'),app,build,source:'运营',creator:actorName(),state:'待上架',mode:mode==='now'?'立即上架':'定时上架',at,plannedAt:mode==='scheduled'?at:null,activatedAt:null,note,logs:[{time:nowISO(),actor:actorName(),event:'创建发布',reason:note}]};
+ publicationRecords.unshift(r);if(mode==='now')beginPublication(r,actorName());
+ closeWorkflow();queryPublications(true);toast(mode==='now'?'已提交，正在上架':'发布计划已创建');
+}
+function activatePublication(record,actor='系统'){
+ if(record.state!=='上架中')return;
+ publicationRecords.filter(r=>r.app===record.app&&r.state==='已上架').forEach(r=>{r.state='已替换';r.logs.push({time:nowISO(),actor,event:'已替换',reason:`新发布 ${record.id} 已生效`})});
+ record.state='已上架';record.at=nowISO();record.activatedAt=record.at;record.logs.push({time:record.at,actor,event:'上架',reason:record.note});
+}
+function beginPublication(record,actor='系统'){
+ if(record.state!=='待上架')return;
+ record.state='上架中';record.processingStartedAt=nowISO();record.processingDeadline=Date.now()+10000;
+ record.logs.push({time:nowISO(),actor,event:'开始上架',reason:'服务端正在处理包体并执行发布，等待完成结果'});
+}
+function runPublicationScheduler(){
+ if(!businessReady)return;let changed=false;
+ publicationRecords.filter(r=>r.state==='上架中'&&r.processingDeadline<=Date.now()).forEach(r=>{
+  if(publicationChecks(r.app,r.build).every(Boolean)){r.logs.push({time:nowISO(),actor:'系统',event:'包体处理完成',reason:'包体可用性与完整性复核完成'});activatePublication(r)}
+  else{r.state='发布失败';r.logs.push({time:nowISO(),actor:'系统',event:'发布失败',reason:'包体处理或发布前置复核未通过，原上架版本保持不变'})}
+  changed=true;
+ });
+ publicationRecords.filter(r=>r.state==='待上架'&&Date.parse(r.at)<=Date.now()).forEach(r=>{
+  if(publicationRecords.some(other=>other.app===r.app&&other.state==='上架中'))return;
+  beginPublication(r);changed=true;
+ });
+ if(changed){renderPublications();if(publicationDetailId&&workflowKind==='publication-detail')openPublicationDetail(publicationDetailId);toast('发布状态已更新')}
+}
+function openPublicationDetail(id){
+ publicationDetailId=id;
+ const r=publicationRecords.find(r=>r.id===id);if(!r||!mayManagePublication(r))return;
+ const content=workflowSection('发布信息','publishRecord',keyValues([['Release ID',r.id],['游戏',gameCatalog[r.app].name],['APPID',r.app],['Build ID',r.build],['上架方式',r.mode],['计划上架时间',formatTime(r.plannedAt)],['实际生效时间',formatTime(r.activatedAt)],['创建来源',r.source],['创建人',r.creator],['发布状态',r.state],['执行进度',r.state==='上架中'?'包体处理与发布执行中，等待服务端结果':r.state==='已上架'?'处理完成，发布已生效':'—'],['发布说明',r.note]]));
+ const logs=workflowSection('操作日志','audit',`<div class="audit-log">${r.logs.map(log=>`<article><b>${businessEscape(log.event)}</b><small>${formatTime(log.time)} · ${businessEscape(log.actor)}</small><p>${businessEscape(log.reason)}</p></article>`).join('')}</div>`);
+ showWorkflow('发布记录详情',content+logs,r.state==='待上架'?`<button class="danger" data-action="pub-cancel" data-id="${id}">取消发布</button>`:r.state==='已上架'?`<button class="danger" data-action="pub-off" data-id="${id}">下架</button>`:r.state==='上架中'?'<button class="secondary" disabled title="服务端正在执行上架，完成前不能取消或下架">上架中</button>':'','publication-detail');
+}
+function openPublicationAction(id,off){
+ const r=publicationRecords.find(r=>r.id===id),expected=off?'已上架':'待上架';if(!r||r.state!==expected||!mayManagePublication(r))return;
+ const title=off?'下架游戏':'取消发布';
+ showWorkflow(title,`<form id="workflowForm">${workflowSection('操作对象','publishRecord',keyValues([['游戏',gameCatalog[r.app].name],['Release ID',r.id],['创建来源',r.source],['发布状态',r.state]]))}${workflowSection('处理原因','publishAction',formField('wfReason','处理原因 *','<textarea id="wfReason" required maxlength="1000"></textarea>'))}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">返回</button><button class="danger" type="submit" form="workflowForm">确认'+title+'</button>','publication-action');
+ $('#workflowForm').onsubmit=e=>{e.preventDefault();const reason=$('#wfReason').value.trim();if(!reason){workflowError('请填写处理原因。');return}if(r.state!==expected||!mayManagePublication(r)){workflowError('记录状态或操作权限已改变，请关闭后重试。');return}r.state=off?'已下架':'已取消';r.logs.push({time:nowISO(),actor:actorName(),event:title,reason});closeWorkflow();renderPublications();toast(off?'游戏已下架':'发布已取消')};
+}
+function handleBusinessAction(action,el){if(handlePackageAction(action,el))return;
+ if(action==='listing-record-detail')openListingReview(el.dataset.id);
+ else if(action==='listing-record-pass'||action==='listing-record-fail')submitListingReview(el.dataset.id,action==='listing-record-pass');
+ else if(action==='create-qa')openQACreate();
+ else if(action==='create-release')openPublicationCreate();
+ else if(action==='close-workflow')closeWorkflow();
+ else if(action==='pub-query')queryPublications();
+ else if(action==='pub-reset')queryPublications(true);
+ else if(action==='pub-detail')openPublicationDetail(el.dataset.id);
+ else if(action==='pub-cancel'||action==='pub-off')openPublicationAction(el.dataset.id,action==='pub-off');
+ else if(action==='qa-task-detail')openQATask(el.dataset.id);
+ else if(action==='qa-start'){const t=qaTasks.get(el.dataset.id);if(t&&t.state==='待测试'){t.state='测试中';t.started=nowISO();t.updated=t.started;renderQATaskRow(t);applyStaticFilter('qa');openQATask(t.id)}}
+ else if(action==='qa-result-pass'||action==='qa-result-fail')openQAResult(el.dataset.id,action==='qa-result-pass');
+ else return false;return true;
+}
+
+
+
+// State contracts live inside module annotations, without adding field-level markers.
+const stateContracts={
+ build:{order:'待人工确认 → READY_FOR_QA；检查失败 / 人工退回 → 开发者修复并提交新 Build。',rows:[['待人工确认','自动检查通过，等待运营确认','通过并进入 QA、退回可用'],['READY_FOR_QA','运营通过构建审核，可创建 QA 任务','仅查看详情；不重复审核'],['检查失败','自动检查不通过','通过按钮禁用；可查看检查结果'],['已退回','运营提交退回原因','仅查看详情；修复后创建新 Build']],note:'状态属于 Build，不等于 QA 通过或正式上架。旧构建详情的检查结果及退回联动仍有样例逻辑，以上为研发实现规则。'},
+ qa:{order:'创建任务 → 待测试 → 测试中 → 已通过 / 已退回。',rows:[['待测试','创建任务成功，已绑定游戏和 Build','开始测试可用；通过、退回隐藏'],['测试中','负责人开始测试','测试通过、退回可用；提交必须填写结论'],['已通过','测试结论提交成功','仅查看详情；后续进入上架审核'],['已退回','提交失败结论与问题说明','仅查看详情；修复包体后新建 Build / 新任务']],note:'负责人为手动输入的姓名或账号，去除首尾空格，不做人员目录校验。列表与详情均记录创建、开始、完成和更新时间，历史样例使用固定演示时间。'},
+ listing:{order:'QA 已通过 → 待审核 → 已通过 / 已退回。',rows:[['待审核','收到满足 QA 条件的上架审核单','审核通过、退回可用'],['已通过','发行资质、商品和包体核验完成','隐藏审批按钮；是否可发布仍需整体前置检查'],['已退回','运营填写原因退回资料或包体','仅查看；资料修订重新提审，包体变更需新 Build']],note:'“已通过”是审核结论，不等于发布状态“已上架”。每次通过或退回都会记录完成时间和审核人，不会自动创建发布计划。'},
+ schedule:{order:'定时发布：待上架 → 上架中 → 已上架 → 已下架 / 已替换。立即发布：提交 → 上架中 → 已上架。异常分支：待上架 → 已取消；上架中 → 发布失败。',rows:[['待上架','计划已创建，等待设定时间；同游戏存在上架任务时排队','详情、取消发布可用；下架隐藏'],['上架中','服务端开始执行：包体处理、完整性复核和发布生效尚未全部完成','详情可用；显示禁用的“上架中”按钮；取消、下架隐藏，禁止重复执行'],['已上架','收到服务端成功结果，包体处理和发布生效均已完成','详情、下架可用；取消发布隐藏'],['发布失败','执行报错或完成前复核失败；原上架版本保持不变','仅详情和失败原因；修复后创建新发布'],['已取消','运营在执行前确认取消并填写原因','仅详情；不再触发上架'],['已下架','运营对已上架记录确认下架并填写原因','仅详情；重新上架创建新记录'],['已替换','同游戏的新发布成功生效后替换旧上架记录','仅详情；新发布处理中不提前替换旧版']],note:'这里只供运营使用，可查看所有游戏并单方面取消或下架，不受创建来源限制。开发者仅在开发者后台操作，其记录同步到此处；来源不代表本后台角色。原型以 10 秒模拟服务端执行，正式实现须以服务端任务结果判定完成，不能按计时器或点击即标为已上架。'},
+ versions:{order:'正式发布成功 → ACTIVE；暂停 → PAUSED；选择有效历史版本回滚成功 → ROLLED BACK（新的指针状态）。',rows:[['未选择游戏 / 尚未发布','没有当前正式 Release','暂停、回滚禁用'],['ACTIVE','当前正式版本正常签发授权','暂停可用；有稳定目标且校验通过才可回滚'],['PAUSED','暂停签发新的下载授权','暂停禁用；有有效目标时可回滚'],['ROLLED BACK','指针已切回选定稳定 Build','不能重复回到当前目标；按目标的新状态决定操作']],note:'历史版本、稳定版本是版本记录分类，不是强制依次流转的任务状态。旧版本页仍有固定回滚目标和局部更新，上述按钮约束是研发规则，后续需统一模型。'}
+};
+function appendStateContract(notes,modal){
+ const contract=stateContracts[reviewPage];if(!contract)return;
+ const preferred={build:['包体记录','包体与自动检查','构建列表','自动检查','构建信息'],qa:['测试任务','测试对象'],listing:['上架审核列表','审核对象','审核结论'],schedule:['发布记录','发布信息','上架设置','操作对象'],versions:['当前版本与操作','版本信息'] }[reviewPage];
+ const target=preferred.map(name=>notes.find(n=>n.title===name)).find(Boolean)||notes[0];if(!target)return;
+ const card=$('#review-note-'+target.number);if(!card)return;
+ if(reviewPage==='listing'||reviewPage==='schedule')card.insertAdjacentHTML('beforeend','<div class="state-contract"><h4>审核与发布的区别</h4><p>上架审核：决定是否允许发布，产出审核单结论。发布管理：管理何时执行与当前上架状态，产出 Release 和执行日志。审核通过 ≠ 已上架；审核通过后仍需创建发布，经历待上架 / 上架中，执行成功才是已上架。</p></div>');
+ card.insertAdjacentHTML('beforeend',`<div class="state-contract"><h4>状态顺序</h4><p>${reviewEscape(contract.order)}</p><h4>状态、变化场景与按钮</h4><dl>${contract.rows.map(([state,event,buttons])=>`<div><dt>${reviewEscape(state)}</dt><dd>${reviewEscape(event)}</dd><dd><b>按钮：</b>${reviewEscape(buttons)}</dd></div>`).join('')}</dl><p class="state-note">${reviewEscape(contract.note)}</p></div>`);
+ const fieldList=card.querySelector('.review-field-list');if(fieldList)card.querySelectorAll('.state-contract').forEach(block=>card.insertBefore(block,fieldList));
+ const formTarget=notes.find(n=>['任务内容','上架设置','处理原因','测试结论','审核结论','测试人员'].includes(n.title));
+ if(modal&&formTarget){
+  const text=workflowKind==='package-start'?'开始测试：测试人员必填；确认后从待测试进入测试中，记录领取人员和开始时间。随后使用测试账号登录客户端下载安装。':workflowKind==='package-result'?'测试通过：结论必填，提交后进入上架审核；测试不通过：问题与复现说明必填，提交后通知开发者。提交前重验必须仍为测试中。':workflowKind==='listing-result'?'确认退回：原因必填，仅待审核单可提交；成功后记录审核完成时间，终态不显示重复审核按钮。':workflowKind==='qa-create'?'创建任务：未填完整时可点击并显示校验错误；游戏、Build、任务名称、负责人及至少一项测试范围必填。创建成功关闭弹窗，生成待测试任务。':workflowKind==='publication-create'?'创建发布：缺少必填项时显示错误；已选择 Build 但前置检查未通过时禁用。立即上架时禁用时间与时区输入。提交成功只表示进入上架中或待上架，不代表已经上架。':workflowKind==='publication-action'?'确认：原因必填；提交前再次核对记录状态。若任务已由待上架变为上架中，取消操作被拒绝，保留输入并提示刷新记录。':'提交结论：说明必填；仅测试中任务可提交。终态详情不提供重复提交。';
+  $('#review-note-'+formTarget.number)?.insertAdjacentHTML('beforeend',`<div class="state-contract"><h4>表单与按钮状态</h4><p>${reviewEscape(text)}</p><p>取消 / 返回 / 关闭仅关闭弹窗，不提交业务变更；只读弹窗不显示底部操作栏。</p></div>`);
+ }
+}
+
+// Query inputs are drafts; only 查询 / 重置 changes the applied Build query.
+let appliedBuildQuery={app:'',q:'',state:'',gameText:''};
+const buildIdentity=build=>JSON.stringify([build.app,build.build]);
+const listingReviews=new Map();
+function applyBuildQuery(){
+ const game=$('#buildGameFilter'),input=game.nextElementSibling?.querySelector('.game-picker-input');
+ appliedBuildQuery={app:game.value,q:$('#buildSearch').value.trim().toLowerCase(),state:$('#buildStateFilter').value,gameText:game.value?'':(input?.value||'').trim().toLowerCase()};
+ renderBuilds();
+}
+function recordTimeCell(iso){
+ if(!iso)return '<td class="record-time">—</td>';
+ const [date,...time]=formatTime(iso).split(' ');return `<td class="record-time">${date}<small>${time.join(' ')}</small></td>`;
+}
+function migrateTimedRecords(){
+ // Use deterministic sample dates; real actions below record actual event times.
+ const dateFor=(index,hours=0,id='')=>{const match=id.match(/-(26)(\d{2})(\d{2})-/);return new Date(match?Date.UTC(2000+Number(match[1]),Number(match[2])-1,Number(match[3]),1+hours):Date.UTC(2026,8,3-index,1+hours)).toISOString()};
+ const qaRows=[...$('#qaRows').querySelectorAll('tr[data-app]')];
+ $('#qaRows').closest('table').querySelector('thead th:last-child').insertAdjacentHTML('beforebegin','<th>创建时间</th><th>完成时间</th>');
+ qaRows.forEach((row,i)=>{
+  const id=row.cells[1].textContent.trim(),state=row.dataset.state,created=dateFor(i,0,id),started=state==='待测试'?null:dateFor(i,1,id),completed=['已通过','已退回'].includes(state)?dateFor(i,3,id):null;
+  const task={id,app:row.dataset.app,build:row.cells[2].textContent.trim(),name:row.cells[3].textContent.trim()+'测试',owner:row.cells[4].textContent.trim(),scopes:row.cells[3].textContent.trim().split(/\s*\/\s*/),state,created,started,completed,updated:completed||started||created,due:'',internal:`INT-HISTORY-${i+1}`,note:'',result:completed?'历史测试结论':''};
+  qaTasks.set(id,task);row.dataset.qaId=id;renderQATaskRow(task);
+ });
+ $('#listingRows').closest('table').querySelector('thead th:last-child').insertAdjacentHTML('beforebegin','<th>提交时间</th><th>审核完成时间</th>');
+ [...$('#listingRows').querySelectorAll('tr[data-app]')].forEach((row,i)=>{
+  const id=row.cells[1].textContent.trim(),state=row.dataset.state,submitted=dateFor(i,0,id),reviewed=state==='待审核'?null:dateFor(i,2,id);
+  const record={id,app:row.dataset.app,product:row.cells[2].textContent.trim(),build:row.cells[3].textContent.trim(),qa:row.cells[4].textContent.trim(),state,submitted,reviewed,updated:reviewed||submitted,reviewer:reviewed?'ops.lin':'',reason:reviewed?'历史审核结论':''};
+  listingReviews.set(id,record);row.dataset.reviewId=id;renderListingReviewRow(record);
+ });
+ Object.assign(fieldNotes,{
+  '创建时间':['created-time','创建时间','测试任务成功创建的时间，创建后保持不变。'],
+  '开始时间':['started-time','开始时间','待测试任务首次点击开始测试的时间；未开始显示 —。'],
+  '完成时间':['completed-time','完成时间','提交测试通过或退回结论的时间；任务尚未完成显示 —。'],
+  '审核完成时间':['reviewed-time','审核完成时间','审核通过或退回结论提交成功的时间；待审核显示 —，不等于发布生效时间。'],
+  '更新时间':['updated-time','更新时间','当前记录最近一次业务状态变更的时间；查询、打开详情不修改该时间。']
+ });
+ workflowGuides.taskTimes='时间记录按创建 → 开始 → 完成推进；新任务以实际操作时间写入，终态保留最后一次更新时间。统一显示 UTC+8；历史样例使用固定演示时间。';
+ workflowGuides.reviewTimes='提交时间在审核单进入流程时记录；通过或退回时写入审核完成时间、更新时间和审核人。待审核不填写完成时间；这些时间不代表上架时间。';
+ workflowGuides.listingObject='上架审核回答是否允许发布：核对游戏、商品、发行资质和目标 Build 的 QA 结论。通过只形成审核结论，不创建 Release、不改变线上上架状态。';
+ workflowGuides.listingResult='仅待审核单可以通过或退回；通过要求 QA 已通过且发行资质有效。退回必须填写原因，成功后记录实际处理时间。之后在发布管理创建并执行 Release。';
+}
+function renderListingReviewRow(record){
+ const row=[...$('#listingRows').querySelectorAll('tr')].find(r=>r.dataset.reviewId===record.id);if(!row)return;
+ row.dataset.state=record.state;
+ row.innerHTML=`<td><b>${gameCatalog[record.app].name}</b><br><small>${record.app}</small></td><td>${businessEscape(record.id)}</td><td>${businessEscape(record.product)}</td><td>${businessEscape(record.build)}</td><td><span class="tag ${record.qa==='已通过'?'green':'red'}">${record.qa}</span></td><td><span class="tag ${record.state==='已通过'?'green':record.state==='已退回'?'red':'amber'}">${record.state}</span></td>${recordTimeCell(record.submitted)}${recordTimeCell(record.reviewed)}<td><button class="ghost" data-action="listing-record-detail" data-id="${record.id}">详情</button></td>`;
+ bindActions(row);
+}
+function openListingReview(id){
+ const r=listingReviews.get(id);if(!r)return;
+ const body=workflowSection('审核对象','listingObject',keyValues([['游戏',gameCatalog[r.app].name],['APPID',r.app],['审核单',r.id],['商品',r.product],['目标 Build',r.build],['QA',r.qa],['状态',r.state]]))+workflowSection('审核记录','listingResult',keyValues([['审核人',r.reviewer],['审核结论',r.reason]]))+workflowSection('时间记录','reviewTimes',keyValues([['提交时间',formatTime(r.submitted)],['审核完成时间',formatTime(r.reviewed)],['更新时间',formatTime(r.updated)]]));
+ const eligible=r.qa==='已通过'&&gameCatalog[r.app].licensed;
+ const footer=r.state==='待审核'?`<button class="danger" data-action="listing-record-fail" data-id="${id}">退回</button><button class="primary" data-action="listing-record-pass" data-id="${id}" ${eligible?'':'disabled title="QA 或发行资质未通过"'}>审核通过</button>`:'';
+ showWorkflow('上架审核详情',body,footer,'listing-detail');
+}
+function submitListingReview(id,pass){
+ const r=listingReviews.get(id);if(!r||r.state!=='待审核')return;
+ if(pass){
+  if(r.qa!=='已通过'||!gameCatalog[r.app].licensed)return;
+  finishListingReview(r,'已通过','审核通过');return;
+ }
+ showWorkflow('退回上架审核',`<form id="workflowForm">${workflowSection('审核结论','listingResult',formField('reviewReason','退回原因 *','<textarea id="reviewReason" required maxlength="1000"></textarea>'))}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">取消</button><button class="danger" form="workflowForm" type="submit">确认退回</button>','listing-result');
+ $('#workflowForm').onsubmit=e=>{e.preventDefault();const reason=$('#reviewReason').value.trim();if(!reason){workflowError('请填写退回原因。');return}if(r.state!=='待审核'){workflowError('审核状态已变化，请重新打开记录。');return}finishListingReview(r,'已退回',reason)};
+}
+function finishListingReview(record,state,reason){
+ record.state=state;record.reason=reason;record.reviewed=nowISO();record.updated=record.reviewed;record.reviewer=actorName();
+ renderListingReviewRow(record);applyStaticFilter('listing');closeWorkflow();toast('审核结论已保存');
+}
+
+// One record per APPID + Build. Build events enqueue tests automatically.
+let packageReady=false,packageQuery={q:'',state:''};
+const packageEntries=new Map();
+const packageStates=['构建中','构建失败','待测试','测试中','测试通过','测试不通过'];
+function initPackageTesting(){
+ const previous=[...qaTasks.values()];qaTasks.clear();
+ builds.forEach((build,index)=>{
+  const key=buildIdentity(build);if(packageEntries.has(key))return;const originalStatus=build.status;
+  const historical=previous.find(t=>t.app===build.app&&t.build===build.build);
+  const uploaded=historical?.created||new Date(Date.UTC(2026,8,3-index,1)).toISOString();
+  const entry={key,build,uploaded,buildFinished:null,notification:null,task:null,state:'构建中',reason:''};
+  packageEntries.set(key,entry);
+  if(build.status==='检查失败')completePackageBuild(entry,false,'自动检查失败：包体内容校验未通过，请修复后重新上传。',uploaded);
+  else{
+   completePackageBuild(entry,true,'',uploaded);
+   if(originalStatus==='READY_FOR_QA'&&historical&&['测试中','已通过','已退回'].includes(historical.state)){
+    Object.assign(entry.task,{owner:historical.owner,started:historical.started,completed:historical.completed,updated:historical.updated,result:historical.result});
+    entry.state=historical.state==='已通过'?'测试通过':historical.state==='已退回'?'测试不通过':'测试中';entry.task.state=historical.state;
+    if(entry.state==='测试不通过')entry.notification={time:historical.completed||uploaded,reason:historical.result||'客户端测试未通过，请修复包体。',status:'已通知'};
+   }
+  }
+ });
+ const activeSample=packageEntries.get(JSON.stringify(['app_2001','bld_demo_1_8']));
+ if(activeSample?.task){activeSample.state='测试中';Object.assign(activeSample.task,{state:'测试中',owner:'qa.lin',started:activeSample.task.created,completed:null,result:''})}
+ const failedSample=packageEntries.get(JSON.stringify(['app_1842','bld_demo_2_5']));
+ if(failedSample?.task){failedSample.state='测试不通过';Object.assign(failedSample.task,{state:'已退回',result:'客户端首次启动失败，复现：安装完成后点击启动，进程退出。'});failedSample.notification={time:failedSample.task.completed||failedSample.uploaded,reason:failedSample.task.result,status:'已通知'}}
+ // A processing sample demonstrates a build completion event without a manual approval button.
+ const processing=packageEntries.get(JSON.stringify(['app_1730','bld_2880']));
+ if(processing){qaTasks.delete(processing.task.id);processing.task=null;processing.state='构建中';processing.build.status='BUILDING';processing.buildFinished=null;processing.notification=null;processing.finishAt=Date.now()+15000}
+ for(const [id,review] of listingReviews){const entry=packageEntries.get(JSON.stringify([review.app,review.build]));if(!entry||entry.state!=='测试通过'){listingReviews.delete(id);[...$('#listingRows').children].find(row=>row.dataset.reviewId===id)?.remove()}}
+ for(const entry of packageEntries.values())if(entry.state==='测试通过')ensurePackageReview(entry,entry.task.completed||entry.uploaded);
+ $('[data-page="build"]').textContent='包体测试';$('[data-page="qa"]')?.remove();$('#page-qa')?.remove();delete filterDefs.qa;
+ $('#page-build').innerHTML=`<div class="page-head"><div><h1>包体测试</h1></div></div>
+ <div class="panel scope-panel"><div class="scope-bar package-filters"><div class="scope-field"><label for="packageSearch">游戏 / 构建记录</label><input class="input" id="packageSearch" placeholder="游戏名称 / APPID / Build ID / 版本号"></div><div class="scope-field"><label for="packageState">处理状态</label><select class="input" id="packageState"><option value="">全部状态</option>${packageStates.map(s=>`<option>${s}</option>`).join('')}</select></div><div class="publication-query-actions"><button class="secondary" data-action="package-reset">重置</button><button class="primary" data-action="package-query">查询</button></div></div></div>
+ <div class="metrics" id="packageMetrics"></div>
+ <div class="panel"><div class="panel-head"><h2>包体记录</h2><span class="record-count" id="packageCount"></span></div><div class="table-wrap"><table class="package-table"><thead><tr><th>游戏 / APPID</th><th>Build / 版本</th><th>状态 / 测试人员</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="packageRows"></tbody></table></div></div>`;
+ annotations.build.title='包体测试';annotations.build.intro='测试人员查看自动构建结果，使用测试账号登录客户端下载安装和测试，在后台提交测试结论。构建成功自动进入待测试，无需人工审批或创建任务。';
+ workflowGuides.packageObject='每条记录按 APPID + Build ID 唯一识别。上传后程序自动构建和检查；成功自动登记待测试记录并关联 Internal Release。失败自动记录原因并通知开发者，不能人工改成成功。';
+ workflowGuides.packageClient='测试人员在 PC 客户端登录有 Internal 测试权限的账号，选择本游戏及指定 Build 下载测试。后台仅记录领取与结论，不在此下载或运行游戏。';
+ workflowGuides.packageResult='只有测试中记录可提交结果。通过后进入上架审核；不通过必须填写问题和复现说明，系统向开发者发送通知，修复必须上传新 Build。';
+ workflowGuides.packageTimes='记录上传、构建完成、开始测试和测试完成时间。未发生的时间显示 —；状态改变时写入实际时间。';
+ workflowGuides.packageNotice='构建失败或测试不通过时，保存失败原因和通知时间。正式系统向开发者后台发送通知；本单文件只模拟通知记录，不实际发送外部消息。';
+ stateContracts.build={order:'上传 → 构建中 → 待测试 → 测试中 → 测试通过 → 上架审核。失败分支：构建中 → 构建失败；测试中 → 测试不通过；失败后开发者上传新 Build 重新开始。',rows:[['构建中','程序构建并执行完整性、签名等自动检查','仅详情；无人工通过、退回和创建任务'],['构建失败','自动检查不通过，记录原因并通知开发者','仅详情；修复后上传新 Build'],['待测试','构建成功后自动进入队列，关联 Internal Release','开始测试可用，无需手动创建任务'],['测试中','测试人员领取，使用测试账号在客户端下载安装和测试','测试通过 / 测试不通过可用，结果必填'],['测试通过','提交通过结论后自动生成待上架审核单','仅详情；不会自动上架'],['测试不通过','提交问题说明后通知开发者','仅详情；保留失败记录，新 Build 重新测试']],note:'当前模块供 QA / 测试人员使用，构建检查由程序完成。示例中的 Silent Harbor 构建在页面打开约 15 秒后完成，用于演示自动入队；刷新恢复样例，通知与 Internal 授权均为本地模拟。'};
+ packageReady=true;renderPackages();bindActions($('#page-build'));route('build');
+ setInterval(()=>{for(const entry of packageEntries.values())if(entry.state==='构建中'&&entry.finishAt&&entry.finishAt<=Date.now()){completePackageBuild(entry,true);renderPackages()}},1000);
+}
+function completePackageBuild(entry,success,reason='',time=nowISO()){
+ if(entry.buildFinished)return;entry.buildFinished=time;
+ if(!success){entry.state='构建失败';entry.build.status='检查失败';entry.reason=reason;entry.notification={time,reason,status:'已通知'};return}
+ entry.build.status='READY_FOR_QA';entry.build.cls='green';entry.state='待测试';
+ entry.task={id:`QA-AUTO-${entry.build.app}-${entry.build.build}`,app:entry.build.app,build:entry.build.build,name:'包体测试',owner:'',scopes:['下载安装','增量更新','启动验权','失败回滚'],state:'待测试',created:time,started:null,completed:null,updated:time,result:'',internal:`INT-${entry.build.app}-${entry.build.build}`};
+ qaTasks.set(entry.task.id,entry.task);
+}
+function ensurePackageReview(entry,time=nowISO()){
+ if([...listingReviews.values()].some(r=>r.app===entry.build.app&&r.build===entry.build.build))return;
+ const record={id:nextBusinessId('REV'),app:entry.build.app,build:entry.build.build,product:'游戏本体',qa:'已通过',state:'待审核',submitted:time,reviewed:null,updated:time,reviewer:'',reason:''};
+ listingReviews.set(record.id,record);const row=document.createElement('tr');row.dataset.reviewId=record.id;row.dataset.app=record.app;$('#listingRows').prepend(row);renderListingReviewRow(record);
+}
+function packageButtons(entry){
+ const key=businessEscape(entry.key),detail=`<button class="ghost" data-action="package-detail" data-key="${key}">详情</button>`;
+ return detail+(entry.state==='待测试'?`<button class="ghost" data-action="package-start" data-key="${key}">开始测试</button>`:entry.state==='测试中'?`<button class="ghost" data-action="package-pass" data-key="${key}">测试通过</button><button class="ghost action-red" data-action="package-fail" data-key="${key}">测试不通过</button>`:'');
+}
+function renderPackages(){
+ if(!packageReady)return;
+ const entries=[...packageEntries.values()],{q,state}=packageQuery;
+ const list=entries.filter(e=>(!state||e.state===state)&&(!q||`${e.build.game} ${e.build.app} ${e.build.build} ${e.build.version}`.toLowerCase().includes(q)));
+ $('#packageCount').textContent=`${list.length} 条`;
+ $('#packageMetrics').innerHTML=['构建中','待测试','测试中','测试不通过'].map(s=>`<div class="metric"><small>${s}</small><strong>${entries.filter(e=>e.state===s).length}</strong></div>`).join('');
+ $('#packageRows').innerHTML=list.length?list.map(e=>`<tr data-package-key="${businessEscape(e.key)}"><td><b>${businessEscape(e.build.game)}</b><small>${e.build.app}</small></td><td>${businessEscape(e.build.build)}<small>${businessEscape(e.build.version)}</small></td><td><span class="tag ${e.state.includes('失败')||e.state==='测试不通过'?'red':e.state==='测试通过'?'green':e.state==='构建中'?'amber':'blue'}">${e.state}</span><small>${businessEscape(e.task?.owner||'—')}</small></td>${recordTimeCell(e.task?.updated||e.buildFinished||e.uploaded)}<td>${packageButtons(e)}</td></tr>`).join(''):'<tr class="empty-row"><td colspan="5">没有符合条件的包体记录</td></tr>';
+ bindActions($('#page-build'));if(reviewPage==='build')renderReviewNotes();
+ if(workflowKind==='package-detail'&&$('#workflowModal').dataset.packageKey)openPackageDetail($('#workflowModal').dataset.packageKey);
+}
+function openPackageDetail(key){
+ const e=packageEntries.get(key);if(!e)return;const t=e.task;
+ const body=workflowSection('包体与自动检查','packageObject',keyValues([['游戏',e.build.game],['APPID',e.build.app],['Build ID',e.build.build],['版本',e.build.version],['状态',e.state],['自动检查',e.state==='构建中'?'执行中':e.state==='构建失败'?e.reason:'已通过']]))+
+ (t?workflowSection('客户端测试','packageClient',keyValues([['测试人员',t.owner||'未领取'],['测试渠道','Internal'],['Internal',t.internal],['测试范围',t.scopes.join(' / ')],['测试结论',t.result]])):'')+
+ workflowSection('时间记录','packageTimes',keyValues([['上传时间',formatTime(e.uploaded)],['构建完成时间',formatTime(e.buildFinished)],['开始时间',formatTime(t?.started)],['完成时间',formatTime(t?.completed)]]))+
+ (e.notification?workflowSection('开发者通知','packageNotice',keyValues([['接收方',gameCatalog[e.build.app].publisher],['通知状态',e.notification.status],['通知时间',formatTime(e.notification.time)],['问题说明',e.notification.reason]])):'');
+ showWorkflow('包体测试详情',body,packageButtons(e).replace(/^<button.*?<\/button>/,''),'package-detail');$('#workflowModal').dataset.packageKey=key;
+}
+function startPackageTest(key){
+ const e=packageEntries.get(key);if(e?.state!=='待测试')return;
+ showWorkflow('开始测试',`<form id="workflowForm">${workflowSection('测试人员','packageClient',formField('packageTester','测试人员 *','<input id="packageTester" class="input" placeholder="输入姓名或测试账号" maxlength="80" required>'))}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">取消</button><button class="primary" form="workflowForm" type="submit">确认开始</button>','package-start');
+ $('#workflowForm').onsubmit=event=>{event.preventDefault();const owner=$('#packageTester').value.trim();if(!owner){workflowError('请填写测试人员。');return}if(e.state!=='待测试'){workflowError('记录已被领取，请重新查看。');return}e.state='测试中';e.task.state='测试中';e.task.owner=owner;e.task.started=nowISO();e.task.updated=e.task.started;closeWorkflow();renderPackages();toast('已开始测试')};
+}
+function finishPackageTest(key,pass){
+ const e=packageEntries.get(key);if(e?.state!=='测试中')return;
+ showWorkflow(pass?'提交测试通过':'提交测试不通过',`<form id="workflowForm">${workflowSection('测试结论','packageResult',keyValues([['游戏',e.build.game],['Build ID',e.build.build],['测试人员',e.task.owner]])+formField('packageResult',pass?'测试结论 *':'问题与复现说明 *','<textarea id="packageResult" required maxlength="2000"></textarea>'))}${workflowErrorBox}</form>`,'<button class="secondary" data-action="close-workflow">取消</button><button class="primary" form="workflowForm" type="submit">确认提交</button>','package-result');
+ $('#workflowForm').onsubmit=event=>{event.preventDefault();const reason=$('#packageResult').value.trim();if(!reason){workflowError('请填写测试结论或问题说明。');return}if(e.state!=='测试中'){workflowError('测试状态已变化，请重新查看。');return}
+ e.state=pass?'测试通过':'测试不通过';e.task.state=pass?'已通过':'已退回';e.task.result=reason;e.task.completed=nowISO();e.task.updated=e.task.completed;
+ if(pass)ensurePackageReview(e);else e.notification={time:e.task.completed,reason,status:'已通知'};
+ closeWorkflow();renderPackages();applyStaticFilter('listing');toast(pass?'测试通过，已进入上架审核':'测试不通过，已记录开发者通知')};
+}
+function handlePackageAction(action,el){
+ if(['create-qa','approve-build','qa-pass','qa-fail','qa-start','qa-task-detail','qa-result-pass','qa-result-fail'].includes(action))return true;
+ if(action==='package-query'||action==='package-reset'){if(action==='package-reset'){$('#packageSearch').value='';$('#packageState').value=''}packageQuery={q:$('#packageSearch').value.trim().toLowerCase(),state:$('#packageState').value};renderPackages()}
+ else if(action==='package-detail')openPackageDetail(el.dataset.key);
+ else if(action==='package-start')startPackageTest(el.dataset.key);
+ else if(action==='package-pass'||action==='package-fail')finishPackageTest(el.dataset.key,action==='package-pass');
+ else return false;return true;
+}
+
+$$('.nav-btn,.nav-root-btn').forEach(b=>b.onclick=()=>route(b.dataset.page));$$('[data-page-link]').forEach(b=>b.onclick=()=>route(b.dataset.pageLink));prepareStaticRows();seedDemoRecords();initBusinessWorkflows();applyFilterCopy();wirePageFilters();wireGameListFilter();renderBuilds();renderAnno('build');bindActions();bindDetails();enhanceGameSearches();enhanceSelects();createQueryActions();wirePackageMenu();enhanceTextClears();prepareReviewLayer();['modal','detailModal','releaseModal'].forEach(id=>{$(`#${id}`).onclick=e=>{if(e.target===$(`#${id}`)){id==='modal'?closeModal():id==='detailModal'?closeDetail():closeRelease()}}});document.addEventListener('click',()=>{closeSelects();closeGamePickers()});$('#workflowModal').onclick=e=>{if(e.target===$('#workflowModal'))closeWorkflow()};document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeWorkflow();closeSelects();closeGamePickers();closeModal();closeDetail();closeRelease()}});
+initPackageTesting();
+</script>
+</body>
+</html>
