@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC游戏发行平台全链路业务流程说明</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#1d2c3f;font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif}.top{background:#17263b;color:#fff;padding:24px 30px}.top h1{margin:0 0 7px;font-size:25px}.top p{margin:0;color:#b8c7d7}.wrap{max-width:1380px;margin:auto;padding:24px}.rule{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}.rule div{background:#fff;border:1px solid #d3dde7;padding:12px 14px}.rule b{display:block;margin-bottom:5px}.rule span{font-size:12px;color:#62758a}.module{background:#fff;border:1px solid #d3dde7;padding:22px;margin:0}.module-head{display:flex;gap:12px;align-items:center;margin-bottom:18px}.module-no{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#286ac8;color:#fff;font-weight:700}.module-head h2{margin:0;font-size:21px}.module-head p{margin:4px 0 0;color:#62758a;font-size:13px}.flow{display:grid;justify-items:center}.node{width:min(100%,620px);border:1.5px solid #8598ac;background:#fff;padding:14px 17px}.node.system{background:#edf4ff;border-color:#7198d1}.node.review{background:#fff7df;border-color:#c08a21}.node.success{background:#e8f7ee;border-color:#4fa173}.node.fail{background:#fff0f0;border-color:#d86464}.node h3{margin:8px 0 5px;text-align:center;font-size:16px}.node>p{margin:0;text-align:center;color:#607389;font-size:13px;line-height:1.55}.meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.meta span{padding:4px 7px;background:#e9eef4;color:#475d74;font-size:11px}.system .meta span{background:#dce9fa}.review .meta span{background:#f5e8c4}.success .meta span{background:#d7efdf}.fail .meta span{background:#f5dada}.ids{margin-top:7px!important;color:#35679f!important;font-size:12px!important}.arrow{height:32px;display:grid;place-items:center;font-size:23px;color:#60758a}.branches{width:min(100%,970px);display:grid;grid-template-columns:1fr 1fr;gap:16px}.branch-label{text-align:center;font-size:13px;font-weight:700;margin-bottom:6px}.no{color:#bd4d4d}.yes{color:#28764f}.back{text-align:center;color:#b64e4e;font-size:12px;margin-top:7px}.handoff{margin:0;background:#dcecff;border:2px solid #3977c9;padding:16px 20px;text-align:center}.handoff b{display:block;font-size:17px;margin-bottom:5px}.handoff span{font-size:13px;color:#48657f}.connector{height:54px;display:grid;place-items:center;color:#286ac8;font-weight:700}.connector:before{content:"↓";font-size:28px;margin-right:8px}.start-node{width:min(100%,760px);padding:11px 16px;margin:0 auto 18px;background:#edf5ff;border:1px solid #72a0db;text-align:center}.start-node b{display:block}.start-node span{font-size:12px;color:#5c7188}.parallel-note{text-align:center;background:#eef3f8;color:#4e657d;padding:11px;margin-bottom:14px;font-size:13px}.parallel{display:grid;grid-template-columns:1fr 1fr;gap:20px}.track{background:#fafbfd;border:1px solid #d4dee7;padding:18px}.track h3{margin:0 0 5px;text-align:center;font-size:18px}.track>.desc{margin:0 0 15px;text-align:center;color:#64778b;font-size:13px}.track .node{max-width:540px}.track .branches{grid-template-columns:1fr 1fr}.merge{display:grid;grid-template-columns:1fr 70px 1fr 70px 1.2fr;align-items:center;gap:8px;margin-top:20px}.merge div:not(.symbol){padding:16px;text-align:center;background:#e8f7ee;border:1.5px solid #4fa173}.merge b{display:block;margin-bottom:4px}.symbol{text-align:center;font-size:25px;font-weight:700;color:#61758b}.after{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.after div{padding:14px 16px;background:#e9eef4}.after b{display:block;margin-bottom:5px}.after p{margin:0;color:#607389;font-size:12px;line-height:1.6}.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;color:#62758a;font-size:12px}.legend i{display:inline-block;width:13px;height:13px;border:1px solid #8598ac;margin-right:5px;vertical-align:-2px}.legend .ls{background:#edf4ff;border-color:#7198d1}.legend .lr{background:#fff7df;border-color:#c08a21}.legend .lok{background:#e8f7ee;border-color:#4fa173}.legend .lf{background:#fff0f0;border-color:#d86464}@media(max-width:900px){.rule,.parallel,.after,.branches{grid-template-columns:1fr}.merge{grid-template-columns:1fr}.symbol{transform:rotate(90deg)}}@media print{body{background:#fff}.top{padding:14px 20px}.wrap{max-width:none;padding:8px}.module{break-inside:avoid}.rule,.legend{display:none}}
+
+html{scroll-behavior:smooth}.top{padding-left:max(30px,calc((100vw - 1740px)/2 + 30px))}.page-shell{max-width:1800px;margin:auto;display:grid;grid-template-columns:320px minmax(0,1fr);gap:22px;padding:22px}.side{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:#fff;border:1px solid #d3dde7;padding:18px}.side h2{margin:0 0 12px;font-size:18px}.side h3{margin:20px 0 9px;font-size:14px}.toc{display:grid;gap:6px}.toc a{display:block;padding:9px 10px;background:#f1f5f9;color:#314a63;text-decoration:none;border-left:3px solid transparent;font-size:13px;line-height:1.45}.toc a:hover,.toc a:focus{border-left-color:#286ac8;background:#e8f1fb}.toc small{display:block;color:#718398;margin-top:2px}.side details{border-top:1px solid #e0e6ec;padding:10px 0}.side summary{cursor:pointer;font-weight:700;font-size:13px}.glossary{margin:10px 0 0}.glossary dt{font-weight:700;font-size:12px;margin-top:10px;color:#28445f}.glossary dd{margin:3px 0 0;color:#617489;font-size:11px;line-height:1.55}.side-list{margin:8px 0 0;padding-left:18px;color:#5d7187;font-size:12px;line-height:1.7}.content{min-width:0}.purpose{background:#fff;border:1px solid #d3dde7;padding:20px;margin-bottom:22px}.purpose h2{margin:0 0 7px;font-size:21px}.purpose>p{margin:0;color:#607389;line-height:1.65}.overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}.overview-card{padding:14px;background:#eef3f8}.overview-card b{display:block;margin-bottom:7px}.overview-card p,.overview-card ul{margin:0;color:#5e7186;font-size:12px;line-height:1.65}.overview-card ul{padding-left:17px}.outline-title{margin:18px 0 9px;font-size:15px}.outline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.outline a{padding:11px 9px;text-align:center;background:#edf4ff;border:1px solid #bdd0e8;color:#315d8d;text-decoration:none;font-size:12px;line-height:1.45}.outline a b{display:block;margin-bottom:3px}.module{scroll-margin-top:14px}.module:target{border-color:#286ac8;box-shadow:0 0 0 2px #d7e8ff}.back-top{display:block;margin-top:18px;text-align:center;color:#376b9e;font-size:12px;text-decoration:none}
+@media(max-width:1100px){.page-shell{grid-template-columns:1fr}.side{position:static;max-height:none}.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.outline{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.page-shell{padding:12px}.overview-grid,.outline{grid-template-columns:1fr}}
+</style>
+</head>
+<body id="top">
+<header class="top"><h1>PC游戏发行平台全链路业务流程说明</h1><p>帮助产品、研发、运营和QA理解从开发者创建游戏，到玩家购买、下载、启动的业务流程、系统协作、审核节点和ID流转。</p></header>
+<div class="page-shell">
+<aside class="side" aria-label="流程目录和名词解释">
+<h2>流程目录</h2>
+<nav class="toc">
+<a href="#flow1"><b>流程1 创建并审核游戏和DLC</b><small>生成AppID并完成资料审核</small></a>
+<a href="#flow2"><b>流程2 准备游戏包和商品</b><small>文件线与商品线并行</small></a>
+<a href="#flow3"><b>流程3 提交并执行正式上线</b><small>发布审核和正式Build切换</small></a>
+<a href="#flow4"><b>流程4 玩家购买并下载</b><small>订单、License和CDN下载</small></a>
+<a href="#flow5"><b>流程5 启动游戏并验权</b><small>SDK、Ticket和DLC使用权</small></a>
+</nav>
+<h3>读图说明</h3>
+<ul class="side-list"><li>每个节点标明角色和操作入口。</li><li>蓝色表示系统自动处理。</li><li>黄色表示审核或检查。</li><li>绿色表示通过或生效。</li><li>红色表示退回、失败或阻断。</li><li>流程终点直接成为下一流程起点。</li></ul>
+<details open><summary>应用与文件名词</summary><dl class="glossary">
+<dt>Base App / 游戏本体</dt><dd>可安装和启动的游戏主体。开发者创建资料，平台生成AppID。</dd>
+<dt>DLC App</dt><dd>归属于游戏本体的附加内容。每个DLC拥有独立DLC AppID。</dd>
+<dt>AppID</dt><dd>游戏本体或DLC的唯一应用编号，由平台系统生成，开发者不能自行填写。</dd>
+<dt>Depot</dt><dd>一组一起下载的文件，可按游戏本体、DLC、Windows、macOS或语言拆分。</dd>
+<dt>Upload ID</dt><dd>一次上传任务的编号，暂停和续传继续使用同一个Upload ID。</dd>
+<dt>Build</dt><dd>一次不可修改的游戏文件版本。修复文件必须创建新的Build ID。</dd>
+<dt>Manifest</dt><dd>Build包含哪些文件和分块的清单，记录路径、大小和Hash。</dd>
+</dl></details>
+<details open><summary>商品与使用权名词</summary><dl class="glossary">
+<dt>Package</dt><dd>一个可销售或激活的授权单元。游戏本体和每个DLC通常分别配置Package。</dd>
+<dt>Bundle</dt><dd>多个Package的组合，例如豪华版＝游戏本体Package＋DLC Package。</dd>
+<dt>价格版本</dt><dd>开发者每次提交审核的价格快照。新版本通过前，旧价格继续生效。</dd>
+<dt>Order / 订单</dt><dd>玩家购买时生成的交易记录，保存购买内容和当时价格。</dd>
+<dt>License / 使用权</dt><dd>玩家购买后由系统写入账号的持有记录，决定能否下载和使用游戏或DLC。</dd>
+</dl></details>
+<details open><summary>发布、下载与启动名词</summary><dl class="glossary">
+<dt>Release / 上线申请</dt><dd>把某个Build设置到指定环境的一次发布申请和执行记录。</dd>
+<dt>Branch / 环境</dt><dd>决定一类用户使用哪个Build，例如Production正式环境、Internal测试环境。</dd>
+<dt>Active Build</dt><dd>某个环境当前实际向用户提供的Build。</dd>
+<dt>CDN</dt><dd>向玩家就近分发游戏文件。CDN只验证短期下载凭证，不判断商品价格。</dd>
+<dt>下载授权</dt><dd>平台确认玩家有License且Build可下载后生成的短期访问凭证。</dd>
+<dt>Launch Ticket</dt><dd>客户端启动游戏时申请的一次性短期凭证，用于证明合法启动。</dd>
+<dt>Session ID</dt><dd>SDK验权成功后创建的游戏会话编号。</dd>
+<dt>SDK</dt><dd>游戏接入平台账号、启动和DLC使用权验证的一套接口。</dd>
+</dl></details>
+<a class="back-top" href="#top">返回顶部</a>
+</aside>
+<main class="content">
+<section class="purpose">
+<h2>页面概览</h2><p>本页共5个流程，覆盖开发者开放平台、运营管理后台、PC客户端和相关服务。用于统一团队对角色、操作入口、审核门槛、状态结果和系统生成ID的理解。</p>
+<div class="overview-grid">
+<div class="overview-card"><b>涉及角色：6类</b><ul><li>开发者管理员</li><li>开发者构建人员</li><li>QA测试人员</li><li>运营审核人员</li><li>玩家</li><li>平台系统与游戏程序</li></ul></div>
+<div class="overview-card"><b>主要操作入口</b><ul><li>开发者开放平台</li><li>运营管理后台</li><li>本地上传组件</li><li>PC客户端</li><li>发行平台SDK</li></ul></div>
+<div class="overview-card"><b>涉及服务</b><ul><li>应用目录、构建与发布</li><li>商品、订单和License</li><li>对象存储和CDN</li><li>下载与启动鉴权</li><li>游戏安全服务端</li></ul></div>
+<div class="overview-card"><b>主要操作</b><ul><li>创建与提交资料</li><li>上传、构建和测试</li><li>商品定价与审核</li><li>上线、购买和授权</li><li>下载、启动和验权</li></ul></div>
+</div>
+<h3 class="outline-title">5个流程大纲</h3><div class="outline"><a href="#flow1"><b>1 创建应用</b>App/DLC资料审核</a><a href="#flow2"><b>2 双线准备</b>游戏包＋商品</a><a href="#flow3"><b>3 正式上线</b>审核并切换Build</a><a href="#flow4"><b>4 购买下载</b>订单＋License＋CDN</a><a href="#flow5"><b>5 启动验权</b>SDK＋Ticket＋Session</a></div>
+</section>
+
+<section class="module" id="flow1">
+<div class="module-head"><div class="module-no">1</div><div><h2>创建并审核游戏和DLC</h2><p>从开发者账号开始，终点是应用资料审核通过。</p></div></div>
+<div class="start-node"><b>流程起点：开发者已经开通平台账号</b><span>开发者组织和操作权限已经配置完成</span></div>
+<div class="flow">
+<div class="node"><div class="meta"><span>角色：开发者管理员</span><span>入口：开发者开放平台 → 游戏管理</span></div><h3>创建游戏本体；需要DLC时创建DLC</h3><p>填写游戏名称、支持系统、发行资料；每个DLC单独填写资料并归属游戏本体。</p></div>
+<div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：应用目录服务</span></div><h3>生成应用编号并建立归属关系</h3><p>游戏本体和每个DLC分别获得唯一编号；平台初始化空白默认销售项，后续由开发者配置。</p><p class="ids">输出：游戏AppID、DLC AppID、默认Package ID</p></div>
+<div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>角色：运营审核</span><span>入口：运营管理后台 → 游戏/DLC审核</span></div><h3>审核游戏和DLC资料</h3><p>检查开发者资质、发行材料、游戏名称和DLC归属。</p></div>
+<div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">不通过</div><div class="node fail"><div class="meta"><span>角色：开发者管理员</span><span>入口：开发者开放平台</span></div><h3>根据原因修改并重新提交</h3></div><div class="back">返回本流程“审核游戏和DLC资料”</div></div><div><div class="branch-label yes">通过</div><div class="node success"><h3>游戏和DLC资料审核通过</h3><p>后续功能解锁。</p></div></div></div>
+</div>
+</section>
+<div class="handoff"><b>流程1终点＝流程2起点：游戏和DLC资料审核通过</b><span>开发者现在可以同时准备游戏文件和商品。</span></div><div class="connector">进入流程2</div>
+
+<section class="module" id="flow2">
+<div class="module-head"><div class="module-no">2</div><div><h2>准备游戏包和商品</h2><p>两条工作并行，全部完成后才能首次上线。</p></div></div>
+<div class="start-node"><b>流程起点：游戏和DLC资料审核通过</b><span>来自流程1终点</span></div>
+<div class="parallel-note">下面两条线可以同时进行，不要求先做完其中一条。</div>
+<div class="parallel">
+<div class="track"><h3>A. 准备游戏包</h3><p class="desc">决定玩家要下载的实际文件。</p><div class="flow">
+<div class="node"><div class="meta"><span>角色：开发者构建人员</span><span>入口：开发者开放平台 → Depot与构建</span></div><h3>创建文件仓库</h3><p>选择游戏本体或DLC，配置Windows/macOS、架构和语言。</p><p class="ids">输出：Depot ID</p></div><div class="arrow">↓</div>
+<div class="node"><div class="meta"><span>角色：开发者构建人员</span><span>入口：本地上传组件</span></div><h3>扫描并上传游戏文件</h3><p>计算Hash和分块，复用已有文件，只上传缺失内容，支持暂停和续传。</p><p class="ids">输出：Upload ID、候选Build ID</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：构建服务、对象存储</span></div><h3>重建、检查并生成游戏包</h3><p>检查病毒、路径、权限、启动程序和系统签名，生成不可修改的文件清单。</p><p class="ids">输出：Manifest ID、最终Build ID</p></div><div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>角色：QA</span><span>入口：PC客户端测试账号 + 运营后台包体测试</span></div><h3>下载安装并测试</h3><p>测试安装、更新、启动和游戏功能，提交测试结论。</p><p class="ids">输出：QA测试记录ID</p></div><div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>角色：运营审核</span><span>入口：运营管理后台 → 提包审核</span></div><h3>审核测试通过的游戏包</h3></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">失败或不通过</div><div class="node fail"><h3>开发者上传修复Build</h3><p>返回上传步骤，创建新Build。</p></div></div><div><div class="branch-label yes">通过</div><div class="node success"><h3>Build可以发布</h3></div></div></div>
+</div></div>
+<div class="track"><h3>B. 准备商品</h3><p class="desc">决定玩家买到什么、支付多少钱。</p><div class="flow">
+<div class="node"><div class="meta"><span>角色：开发者管理员</span><span>入口：开发者开放平台 → Package、Bundle与定价</span></div><h3>配置游戏本体和DLC销售项</h3><p>填写销售内容、全部地区美元价格和销售说明。</p><p class="ids">使用：默认Package ID；也可新建附加Package ID</p></div><div class="arrow">↓</div>
+<div class="node"><div class="meta"><span>角色：开发者管理员</span><span>入口：同一商品页面</span></div><h3>按需创建豪华版或旗舰版</h3><p>选择两个或更多已配置销售项组成组合版本。</p><p class="ids">输出：Bundle ID</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：商品与定价服务</span></div><h3>冻结本次商品申请</h3><p>审核期间不允许修改本次提交内容。</p><p class="ids">输出：Package版本ID、价格版本ID、Bundle版本ID</p></div><div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>角色：运营审核</span><span>入口：运营管理后台 → Package定价审核 / Bundle审核</span></div><h3>审核销售内容、价格和组合</h3></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">不通过</div><div class="node fail"><h3>开发者修改后重新提交</h3></div></div><div><div class="branch-label yes">通过</div><div class="node success"><h3>商品获得销售资格</h3></div></div></div>
+</div></div>
+</div>
+<div class="merge"><div><b>Build可以发布</b><span>游戏文件已通过测试和审核</span></div><div class="symbol">＋</div><div><b>商品获得销售资格</b><span>销售内容和价格已通过审核</span></div><div class="symbol">＝</div><div><b>首次上线条件已经满足</b></div></div>
+</section>
+<div class="handoff"><b>流程2终点＝流程3起点：Build可以发布＋商品获得销售资格</b><span>可以提交首次正式上线。</span></div><div class="connector">进入流程3</div>
+
+<section class="module" id="flow3">
+<div class="module-head"><div class="module-no">3</div><div><h2>提交并执行正式上线</h2><p>决定哪个游戏包在哪个环境、什么时间生效。</p></div></div>
+<div class="start-node"><b>流程起点：Build可以发布＋商品获得销售资格</b><span>来自流程2终点；以后只更新Build时，已经生效的商品不需要重新审核。</span></div>
+<div class="flow">
+<div class="node"><div class="meta"><span>角色：开发者管理员</span><span>入口：开发者开放平台 → 发布管理</span></div><h3>提交上线申请</h3><p>选择Build、正式/测试环境，以及立即上线或定时上线。</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：发布服务</span></div><h3>保存上线申请并创建审核任务</h3><p class="ids">输出：Release ID、发布审核任务ID</p></div><div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>角色：运营审核</span><span>入口：运营管理后台 → 发布审核</span></div><h3>审核Build、环境和上线时间</h3></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">不通过</div><div class="node fail"><h3>返回开发者调整</h3><p>修改Build、环境、时间或说明后重新提交。</p></div></div><div><div class="branch-label yes">通过</div><div class="node system"><h3>进入上线任务</h3><p>立即上线直接执行；定时上线等待指定时间。</p></div></div></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：发布服务</span></div><h3>再次检查并切换正式Build</h3><p>检查文件和限制，成功后正式环境指向新Build。</p></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">执行失败</div><div class="node fail"><h3>原正式Build保持不变</h3><p>平台通知开发者查看失败原因。</p></div></div><div><div class="branch-label yes">执行成功</div><div class="node success"><h3>商品可售，正式Build已上线</h3></div></div></div>
+</div>
+</section>
+<div class="handoff"><b>流程3终点＝流程4起点：商品可售＋正式Build已上线</b><span>商城可以展示，玩家可以购买。</span></div><div class="connector">进入流程4</div>
+
+<section class="module" id="flow4">
+<div class="module-head"><div class="module-no">4</div><div><h2>玩家购买、获得使用权并下载</h2><p>从商城购买到游戏文件安装完成。</p></div></div>
+<div class="start-node"><b>流程起点：商品可售＋正式Build已上线</b><span>来自流程3终点</span></div>
+<div class="flow">
+<div class="node"><div class="meta"><span>角色：玩家</span><span>入口：PC客户端 → 商城</span></div><h3>购买游戏本体、豪华版或DLC</h3></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：订单服务</span></div><h3>记录订单并拆解组合版本</h3><p class="ids">输出：Order ID、Order Item ID</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：License服务</span></div><h3>给玩家账号发放游戏和DLC使用权</h3><p class="ids">输出：License ID</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：PC客户端</span><span>系统：下载授权服务</span></div><h3>查询使用权和正式Build，申请下载</h3><p class="ids">输出：Download Authorization ID</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：平台系统</span><span>系统：CDN / 对象存储</span></div><h3>向客户端发送文件</h3></div><div class="arrow">↓</div>
+<div class="node success"><div class="meta"><span>角色：PC客户端</span><span>入口：下载与安装页面</span></div><h3>下载、校验并安装完成</h3></div>
+</div>
+</section>
+<div class="handoff"><b>流程4终点＝流程5起点：游戏已安装且文件校验通过</b><span>现在可以进入启动与SDK验权。</span></div><div class="connector">进入流程5</div>
+
+<section class="module" id="flow5">
+<div class="module-head"><div class="module-no">5</div><div><h2>启动游戏并完成SDK验权</h2><p>确认文件正确、启动凭证有效、玩家拥有游戏和DLC。</p></div></div>
+<div class="start-node"><b>流程起点：游戏已安装且文件校验通过</b><span>来自流程4终点</span></div>
+<div class="flow">
+<div class="node"><div class="meta"><span>角色：玩家</span><span>入口：PC客户端 → 游戏详情</span></div><h3>选择需要启用的DLC并点击启动</h3></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：PC客户端</span><span>系统：启动鉴权服务</span></div><h3>申请一次性启动凭证</h3><p class="ids">输出：Launch Ticket ID</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：游戏程序</span><span>入口：发行平台SDK</span></div><h3>使用游戏AppID初始化SDK</h3><p>SDK校验启动凭证、玩家账号和本次启动的Build。</p></div><div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>角色：平台系统 / 游戏服务端</span><span>系统：License服务、游戏安全服务端</span></div><h3>验证游戏本体和已启用DLC使用权</h3><p class="ids">输出：Session ID</p></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">验证不通过</div><div class="node fail"><h3>阻止启动或DLC功能</h3><p>提示购买、更新、修复或重新登录。</p></div></div><div><div class="branch-label yes">验证通过</div><div class="node success"><h3>玩家进入游戏</h3><p>只加载已经购买、安装并启用的DLC。</p></div></div></div>
+</div>
+</section>
+<div class="handoff"><b>完整流程终点：玩家进入游戏</b><span>游戏文件、账号使用权和SDK会话均已通过验证。</span></div>
+
+
+<div class="legend"><span><i></i>人员操作</span><span><i class="ls"></i>系统处理</span><span><i class="lr"></i>审核或检查</span><span><i class="lok"></i>成功结果</span><span><i class="lf"></i>退回或失败</span></div>
+</main>
+</div>
+</body>
+</html>
