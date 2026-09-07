@@ -9,7 +9,9 @@
 
 html{scroll-behavior:smooth}.top{padding-left:max(30px,calc((100vw - 1740px)/2 + 30px))}.page-shell{max-width:1800px;margin:auto;display:grid;grid-template-columns:320px minmax(0,1fr);gap:22px;padding:22px}.side{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;background:#fff;border:1px solid #d3dde7;padding:18px}.side h2{margin:0 0 12px;font-size:18px}.side h3{margin:20px 0 9px;font-size:14px}.toc{display:grid;gap:6px}.toc a{display:block;padding:9px 10px;background:#f1f5f9;color:#314a63;text-decoration:none;border-left:3px solid transparent;font-size:13px;line-height:1.45}.toc a:hover,.toc a:focus{border-left-color:#286ac8;background:#e8f1fb}.toc small{display:block;color:#718398;margin-top:2px}.side details{border-top:1px solid #e0e6ec;padding:10px 0}.side summary{cursor:pointer;font-weight:700;font-size:13px}.glossary{margin:10px 0 0}.glossary dt{font-weight:700;font-size:12px;margin-top:10px;color:#28445f}.glossary dd{margin:3px 0 0;color:#617489;font-size:11px;line-height:1.55}.side-list{margin:8px 0 0;padding-left:18px;color:#5d7187;font-size:12px;line-height:1.7}.content{min-width:0}.purpose{background:#fff;border:1px solid #d3dde7;padding:20px;margin-bottom:22px}.purpose h2{margin:0 0 7px;font-size:21px}.purpose>p{margin:0;color:#607389;line-height:1.65}.overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}.overview-card{padding:14px;background:#eef3f8}.overview-card b{display:block;margin-bottom:7px}.overview-card p,.overview-card ul{margin:0;color:#5e7186;font-size:12px;line-height:1.65}.overview-card ul{padding-left:17px}.outline-title{margin:18px 0 9px;font-size:15px}.outline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.outline a{padding:11px 9px;text-align:center;background:#edf4ff;border:1px solid #bdd0e8;color:#315d8d;text-decoration:none;font-size:12px;line-height:1.45}.outline a b{display:block;margin-bottom:3px}.module{scroll-margin-top:14px}.module:target{border-color:#286ac8;box-shadow:0 0 0 2px #d7e8ff}.back-top{display:block;margin-top:18px;text-align:center;color:#376b9e;font-size:12px;text-decoration:none}
 @media(max-width:1100px){.page-shell{grid-template-columns:1fr}.side{position:static;max-height:none}.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.outline{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.page-shell{padding:12px}.overview-grid,.outline{grid-template-columns:1fr}}
-</style>
+
+.glossary em{display:block;margin-top:4px;padding:4px 6px;background:#edf4ff;color:#356392;font-style:normal;font-size:10px}.relationship{scroll-margin-top:14px;background:#fff;border:1px solid #d3dde7;padding:22px;margin-bottom:22px}.relationship:target{border-color:#286ac8;box-shadow:0 0 0 2px #d7e8ff}.relationship h2{margin:0 0 7px;font-size:21px}.relationship>.intro{margin:0 0 17px;color:#607389;line-height:1.65}.relation-alert{padding:13px 16px;background:#fff7df;border-left:4px solid #c08a21;margin-bottom:16px}.relation-alert b{display:block;margin-bottom:4px}.relation-lines{display:grid;gap:10px}.relation-line{display:grid;grid-template-columns:1fr 42px 1fr 42px 1.15fr;align-items:center;gap:8px}.relation-item{height:100%;padding:13px;text-align:center;background:#edf4ff;border:1px solid #9bb8dc}.relation-item.permission{background:#e8f7ee;border-color:#70b28b}.relation-arrow{text-align:center;color:#55718c;font-size:22px}.relation-merge{margin:14px auto 0;max-width:760px;padding:15px;text-align:center;background:#e8f7ee;border:1.5px solid #4fa173}.relation-example{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.example-card{padding:14px;background:#f3f6f9}.example-card h3{margin:0 0 8px;font-size:14px}.example-card pre{margin:0;white-space:pre-wrap;font:11px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;color:#41586f}.example-result{margin-top:12px;padding:14px 16px;background:#edf4ff;color:#365b82;font-size:12px;line-height:1.7}.relation-table{width:100%;border-collapse:collapse;margin-top:18px;font-size:12px}.relation-table th,.relation-table td{padding:10px;border-bottom:1px solid #dce4ec;text-align:left;vertical-align:top}.relation-table th{background:#eaf0f6}.relation-table code{color:#315f91}@media(max-width:900px){.relation-line,.relation-example{grid-template-columns:1fr}.relation-arrow{transform:rotate(90deg)}}
+.glossary dt{margin-top:12px!important;padding:10px 10px 4px!important;background:#f7f9fb;border:1px solid #dbe4ec;border-bottom:0;border-radius:7px 7px 0 0}.glossary dd{margin:0!important;padding:2px 10px 10px!important;background:#f7f9fb;border:1px solid #dbe4ec;border-top:0;border-radius:0 0 7px 7px}.glossary em{margin-top:7px!important;border-left:3px solid #78a2d3;border-radius:3px}.side details{padding-bottom:13px}.side details+details{margin-top:5px}</style>
 </head>
 <body id="top">
 <header class="top"><h1>PC游戏发行平台全链路业务流程说明</h1><p>帮助产品、研发、运营和QA理解从开发者创建游戏，到玩家购买、下载、启动的业务流程、系统协作、审核节点和ID流转。</p></header>
@@ -21,35 +23,37 @@ html{scroll-behavior:smooth}.top{padding-left:max(30px,calc((100vw - 1740px)/2 +
 <a href="#flow2"><b>流程2 准备游戏包和商品</b><small>文件线与商品线并行</small></a>
 <a href="#flow3"><b>流程3 提交并执行正式上线</b><small>发布审核和正式Build切换</small></a>
 <a href="#flow4"><b>流程4 玩家购买并下载</b><small>订单、License和CDN下载</small></a>
-<a href="#flow5"><b>流程5 启动游戏并验权</b><small>SDK、Ticket和DLC使用权</small></a>
+<a href="#flow5"><b>流程5 启动游戏并验权</b><small>在线Ticket、7天离线许可和DLC使用权</small></a>
+<a href="#relationship"><b>关键关系说明</b><small>Package、Depot和Build如何关联</small></a>
 </nav>
 <h3>读图说明</h3>
 <ul class="side-list"><li>每个节点标明角色和操作入口。</li><li>蓝色表示系统自动处理。</li><li>黄色表示审核或检查。</li><li>绿色表示通过或生效。</li><li>红色表示退回、失败或阻断。</li><li>流程终点直接成为下一流程起点。</li></ul>
 <details open><summary>应用与文件名词</summary><dl class="glossary">
-<dt>Base App / 游戏本体</dt><dd>可安装和启动的游戏主体。开发者创建资料，平台生成AppID。</dd>
-<dt>DLC App</dt><dd>归属于游戏本体的附加内容。每个DLC拥有独立DLC AppID。</dd>
-<dt>AppID</dt><dd>游戏本体或DLC的唯一应用编号，由平台系统生成，开发者不能自行填写。</dd>
-<dt>Depot</dt><dd>一组一起下载的文件，可按游戏本体、DLC、Windows、macOS或语言拆分。</dd>
-<dt>Upload ID</dt><dd>一次上传任务的编号，暂停和续传继续使用同一个Upload ID。</dd>
-<dt>Build</dt><dd>一次不可修改的游戏文件版本。修复文件必须创建新的Build ID。</dd>
-<dt>Manifest</dt><dd>Build包含哪些文件和分块的清单，记录路径、大小和Hash。</dd>
+<dt>Base App / 游戏本体</dt><dd>可安装和启动的游戏主体。开发者创建资料，平台生成AppID。<em>示例：Neon Frontier，AppID＝app_2001</em></dd>
+<dt>DLC App</dt><dd>归属于游戏本体的附加内容。每个DLC拥有独立DLC AppID。<em>示例：剧情DLC 1，DLC AppID＝app_2101，归属app_2001</em></dd>
+<dt>AppID</dt><dd>游戏本体或DLC的唯一应用编号，由平台系统生成，开发者不能自行填写。<em>示例：游戏本体app_2001；DLC app_2101</em></dd>
+<dt>Depot</dt><dd>一组一起下载的文件，可按游戏本体、DLC、Windows、macOS或语言拆分。<em>示例：depot_2001_win＝本体Windows文件；depot_2101_all＝DLC文件</em></dd>
+<dt>Upload ID</dt><dd>一次上传任务的编号，暂停和续传继续使用同一个Upload ID。<em>示例：upl_20260907_001</em></dd>
+<dt>Build</dt><dd>一次不可修改的游戏文件版本。修复文件必须创建新的Build ID。<em>示例：bld_3200＝Neon Frontier 1.5.0文件版本</em></dd>
+<dt>Manifest</dt><dd>Build包含哪些文件和分块的清单，记录路径、大小和Hash。<em>示例：manifest_win_3200描述bld_3200中的Windows文件</em></dd>
 </dl></details>
 <details open><summary>商品与使用权名词</summary><dl class="glossary">
-<dt>Package</dt><dd>一个可销售或激活的授权单元。游戏本体和每个DLC通常分别配置Package。</dd>
-<dt>Bundle</dt><dd>多个Package的组合，例如豪华版＝游戏本体Package＋DLC Package。</dd>
-<dt>价格版本</dt><dd>开发者每次提交审核的价格快照。新版本通过前，旧价格继续生效。</dd>
-<dt>Order / 订单</dt><dd>玩家购买时生成的交易记录，保存购买内容和当时价格。</dd>
-<dt>License / 使用权</dt><dd>玩家购买后由系统写入账号的持有记录，决定能否下载和使用游戏或DLC。</dd>
+<dt>Package</dt><dd>一个可销售或激活的授权单元。游戏本体和每个DLC通常分别配置Package。<em>示例：pkg_base_2001授予app_2001；pkg_dlc_2101授予app_2101</em></dd>
+<dt>Bundle</dt><dd>多个Package的组合，例如豪华版＝游戏本体Package＋DLC Package。<em>示例：bundle_deluxe_2001＝pkg_base_2001＋pkg_dlc_2101</em></dd>
+<dt>价格版本</dt><dd>开发者每次提交审核的价格快照。新版本通过前，旧价格继续生效。<em>示例：price_v3＝全部地区USD 29.99</em></dd>
+<dt>Order / 订单</dt><dd>玩家购买时生成的交易记录，保存购买内容和当时价格。<em>示例：order_88001购买bundle_deluxe_2001</em></dd>
+<dt>License / 使用权</dt><dd>玩家购买后由系统写入账号的持有记录，决定能否下载和使用游戏或DLC。<em>示例：lic_99001把pkg_base_2001授予usr_100086</em></dd>
 </dl></details>
 <details open><summary>发布、下载与启动名词</summary><dl class="glossary">
-<dt>Release / 上线申请</dt><dd>把某个Build设置到指定环境的一次发布申请和执行记录。</dd>
-<dt>Branch / 环境</dt><dd>决定一类用户使用哪个Build，例如Production正式环境、Internal测试环境。</dd>
-<dt>Active Build</dt><dd>某个环境当前实际向用户提供的Build。</dd>
-<dt>CDN</dt><dd>向玩家就近分发游戏文件。CDN只验证短期下载凭证，不判断商品价格。</dd>
-<dt>下载授权</dt><dd>平台确认玩家有License且Build可下载后生成的短期访问凭证。</dd>
-<dt>Launch Ticket</dt><dd>客户端启动游戏时申请的一次性短期凭证，用于证明合法启动。</dd>
-<dt>Session ID</dt><dd>SDK验权成功后创建的游戏会话编号。</dd>
-<dt>SDK</dt><dd>游戏接入平台账号、启动和DLC使用权验证的一套接口。</dd>
+<dt>Release / 上线申请</dt><dd>把某个Build设置到指定环境的一次发布申请和执行记录。<em>示例：rel_33001把bld_3200发布到Production</em></dd>
+<dt>Branch / 环境</dt><dd>决定一类用户使用哪个Build，例如Production正式环境、Internal测试环境。<em>示例：Production给正式玩家；Internal给QA测试账号</em></dd>
+<dt>Active Build</dt><dd>某个环境当前实际向用户提供的Build。<em>示例：app_2001的Production当前指向bld_3200</em></dd>
+<dt>CDN</dt><dd>向玩家就近分发游戏文件。CDN只验证短期下载凭证，不判断商品价格。<em>示例：授权后分发manifest_win_3200对应的Chunk</em></dd>
+<dt>下载授权</dt><dd>平台确认玩家有License且Build可下载后生成的短期访问凭证。<em>示例：da_77001，只允许下载bld_3200且10分钟后过期</em></dd>
+<dt>Launch Ticket</dt><dd>客户端启动游戏时申请的一次性短期凭证，用于证明合法启动。<em>示例：lt_55001，绑定usr_100086、app_2001和bld_3200</em></dd>
+<dt>Offline License</dt><dd>设备联网验权成功后获得的签名许可，允许匹配账号、游戏和设备在168小时内离线启动。<em>联网并成功复核后续期；网络连通本身不续期</em></dd>
+<dt>Session ID</dt><dd>SDK验权成功后创建的游戏会话编号。<em>示例：sess_66001</em></dd>
+<dt>SDK</dt><dd>游戏接入平台账号、启动和DLC使用权验证的一套接口。<em>示例：PlatformSDK_Init("app_2001")</em></dd>
 </dl></details>
 <a class="back-top" href="#top">返回顶部</a>
 </aside>
@@ -59,10 +63,10 @@ html{scroll-behavior:smooth}.top{padding-left:max(30px,calc((100vw - 1740px)/2 +
 <div class="overview-grid">
 <div class="overview-card"><b>涉及角色：6类</b><ul><li>开发者管理员</li><li>开发者构建人员</li><li>QA测试人员</li><li>运营审核人员</li><li>玩家</li><li>平台系统与游戏程序</li></ul></div>
 <div class="overview-card"><b>主要操作入口</b><ul><li>开发者开放平台</li><li>运营管理后台</li><li>本地上传组件</li><li>PC客户端</li><li>发行平台SDK</li></ul></div>
-<div class="overview-card"><b>涉及服务</b><ul><li>应用目录、构建与发布</li><li>商品、订单和License</li><li>对象存储和CDN</li><li>下载与启动鉴权</li><li>游戏安全服务端</li></ul></div>
+<div class="overview-card"><b>涉及服务</b><ul><li>应用目录、构建与发布</li><li>商品、订单和License</li><li>对象存储和CDN</li><li>下载与启动鉴权</li><li>游戏安全服务端（可选）</li></ul></div>
 <div class="overview-card"><b>主要操作</b><ul><li>创建与提交资料</li><li>上传、构建和测试</li><li>商品定价与审核</li><li>上线、购买和授权</li><li>下载、启动和验权</li></ul></div>
 </div>
-<h3 class="outline-title">5个流程大纲</h3><div class="outline"><a href="#flow1"><b>1 创建应用</b>App/DLC资料审核</a><a href="#flow2"><b>2 双线准备</b>游戏包＋商品</a><a href="#flow3"><b>3 正式上线</b>审核并切换Build</a><a href="#flow4"><b>4 购买下载</b>订单＋License＋CDN</a><a href="#flow5"><b>5 启动验权</b>SDK＋Ticket＋Session</a></div>
+<h3 class="outline-title">5个流程大纲</h3><div class="outline"><a href="#flow1"><b>1 创建应用</b>App/DLC资料审核</a><a href="#flow2"><b>2 双线准备</b>游戏包＋商品</a><a href="#flow3"><b>3 正式上线</b>审核并切换Build</a><a href="#flow4"><b>4 购买下载</b>订单＋License＋CDN</a><a href="#flow5"><b>5 启动验权</b>在线Ticket＋离线许可＋SDK</a></div>
 </section>
 
 <section class="module" id="flow1">
@@ -134,19 +138,49 @@ html{scroll-behavior:smooth}.top{padding-left:max(30px,calc((100vw - 1740px)/2 +
 <div class="handoff"><b>流程4终点＝流程5起点：游戏已安装且文件校验通过</b><span>现在可以进入启动与SDK验权。</span></div><div class="connector">进入流程5</div>
 
 <section class="module" id="flow5">
-<div class="module-head"><div class="module-no">5</div><div><h2>启动游戏并完成SDK验权</h2><p>确认文件正确、启动凭证有效、玩家拥有游戏和DLC。</p></div></div>
+<div class="module-head"><div class="module-no">5</div><div><h2>启动游戏并完成SDK验权</h2><p>在线使用一次性Ticket；无网络时使用仍有效的7天设备离线许可。</p></div></div>
 <div class="start-node"><b>流程起点：游戏已安装且文件校验通过</b><span>来自流程4终点</span></div>
 <div class="flow">
-<div class="node"><div class="meta"><span>角色：玩家</span><span>入口：PC客户端 → 游戏详情</span></div><h3>选择需要启用的DLC并点击启动</h3></div><div class="arrow">↓</div>
-<div class="node system"><div class="meta"><span>角色：PC客户端</span><span>系统：启动鉴权服务</span></div><h3>申请一次性启动凭证</h3><p class="ids">输出：Launch Ticket ID</p></div><div class="arrow">↓</div>
-<div class="node system"><div class="meta"><span>角色：游戏程序</span><span>入口：发行平台SDK</span></div><h3>使用游戏AppID初始化SDK</h3><p>SDK校验启动凭证、玩家账号和本次启动的Build。</p></div><div class="arrow">↓</div>
-<div class="node review"><div class="meta"><span>角色：平台系统 / 游戏服务端</span><span>系统：License服务、游戏安全服务端</span></div><h3>验证游戏本体和已启用DLC使用权</h3><p class="ids">输出：Session ID</p></div><div class="arrow">↓</div>
-<div class="branches"><div><div class="branch-label no">验证不通过</div><div class="node fail"><h3>阻止启动或DLC功能</h3><p>提示购买、更新、修复或重新登录。</p></div></div><div><div class="branch-label yes">验证通过</div><div class="node success"><h3>玩家进入游戏</h3><p>只加载已经购买、安装并启用的DLC。</p></div></div></div>
+<div class="node"><div class="meta"><span>角色：玩家</span><span>入口：PC客户端 → 游戏详情</span></div><h3>点击启动</h3><p>DLC在游戏属性中管理；正常启动默认不要求玩家再次选择。</p></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：PC客户端</span><span>系统：Release / Manifest</span></div><h3>检查本体及已启用DLC文件</h3><p>installed、enabled是客户端本地状态；不能证明玩家拥有DLC。</p></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label yes">可连接启动鉴权服务</div><div class="node system"><div class="meta"><span>在线分支</span></div><h3>申请并兑换一次性Launch Ticket</h3><p>平台复核登录、Base/DLC License、Build、Branch和设备；SDK初始化成功后创建Session。</p><p class="ids">输出：Session ID；签发或续期168小时Offline License</p></div></div><div><div class="branch-label yes">网络或鉴权服务不可用</div><div class="node review"><div class="meta"><span>离线分支</span></div><h3>校验本机Offline License</h3><p>核对签名、账号、Base AppID、设备、Build/Branch范围和有效期；缺失或过期时要求联网。</p></div></div></div><div class="arrow">↓</div>
+<div class="node system"><div class="meta"><span>角色：游戏程序</span><span>入口：发行平台SDK</span></div><h3>使用Base AppID初始化一次</h3><p>SDK按DLC AppID返回owned，并组合客户端提供的installed、enabled；Content ID和Depot ID不进入游戏所有权接口。</p></div><div class="arrow">↓</div>
+<div class="branches"><div><div class="branch-label no">在线或离线验证不通过</div><div class="node fail"><h3>阻止本次新启动</h3><p>提示联网、登录、购买、更新或修复；明确拒绝不能回退旧离线许可。</p></div></div><div><div class="branch-label yes">验证通过</div><div class="node success"><h3>玩家进入游戏</h3><p>只加载owned、installed、enabled均满足的DLC。游戏有安全服务端时，可选使用Session Ticket再验重要权益。</p></div></div></div><div class="arrow">↓</div>
+<div class="node review"><div class="meta"><span>运行中变化</span><span>SDK回调</span></div><h3>撤权或新设备登录只限制后续启动</h3><p>当前已运行游戏不强退、不切换用户；DLC变化通知游戏研发处理角色、地图和存档兼容。</p></div>
 </div>
 </section>
-<div class="handoff"><b>完整流程终点：玩家进入游戏</b><span>游戏文件、账号使用权和SDK会话均已通过验证。</span></div>
+<div class="handoff"><b>完整流程终点：玩家完成一次合法启动</b><span>在线启动可刷新168小时设备离线许可；后续撤权或登录替换不影响当前进程，只限制下一次启动与续期。</span></div>
 
 
+<section class="relationship" id="relationship">
+<h2>关键关系：Package ID和Build ID如何关联？</h2>
+<p class="intro">两者有关系，但不直接一对一绑定。Package决定玩家有权访问哪些Depot；Build决定这些Depot当前使用哪份Manifest。二者通过Depot ID关联。</p>
+<div class="relation-alert"><b>不要保存“Build ID直接等于某个Package ID”</b><span>同一个游戏文件可能被标准版和豪华版共同使用；修改价格不应重新生成Build，更新Build也不应修改全部Package。</span></div>
+<div class="relation-lines">
+<div class="relation-line"><div class="relation-item permission"><b>玩家使用权</b><br>User ID → License ID</div><div class="relation-arrow">→</div><div class="relation-item permission"><b>购买的销售项</b><br>Package ID</div><div class="relation-arrow">→</div><div class="relation-item permission"><b>允许访问的文件仓库</b><br>Depot ID集合</div></div>
+<div class="relation-line"><div class="relation-item"><b>正式环境</b><br>Production Branch</div><div class="relation-arrow">→</div><div class="relation-item"><b>当前文件版本</b><br>Active Build ID</div><div class="relation-arrow">→</div><div class="relation-item"><b>当前实际文件</b><br>Depot ID＋Manifest ID</div></div>
+</div>
+<div class="relation-merge"><b>客户端最终下载</b><br>用户Package允许访问的Depot ∩ 当前Active Build包含的Depot和Manifest</div>
+<div class="relation-example">
+<div class="example-card"><h3>示例1：标准版Package</h3><pre>pkg_base_2001
+├─ AppID: app_2001
+├─ depot_2001_win
+└─ depot_2001_mac</pre></div>
+<div class="example-card"><h3>示例2：正式Build</h3><pre>bld_3200
+├─ depot_2001_win
+│  └─ manifest_win_3200
+└─ depot_2001_mac
+   └─ manifest_mac_3200</pre></div>
+<div class="example-card"><h3>示例3：玩家下载结果</h3><pre>玩家拥有 pkg_base_2001
+客户端系统 = Windows
+Production = bld_3200
+
+最终下载：
+manifest_win_3200</pre></div>
+</div>
+<div class="example-result"><b>豪华版示例：</b>bundle_deluxe_2001包含pkg_base_2001和pkg_dlc_2101。玩家购买后得到两条Package License，因此既能访问游戏本体Depot，也能访问DLC Depot；豪华版本身不需要单独创建一个Build。</div>
+<table class="relation-table"><thead><tr><th>关系表</th><th>关键字段</th><th>示例</th></tr></thead><tbody><tr><td>Package允许访问哪些应用</td><td><code>package_id + app_id</code></td><td>pkg_base_2001 → app_2001</td></tr><tr><td>Package允许访问哪些文件仓库</td><td><code>package_id + depot_id</code></td><td>pkg_base_2001 → depot_2001_win</td></tr><tr><td>Build包含哪个Depot清单</td><td><code>build_id + depot_id + manifest_id</code></td><td>bld_3200 → depot_2001_win → manifest_win_3200</td></tr><tr><td>环境当前使用哪个Build</td><td><code>app_id + branch + active_build_id</code></td><td>app_2001 + Production → bld_3200</td></tr><tr><td>用户拥有什么Package</td><td><code>user_id + package_id + license_id</code></td><td>usr_100086 + pkg_base_2001 → lic_99001</td></tr></tbody></table>
+</section>
 <div class="legend"><span><i></i>人员操作</span><span><i class="ls"></i>系统处理</span><span><i class="lr"></i>审核或检查</span><span><i class="lok"></i>成功结果</span><span><i class="lf"></i>退回或失败</span></div>
 </main>
 </div>
