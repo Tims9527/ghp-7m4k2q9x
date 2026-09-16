@@ -1,9 +1,50 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="gf-app-loading">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GameHub · 首页与我的游戏库</title>
+  <style id="gf-app-loading-style">
+    html.gf-app-loading body { background:#090c10; }
+    html.gf-app-loading body > * { visibility:hidden !important; }
+    html.gf-app-loading body::before {
+      content:"GameHub\A正在加载最新版本…";
+      position:fixed;
+      z-index:2147483646;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding-top:54px;
+      visibility:visible;
+      white-space:pre;
+      color:#eef7fb;
+      background:radial-gradient(circle at 50% 38%,rgba(64,166,214,.13),transparent 28%),#090c10;
+      font:800 22px/2 -apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+      letter-spacing:.01em;
+      text-align:center;
+    }
+    html.gf-app-loading body::after {
+      content:"";
+      position:fixed;
+      z-index:2147483647;
+      top:calc(50% - 46px);
+      left:calc(50% - 18px);
+      width:36px;
+      height:36px;
+      visibility:visible;
+      border:3px solid rgba(142,217,255,.16);
+      border-top-color:#73d3fb;
+      border-radius:50%;
+      animation:gf-app-loading-spin .78s linear infinite;
+    }
+    html.gf-app-ready body > * { animation:gf-app-ready-in .16s ease-out both; }
+    @keyframes gf-app-loading-spin { to { transform:rotate(360deg); } }
+    @keyframes gf-app-ready-in { from { opacity:0; } to { opacity:1; } }
+    @media (prefers-reduced-motion:reduce) {
+      html.gf-app-loading body::after { animation:none; }
+      html.gf-app-ready body > * { animation:none; }
+    }
+  </style>
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const isDevelopmentFile = Boolean(document.querySelector('script[type="text/babel"][src]'));
@@ -6923,7 +6964,7 @@ window.GameHubAssets=Object.assign(window.GameHubAssets||{},{"dlc-01.jpg":"data:
   let refreshQueued=false;
   const refresh=()=>{const app=document.querySelector('.app-window');removePlatformBubble();setupDownloadIndicator();renderLibrary();syncLibraryNav(app);enhanceDownloadsPage();enhanceDownloadSettings();applyDetailDemoState();cleanAnnotationRail()};
   const observer=new MutationObserver(()=>{if(refreshQueued)return;refreshQueued=true;requestAnimationFrame(()=>{refreshQueued=false;refresh()})});
-  const start=()=>{const app=document.querySelector('.app-window');if(!app){setTimeout(start,120);return}observer.observe(app,{childList:true,subtree:true});refresh()};
+  const start=()=>{const app=document.querySelector('.app-window');if(!app){setTimeout(start,120);return}observer.observe(app,{childList:true,subtree:true});refresh();requestAnimationFrame(()=>{document.documentElement.classList.remove('gf-app-loading');document.documentElement.classList.add('gf-app-ready')})};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
