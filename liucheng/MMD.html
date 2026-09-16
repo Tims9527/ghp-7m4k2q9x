@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DLC、Package、Bundle 状态与流转说明</title>
+  <style>
+    :root {
+      --navy:#0f1d35; --ink:#1f2d3d; --muted:#6e7d92; --line:#dfe6ef;
+      --bg:#f4f7fb; --card:#fff; --primary:#3157d5; --cyan:#16c7d9;
+      --green:#14875d; --green-bg:#e8f6f0; --amber:#9a6500; --amber-bg:#fff5dc;
+      --red:#c64242; --red-bg:#fff0f0; --blue-bg:#eef3ff; --purple:#7855b8;
+      --shadow:0 8px 24px rgba(27,42,73,.07);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+    .topbar{height:64px;background:var(--navy);color:#fff;display:flex;align-items:center;padding:0 28px;position:sticky;top:0;z-index:30;box-shadow:0 2px 10px rgba(0,0,0,.16)}
+    .brand{font-weight:700;font-size:18px;letter-spacing:.4px}.brand small{font-weight:400;color:#aebbd0;margin-left:12px}
+    .top-actions{margin-left:auto;display:flex;gap:10px}
+    button{font:inherit;cursor:pointer}
+    .top-actions button{border:1px solid #43536d;background:#182844;color:#e9eff9;border-radius:8px;padding:7px 14px}
+    .layout{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100vh - 64px)}
+    aside{background:#fff;border-right:1px solid var(--line);padding:26px 16px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}
+    aside h3{font-size:13px;color:#94a0b2;margin:0 12px 14px;letter-spacing:.08em}
+    .nav-group{display:block;margin:20px 12px 7px;padding-top:12px;border-top:1px solid #edf0f5;color:#98a4b5;font-size:11px;font-weight:700;letter-spacing:.08em}
+    aside h3+.nav-group{margin-top:0;padding-top:0;border-top:0}
+    aside a b{display:inline-block;width:22px;color:#a2adbd;font-size:11px;font-weight:650}
+    aside a.active b,aside a:hover b{color:#0792a1}
+    aside a{display:block;color:#4b5b72;text-decoration:none;padding:10px 12px;border-radius:8px;margin:3px 0;font-size:14px}
+    aside a:hover,aside a.active{background:#e9f8fa;color:#087d8b;font-weight:600}
+    main{padding:34px 38px 72px;min-width:0}
+    .hero,.card{max-width:1240px;margin:0 auto 22px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+    .hero{padding:28px 30px;background:linear-gradient(135deg,#fff 72%,#eef8ff)}
+    .eyebrow{font-size:13px;color:var(--primary);font-weight:700;letter-spacing:.08em}
+    h1{font-size:30px;margin:4px 0 8px;line-height:1.3}h2{font-size:21px;margin:0}h3{font-size:16px}
+    .hero p,.section-head p{margin:4px 0 0;color:var(--muted)}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.badge{font-size:12px;padding:4px 9px;border-radius:99px;background:var(--blue-bg);color:var(--primary)}
+    .card{overflow:hidden}.section-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.section-body{padding:22px 24px}
+    .note{border-left:4px solid var(--primary);background:#f3f6ff;padding:14px 16px;border-radius:8px;margin:0 0 18px}.note.warn{border-color:#e3a325;background:#fff9eb}.note.danger{border-color:#d75050;background:#fff3f3}.note strong{display:block;margin-bottom:2px}
+    .relation-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.relation{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fbfcfe}.relation b{display:block;margin-bottom:6px}.relation span{color:var(--muted);font-size:14px}.relation .tag{display:inline-block;font-size:11px;color:#fff;background:var(--primary);padding:2px 7px;border-radius:4px;margin-bottom:8px}
+    .map{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:#f8faff;padding:22px;overflow:auto}.map-inner{min-width:900px;display:grid;grid-template-columns:1.05fr 70px 1.05fr 70px 1.05fr;grid-template-rows:auto 54px auto;align-items:center}.map-box{border:1px solid #bfccea;border-radius:10px;background:#fff;padding:14px;text-align:center;box-shadow:0 4px 12px rgba(43,68,120,.06)}.map-box b{display:block}.map-box small{color:var(--muted)}.map-box.dlc{grid-column:1;grid-row:1}.map-box.pkg{grid-column:3;grid-row:1}.map-box.player{grid-column:5;grid-row:1}.map-box.promo{grid-column:3;grid-row:3}.map-box.bundle{grid-column:5;grid-row:3}.map-arrow{text-align:center;color:var(--primary);font-weight:700;font-size:13px}.map-arrow.a1{grid-column:2;grid-row:1}.map-arrow.a2{grid-column:4;grid-row:1}.map-arrow.a3{grid-column:3;grid-row:2}.map-arrow.a4{grid-column:4;grid-row:3}.map-caption{text-align:center;color:var(--muted);font-size:12px;margin-top:12px}
+    .table-wrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:10px}.table-wrap table{border-collapse:collapse;width:100%;min-width:980px;background:#fff}.table-wrap.compact table{min-width:760px}
+    th,td{padding:13px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:14px}th{background:#f7f9fc;color:#52627a;font-weight:650;white-space:nowrap}tr:last-child td{border-bottom:0}td strong{color:#1c2b40}.sub{display:block;color:#7b899b;font-size:12px;margin-top:2px}
+    .status{display:inline-block;white-space:nowrap;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:650}.s-green{background:var(--green-bg);color:var(--green)}.s-amber{background:var(--amber-bg);color:var(--amber)}.s-red{background:var(--red-bg);color:var(--red)}.s-blue{background:var(--blue-bg);color:var(--primary)}.s-gray{background:#edf0f4;color:#68768a}
+    .flow{display:flex;align-items:stretch;gap:8px;overflow:auto;padding:4px 0 10px}.flow-step{min-width:154px;border:1px solid #cad6ef;background:#f7f9ff;border-radius:10px;padding:13px}.flow-step b{display:block;font-size:14px}.flow-step small{color:var(--muted)}.arrow{align-self:center;color:#8998ae;font-size:20px}.flow-step.ok{border-color:#a9dfc8;background:#effaf5}.flow-step.wait{border-color:#f0d18e;background:#fff9eb}
+    .formula{background:var(--navy);color:#fff;border-radius:12px;padding:22px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:15px}.formula .term{background:#1c3154;border:1px solid #3f5579;padding:8px 10px;border-radius:7px}.formula .op{color:#6ee8f1;font-weight:700}.formula .result{background:#0c806e;padding:9px 12px;border-radius:7px;font-weight:700}
+    .rules{margin:0;padding-left:20px}.rules li{margin:8px 0}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}.mini-card{border:1px solid var(--line);border-radius:10px;padding:16px}.mini-card h3{margin:0 0 8px}.mini-card p{margin:0;color:var(--muted);font-size:14px}
+    .diagram-shell{margin-top:14px;border:1px solid #cfd9ea;border-radius:12px;background:#f8faff;overflow:hidden}.diagram-toolbar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #dce4f0;background:#fff}.diagram-toolbar strong{font-size:14px;margin-right:auto}.diagram-toolbar small{color:var(--muted);margin-right:8px}.diagram-toolbar button{border:1px solid #ccd6e6;background:#fff;color:#40516b;border-radius:7px;padding:5px 10px}.diagram-toolbar button:hover{border-color:#7f96c3;background:#f3f6ff;color:var(--primary)}.diagram-viewport{position:relative;height:520px;overflow:hidden;background-color:#f8faff;background-image:radial-gradient(#d8dfeb 1px,transparent 1px);background-size:20px 20px;touch-action:none}.diagram-stage{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;cursor:grab;user-select:none}.diagram-stage.is-dragging{cursor:grabbing}.diagram-stage svg{display:block;max-width:none!important;height:auto!important}.diagram-source{display:none;margin:0;padding:18px;max-height:360px;overflow:auto;border-top:1px solid #dce4f0;background:#101b2d;color:#d7e4f8;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre}.diagram-source.is-visible{display:block}.diagram-error{padding:28px;color:var(--red);text-align:center}.diagram-shell:fullscreen{background:#f8faff;display:flex;flex-direction:column}.diagram-shell:fullscreen .diagram-viewport{height:auto;flex:1}.diagram-shell:fullscreen .diagram-source{max-height:35vh}
+    .footer{max-width:1240px;margin:28px auto 0;color:#8491a3;font-size:12px;text-align:center}
+    @media(max-width:980px){.layout{grid-template-columns:1fr}aside{display:none}main{padding:20px 14px}.relation-grid,.two-col{grid-template-columns:1fr 1fr}.hero{padding:22px}h1{font-size:25px}}
+    @media(max-width:620px){.relation-grid,.two-col{grid-template-columns:1fr}.topbar{padding:0 14px}.brand small{display:none}.section-head,.section-body{padding:17px}.top-actions .print{display:none}}
+    @media print{body{background:#fff}.topbar,aside,.top-actions,.diagram-toolbar{display:none}.layout{display:block}main{padding:0}.hero,.card{box-shadow:none;max-width:none;break-inside:avoid}.table-wrap{overflow:visible}.table-wrap table{min-width:0;font-size:10px}th,td{font-size:10px;padding:7px}.relation-grid{grid-template-columns:repeat(4,1fr)}.diagram-viewport{height:420px;background:#fff}.diagram-source{display:none!important}@page{size:A4 landscape;margin:10mm}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">PC 发行平台 <small>业务规则说明</small></div>
+    <div class="top-actions"><button class="print" onclick="window.print()">打印 / 导出 PDF</button><button onclick="copyConclusion(this)">复制核心条件</button></div>
+  </header>
+  <div class="layout">
+    <aside>
+      <h3>文档目录</h3>
+      <span class="nav-group">总览与核心结论</span>
+      <a href="#relationship" class="active"><b>01</b> 对象关系</a>
+      <a href="#status"><b>02</b> 状态定义</a>
+      <a href="#conclusion"><b>03</b> 核心生效条件</a>
+
+      <span class="nav-group">商品与销售规则</span>
+      <a href="#transitions"><b>04</b> 状态与行为</a>
+      <a href="#fields"><b>05</b> 页面字段与按钮</a>
+      <a href="#dlc-flow"><b>06</b> DLC 完整流转</a>
+      <a href="#matrix"><b>07</b> DLC／Package 双审核</a>
+      <a href="#effects"><b>08</b> 状态变化结果</a>
+      <a href="#bundle"><b>09</b> Bundle 规则</a>
+      <a href="#promotion"><b>10</b> 促销规则</a>
+
+      <span class="nav-group">文件与版本发布</span>
+      <a href="#file-release"><b>11</b> 文件与发布关系</a>
+    </aside>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">开发前业务确认 · V1.0</div>
+        <h1>DLC、Package、Bundle 状态与流转说明</h1>
+        <p>用于统一资料审核、上架展示、价格销售和玩家权益之间的关系，避免把“审核通过”“上架”“可购买”当成同一状态。</p>
+        <div class="badges"><span class="badge">DLC 管内容与展示</span><span class="badge">Package 管价格与购买</span><span class="badge">Bundle 组合 Package</span><span class="badge">促销改变有效价格</span></div>
+      </section>
+
+      <section class="card" id="relationship">
+        <div class="section-head"><div><h2>1. 对象关系</h2><p>四类对象各自负责一件事，状态相互校验但不互相替代。</p></div></div>
+        <div class="section-body">
+          <div class="relation-grid">
+            <div class="relation"><span class="tag">内容对象</span><b>DLC</b><span>保存名称、介绍、图片、上架时间等展示资料；审核通过后才具备上架资格。</span></div>
+            <div class="relation"><span class="tag">交易对象</span><b>Package</b><span>保存价格、区域价和包含的 App / Depot；销售中后才允许购买或免费领取并发放 License。</span></div>
+            <div class="relation"><span class="tag">组合商品</span><b>Bundle</b><span>组合两个及以上 Package，保存独立展示资料和组合售卖价；自身审核与上架状态独立。</span></div>
+            <div class="relation"><span class="tag">价格活动</span><b>促销活动</b><span>引用一个 Package，在有效时间内覆盖其成交价；不改变 DLC 资料和 Package 权益内容。</span></div>
+          </div>
+          <div class="map" aria-label="DLC、Package、Bundle和促销关系示意图">
+            <div class="map-inner">
+              <div class="map-box dlc"><b>DLC 内容对象</b><small>名称、介绍、图片、上架时间</small></div>
+              <div class="map-arrow a1">绑定默认 Package →</div>
+              <div class="map-box pkg"><b>默认 Package 交易对象</b><small>价格、地区价、App / Depot 权益</small></div>
+              <div class="map-arrow a2">订单 / License →</div>
+              <div class="map-box player"><b>玩家侧</b><small>看见详情、购买或领取、下载</small></div>
+              <div class="map-arrow a3">↑ 覆盖有效价格</div>
+              <div class="map-box promo"><b>促销活动</b><small>引用一个 Package，在有效期内改成交价</small></div>
+              <div class="map-arrow a4">Package 可被组合 →</div>
+              <div class="map-box bundle"><b>Bundle</b><small>组合两个及以上 Package 统一售卖</small></div>
+            </div>
+            <div class="map-caption">箭头表示引用或生效关系。DLC 与 Package 分别审核；Bundle、促销引用 Package，不复制其权益内容。</div>
+          </div>
+          <div class="note" style="margin-top:18px"><strong>核心边界</strong>DLC 是否公开展示由 DLC 上架状态决定；是否可购买或免费领取由默认 Package 的销售状态决定；玩家是否拥有由 License 决定；能否下载由 Package 权益、Depot 与可用 Build 共同决定。</div>
+        </div>
+      </section>
+
+      <section class="card" id="status">
+        <div class="section-head"><div><h2>2. 状态定义</h2><p>审核状态回答“内容是否获准”，业务状态回答“当前是否对玩家生效”。</p></div></div>
+        <div class="section-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>对象</th><th>审核状态</th><th>业务状态</th><th>决定什么</th><th>不决定什么</th></tr></thead>
+              <tbody>
+                <tr><td><strong>DLC</strong></td><td>草稿／待审核／已通过／拒绝通过／已撤回</td><td>待配置／待上架／预购中／已上架／已结束／已下架</td><td>资料是否允许公开；DLC 是否在客户端公开展示</td><td>价格、购买、License 和下载内容</td></tr>
+                <tr><td><strong>Package</strong></td><td>草稿／待审核／已通过／拒绝通过／已撤回</td><td>未上架／待上架／销售中／已结束／已下架</td><td>价格及权益配置是否合规；是否已上架销售，能否购买或免费领取</td><td>DLC 详情页资料是否公开展示</td></tr>
+                <tr><td><strong>Bundle</strong></td><td>草稿／待审核／已通过／拒绝通过／已撤回</td><td>未上架／待上架／已上架／已结束／已下架</td><td>组合内容和售卖价是否合规；Bundle 是否展示并可购买</td><td>成员 Package 的价格或销售状态</td></tr>
+                <tr><td><strong>促销活动</strong></td><td>草稿／待审核／已通过／拒绝通过／已撤回</td><td>未生效／待开始／进行中／已结束／已取消</td><td>审核通过后，按活动时间决定折后价是否生效</td><td>DLC 上架与 Package 权益内容</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note warn" style="margin-top:18px"><strong>字段命名要求</strong>页面必须同时展示“审核状态”和对应的“上架状态／销售状态／活动状态”。审核已通过但尚未到开始时间时，业务状态叫“待上架”，不是“待通过”；“待通过”只表示运营尚未完成审核。</div>
+        </div>
+      </section>
+
+      <section class="card" id="conclusion">
+        <div class="section-head"><div><h2>3. 核心生效条件</h2><p>先明确玩家何时能够看到并购买 DLC，再阅读具体状态与操作规则。</p></div></div>
+        <div class="section-body">
+          <div class="formula" id="copyText">
+            <span class="term">DLC 资料已通过</span><span class="op">＋</span>
+            <span class="term">DLC 已上架</span><span class="op">＋</span>
+            <span class="term">默认 Package 审核已通过</span><span class="op">＋</span>
+            <span class="term">默认 Package 销售中</span><span class="op">＋</span>
+            <span class="term">当前地区价格有效</span><span class="op">＋</span>
+            <span class="term">当前时间在开始与结束时间内</span><span class="op">＝</span>
+            <span class="result">展示购买／免费领取入口</span>
+          </div>
+          <div class="note" style="margin-top:18px"><strong>执行顺序</strong>先审核内容和价格，再上架 Package 销售，最后按开始／结束时间自动上架和结束；手动立即上架只修改开始时间。任何前置条件不满足时，都应阻止操作并明确显示缺少的条件。</div>
+        </div>
+      </section>
+
+      <section class="card" id="transitions">
+        <div class="section-head"><div><h2>4. 状态切换与对应行为</h2><p>每次状态变化必须由明确行为触发，并记录操作人、时间、对象、前后状态及原因。</p></div></div>
+        <div class="section-body">
+          <h3>4.1 通用审核状态</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>当前状态</th><th>触发行为</th><th>操作人</th><th>目标状态</th><th>系统行为</th></tr></thead>
+              <tbody>
+                <tr><td><span class="status s-gray">草稿</span></td><td>提交审核</td><td>开发者</td><td><span class="status s-amber">待审核</span></td><td>校验必填项，生成不可变审核快照和审核记录；审核内容暂时锁定。</td></tr>
+                <tr><td><span class="status s-amber">待审核</span></td><td>审核通过</td><td>平台运营</td><td><span class="status s-green">已通过</span></td><td>记录审核人和通过时间，开放后续上架或上架销售资格；不会自动上架或销售。</td></tr>
+                <tr><td><span class="status s-amber">待审核</span></td><td>拒绝通过</td><td>平台运营</td><td><span class="status s-red">拒绝通过</span></td><td>审核说明必填；保留被拒快照，将提交内容回显到工作草稿供修改。</td></tr>
+                <tr><td><span class="status s-amber">待审核</span></td><td>撤回审核</td><td>开发者</td><td><span class="status s-gray">已撤回</span></td><td>终止当前审核，保留撤回记录，将提交内容恢复为可编辑工作草稿。</td></tr>
+                <tr><td><span class="status s-red">拒绝通过</span>／<span class="status s-gray">已撤回</span></td><td>修改后重新提交</td><td>开发者</td><td><span class="status s-amber">待审核</span></td><td>生成新的 revision_id 和审核快照；旧审核记录不覆盖。</td></tr>
+                <tr><td><span class="status s-green">已通过</span></td><td>修改已生效资料</td><td>开发者</td><td><span class="status s-gray">新修订草稿</span></td><td>线上仍使用原已通过版本；新修订单独编辑、提交和审核，通过后替换线上版本。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:24px">4.2 DLC 上架状态</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>当前状态</th><th>触发行为</th><th>操作人</th><th>目标状态</th><th>系统行为</th></tr></thead>
+              <tbody>
+                <tr><td><span class="status s-gray">待配置</span></td><td>DLC 资料通过，且默认 Package 审核通过并销售中</td><td>系统校验</td><td><span class="status s-blue">待上架</span></td><td>取得上架资格；继续等待计划时间，客户端仍不公开。</td></tr>
+                <tr><td><span class="status s-blue">待上架</span></td><td>开启预购且到达预购开始条件</td><td>系统</td><td><span class="status s-amber">预购中</span></td><td>展示 DLC 及预购入口；交易仍由默认 Package 完成。</td></tr>
+                <tr><td><span class="status s-blue">待上架</span>／<span class="status s-amber">预购中</span></td><td>到达计划上架时间</td><td>系统</td><td><span class="status s-green">已上架</span></td><td>重新校验资料、Package 销售状态和地区价格；通过后公开 DLC。</td></tr>
+                <tr><td><span class="status s-green">已上架</span></td><td>到达结束时间</td><td>系统</td><td><span class="status s-gray">已结束</span></td><td>停止公开展示和新增购买；历史订单和License继续保留。</td></tr>
+                <tr><td><span class="status s-blue">待上架</span>／<span class="status s-amber">预购中</span></td><td>立即上架</td><td>开发者</td><td><span class="status s-green">已上架</span></td><td>开始时间改为当前时间，结束时间保持不变；结束时间已过或其他条件不满足时拒绝操作。</td></tr>
+                <tr><td><span class="status s-green">已上架</span>／<span class="status s-amber">预购中</span></td><td>下架</td><td>开发者／平台运营</td><td><span class="status s-red">已下架</span></td><td>隐藏客户端入口，同步停售默认 Package，并取消未结束的关联促销。</td></tr>
+                <tr><td><span class="status s-red">已下架</span></td><td>重新上架</td><td>开发者</td><td><span class="status s-gray">待配置</span></td><td>提交重新上架资料；重新校验审核结果、默认 Package、地区价格和计划时间。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:24px">4.3 Package 上架销售状态</h3>
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>当前状态</th><th>触发行为</th><th>操作人</th><th>目标状态</th><th>系统行为</th></tr></thead>
+              <tbody>
+                <tr><td><span class="status s-gray">未上架</span></td><td>运营审核通过，开始时间在未来</td><td>系统</td><td><span class="status s-blue">待上架</span></td><td>保存已通过结果，等待开始时间；暂不允许购买或领取。</td></tr>
+                <tr><td><span class="status s-blue">待上架</span></td><td>到达开始时间</td><td>系统</td><td><span class="status s-green">销售中</span></td><td>开放购买／领取和License发放。</td></tr>
+                <tr><td><span class="status s-gray">未上架</span>／<span class="status s-blue">待上架</span></td><td>手动点击“立即上架”</td><td>开发者</td><td><span class="status s-green">销售中</span></td><td>开始时间改为当前时间，结束时间保持不变。</td></tr>
+                <tr><td><span class="status s-green">销售中</span></td><td>到达结束时间</td><td>系统</td><td><span class="status s-gray">已结束</span></td><td>停止新订单和新License；历史权益保留。</td></tr>
+                <tr><td><span class="status s-green">销售中</span></td><td>下架销售</td><td>开发者／平台运营</td><td><span class="status s-red">已下架</span></td><td>提前停止销售，并联动处理对应DLC、Bundle和促销。</td></tr>
+                <tr><td><span class="status s-gray">已结束</span>／<span class="status s-red">已下架</span></td><td>重新修改时间</td><td>开发者</td><td><span class="status s-blue">待上架</span>／<span class="status s-green">销售中</span></td><td>结束时间必须晚于当前时间，保存后按新时间重新计算状态。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:24px">4.4 促销活动状态</h3>
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>当前状态</th><th>触发行为</th><th>操作人</th><th>目标状态</th><th>系统行为</th></tr></thead>
+              <tbody>
+                <tr><td><span class="status s-gray">未生效</span></td><td>促销审核通过</td><td>平台运营</td><td><span class="status s-blue">待开始</span></td><td>保存审核结果，等待开始时间，不提前改变成交价。</td></tr>
+                <tr><td><span class="status s-blue">待开始</span></td><td>到达开始时间</td><td>系统</td><td><span class="status s-green">进行中</span></td><td>将折后价作为 Package 当前有效成交价。</td></tr>
+                <tr><td><span class="status s-green">进行中</span></td><td>到达结束时间</td><td>系统</td><td><span class="status s-gray">已结束</span></td><td>停止折后价，恢复 Package 的非促销价格。</td></tr>
+                <tr><td><span class="status s-blue">待开始</span>／<span class="status s-green">进行中</span></td><td>取消活动</td><td>开发者／平台运营</td><td><span class="status s-red">已取消</span></td><td>立即终止活动并恢复非促销价格，保留促销记录。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note" style="margin-top:18px"><strong>统一审计要求</strong>每次行为都记录 object_id、revision_id（涉及审核修订时）、行为名称、操作人、操作时间、原状态、目标状态和原因。系统自动行为的操作人记为“系统”。</div>
+        </div>
+      </section>
+
+      <section class="card" id="fields">
+        <div class="section-head"><div><h2>5. 页面字段与按钮交互</h2><p>开发者中心列表必须让用户同时看见审核结果和当前业务结果。</p></div></div>
+        <div class="section-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>页面</th><th>必须展示的状态字段</th><th>辅助字段</th><th>主要按钮</th><th>按钮可用条件与结果</th></tr></thead>
+              <tbody>
+                <tr><td><strong>DLC 商品设置</strong></td><td>资料审核状态<br>上架状态</td><td>开始时间、结束时间、实际上架时间、默认 Package ID</td><td>待审核可编辑、删除、撤回；通过后可修改时间、立即上架、下架、重新上架</td><td>编辑待审核内容会自动撤回旧快照并重新提交；删除仍需校验没有业务引用。</td></tr>
+                <tr><td><strong>付费下载设置</strong></td><td>Package 审核状态<br>销售状态</td><td>包含 App、包含 Depot、USD 基础价、地区价格、开始时间、结束时间</td><td>待审核可编辑、删除、撤回；通过后可上架销售、下架销售、重新上架</td><td>默认 Package 不能单独删除；其他 Package 仅从未上架且无引用时可删除。</td></tr>
+                <tr><td><strong>捆绑组合</strong></td><td>Bundle 审核状态<br>上架／销售状态</td><td>包含的 Package、商品原价、组合售卖价、系统计算折扣、开始时间、结束时间</td><td>待审核可编辑、删除、撤回；通过后可设置时间、立即上架、下架、重新上架</td><td>待审核且从未上架的 Bundle 可删除，成员 Package 不受影响；已上架后只能下架。</td></tr>
+                <tr><td><strong>促销活动</strong></td><td>促销审核状态<br>活动状态</td><td>促销 Package、只读原价、折后价、开始和结束时间</td><td>待审核可编辑、删除、撤回；通过后可取消活动</td><td>尚未开始且未通过的记录可删除；进行中、已结束或已取消的记录必须保留。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note warn" style="margin-top:18px"><strong>操作反馈</strong>按钮不可用时应置灰，并直接说明缺少的前置条件。执行上架、下架、上架销售、下架销售或取消活动时需要二次确认；成功后刷新业务状态并新增操作记录。</div>
+          <div class="note" style="margin-top:12px"><strong>待审核编辑规则</strong>允许点击“编辑”不代表覆盖运营正在看的快照。系统先将旧审核记录标记为已撤回，再以修改后的内容生成新 revision_id 并重新进入待审核；旧记录继续保留。待审核删除同样先终止审核，再按对象依赖规则判断是否允许删除。</div>
+        </div>
+      </section>
+
+      <section class="card" id="dlc-flow">
+        <div class="section-head"><div><h2>6. DLC 完整流转</h2><p>DLC 资料与默认 Package 分开审核，全部满足后才可形成完整售卖闭环。</p></div></div>
+        <div class="section-body">
+          <div class="flow">
+            <div class="flow-step"><b>创建 DLC</b><small>生成 DLC AppID 和默认 Package 草稿</small></div><div class="arrow">→</div>
+            <div class="flow-step"><b>填写资料</b><small>DLC 内容、开始时间、结束时间</small></div><div class="arrow">→</div>
+            <div class="flow-step"><b>配置价格</b><small>价格写入默认 Package</small></div><div class="arrow">→</div>
+            <div class="flow-step wait"><b>分别提交审核</b><small>DLC 资料审核 + Package 定价审核</small></div><div class="arrow">→</div>
+            <div class="flow-step"><b>Package 上架销售</b><small>审核通过后手动开放销售</small></div><div class="arrow">→</div>
+            <div class="flow-step ok"><b>DLC 上架</b><small>到达计划时间自动上架，或手动立即上架</small></div>
+          </div>
+          <div class="table-wrap" style="margin-top:12px">
+            <table>
+              <thead><tr><th>环节</th><th>DLC 变化</th><th>默认 Package 变化</th><th>页面操作</th><th>限制</th></tr></thead>
+              <tbody>
+                <tr><td>创建 DLC</td><td>生成 DLC AppID，资料为草稿，状态为待配置</td><td>同时生成默认 Package，审核状态为草稿，开始／结束时间待配置</td><td>编辑资料、配置 Package</td><td>此时不展示、不可购买</td></tr>
+                <tr><td>提交 DLC 资料审核</td><td>草稿 → 待审核</td><td>不自动提交 Package</td><td>可撤回</td><td>待审核时不可再次提交</td></tr>
+                <tr><td>提交 Package 审核</td><td>不改变 DLC 状态</td><td>草稿 → 待审核</td><td>可撤回</td><td>价格与权益必须完整</td></tr>
+                <tr><td>DLC 审核通过</td><td>获得上架资格；未到开始时间时进入待上架或预购中</td><td>保持原状态</td><td>等待 Package 通过并生效</td><td>不等于已经上架或可以购买</td></tr>
+                <tr><td>Package 审核通过</td><td>保持原状态</td><td>审核已通过，销售仍为未上架</td><td>可执行“上架销售”</td><td>DLC 资料未通过时不可启动</td></tr>
+                <tr><td>Package 上架销售</td><td>满足DLC上架前置条件之一</td><td>未上架 → 销售中</td><td>上架销售</td><td>仅 Package 审核通过且 DLC 资料通过时可操作</td></tr>
+                <tr><td>到达开始时间</td><td>待上架 → 已上架</td><td>保持销售中</td><td>系统自动处理</td><td>前置条件不满足则不上架，并提示阻断原因</td></tr>
+                <tr><td>手动立即上架</td><td>待上架 → 已上架；开始时间改为当前时间</td><td>保持销售中</td><td>二次确认后立即生效</td><td>默认 Package 必须销售中且结束时间晚于当前时间</td></tr>
+                <tr><td>DLC 下架</td><td>已上架／预购中 → 已下架</td><td>默认 Package 同步下架销售</td><td>填写原因并确认</td><td>保留历史、订单和 License，不删除对象</td></tr>
+                <tr><td>DLC 重新上架</td><td>已下架 → 已上架或待上架</td><td>需要先重新上架默认 Package 销售</td><td>选择立即或定时</td><td>资料仍有效且所有前置条件重新校验通过</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="matrix">
+        <div class="section-head"><div><h2>7. DLC 与默认 Package 双审核组合</h2><p>重点处理一个已通过、另一个未通过的中间状态。</p></div></div>
+        <div class="section-body">
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>DLC 资料审核</th><th>Package 审核</th><th>Package 销售状态</th><th>允许结果</th><th>运营／开发者下一步</th></tr></thead>
+              <tbody>
+                <tr><td><span class="status s-green">已通过</span></td><td><span class="status s-red">拒绝通过</span></td><td><span class="status s-gray">未上架</span></td><td>DLC 保持待配置，不展示、不可购买</td><td>修改 Package 后重新提交审核；“立即上架”置灰</td></tr>
+                <tr><td><span class="status s-red">拒绝通过</span></td><td><span class="status s-green">已通过</span></td><td><span class="status s-gray">未上架</span></td><td>Package 不可上架销售；DLC 不展示</td><td>修改 DLC 资料后重新提交审核</td></tr>
+                <tr><td><span class="status s-green">已通过</span></td><td><span class="status s-green">已通过</span></td><td><span class="status s-gray">未上架</span></td><td>仍不可购买，也不可完成上架</td><td>上架默认 Package 销售</td></tr>
+                <tr><td><span class="status s-green">已通过</span></td><td><span class="status s-green">已通过</span></td><td><span class="status s-green">销售中</span></td><td>具备上架条件</td><td>等待计划时间，或执行立即上架</td></tr>
+                <tr><td><span class="status s-amber">待审核</span></td><td>任意状态</td><td>任意状态</td><td>不可上架</td><td>等待审核或撤回修改</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note danger" style="margin-top:18px"><strong>指定异常场景</strong>当 DLC 已通过但 Package 未通过时，页面提示“默认 Package 尚未审核通过，请完成 Package 定价审核并上架销售后再上架 DLC”。前端按钮置灰，服务端也必须校验并拒绝上架请求。</div>
+        </div>
+      </section>
+
+      <section class="card" id="effects">
+        <div class="section-head"><div><h2>8. 状态流转前后的实际变化</h2><p>用玩家可见结果解释每种状态的业务作用。</p></div></div>
+        <div class="section-body">
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>状态变化</th><th>变化后系统允许</th><th>玩家侧结果</th></tr></thead>
+              <tbody>
+                <tr><td>DLC 资料审核：待审核 → 已通过</td><td>允许进入上架准备，仍需校验默认 Package</td><td>没有立即变化</td></tr>
+                <tr><td>DLC 上架：待上架 → 已上架</td><td>公开 DLC 名称、介绍、图片和详情页</td><td>可以看到 DLC；购买按钮仍取决于 Package</td></tr>
+                <tr><td>Package 审核：待审核 → 已通过</td><td>允许开发者上架销售</td><td>没有立即变化</td></tr>
+                <tr><td>Package 销售：未上架 → 销售中</td><td>允许创建订单／免费领取并发放 License</td><td>DLC 已上架时出现购买／领取入口</td></tr>
+                <tr><td>Package 销售：销售中 → 已结束</td><td>到达结束时间，停止新订单和新License</td><td>不能新购；历史权益保留</td></tr>
+                <tr><td>Package 销售：销售中 → 已下架</td><td>拒绝新订单与新 License</td><td>不能新购；历史购买和已发 License 保留</td></tr>
+                <tr><td>DLC 上架：已上架 → 已下架</td><td>隐藏公开入口，并联动默认 Package 下架销售</td><td>商店不可见、不可新购；已拥有用户权益保留</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="bundle">
+        <div class="section-head"><div><h2>9. Bundle 规则</h2><p>Bundle 是独立组合商品，具有独立审核状态和上架／销售状态。</p></div></div>
+        <div class="section-body">
+          <div class="two-col">
+            <div class="mini-card"><h3>审核状态</h3><p>草稿、待审核、已通过、拒绝通过、已撤回。审核组合资料、成员 Package 和组合售卖价；通过后只取得上架资格。</p></div>
+            <div class="mini-card"><h3>上架／销售状态</h3><p>未上架、待上架、已上架、已结束、已下架。只有“已上架”时才向玩家展示并允许购买。</p></div>
+          </div>
+          <div class="table-wrap compact" style="margin-top:18px">
+            <table>
+              <thead><tr><th>当前状态</th><th>触发行为</th><th>目标状态</th><th>系统结果</th></tr></thead>
+              <tbody>
+                <tr><td><span class="status s-gray">未上架</span></td><td>创建或修改开始／结束时间</td><td><span class="status s-blue">待上架</span></td><td>保存时间范围；审核通过且未到开始时间时为待上架。</td></tr>
+                <tr><td><span class="status s-gray">未上架</span>／<span class="status s-blue">待上架</span></td><td>手动点击“立即上架”</td><td><span class="status s-green">已上架</span></td><td>立即展示 Bundle 并开放购买；未操作时保持未上架或待上架。</td></tr>
+                <tr><td><span class="status s-blue">待上架</span></td><td>到达计划时间</td><td><span class="status s-green">已上架</span></td><td>所有成员 Package 均销售中时自动上架，否则保持待上架并提示阻断原因。</td></tr>
+                <tr><td><span class="status s-green">已上架</span></td><td>到达结束时间</td><td><span class="status s-gray">已结束</span></td><td>停止展示和新增购买，历史订单及权益保留。</td></tr>
+                <tr><td><span class="status s-green">已上架</span></td><td>手动下架或成员 Package 失效</td><td><span class="status s-red">已下架</span></td><td>停止展示和新增购买，保留历史订单及已发权益。</td></tr>
+                <tr><td><span class="status s-gray">已结束</span>／<span class="status s-red">已下架</span></td><td>重新设置时间</td><td><span class="status s-blue">待上架</span>／<span class="status s-green">已上架</span></td><td>重新设置开始和结束时间；也可立即上架，此时只把开始时间改为当前时间。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="rules">
+            <li>Bundle 不属于 Package；它只引用两个及以上 Package，并保存独立的展示资料和组合售卖价。</li>
+            <li>创建和提交审核时只能选择审核已通过、销售中的 Package。</li>
+            <li>任一成员 Package 下架销售，或对应 DLC 下架时，已上架 Bundle 自动下架。</li>
+            <li>依赖恢复后 Bundle 不自动重新上架，需要再次确认上架方式。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="promotion">
+        <div class="section-head"><div><h2>10. 促销活动规则</h2><p>促销属于价格活动，不设置“上架状态”。</p></div></div>
+        <div class="section-body">
+          <div class="two-col">
+            <div class="mini-card"><h3>审核状态</h3><p>草稿、待审核、已通过、拒绝通过、已撤回。审核促销商品、折后价、时间和说明。</p></div>
+            <div class="mini-card"><h3>活动状态</h3><p>未生效、待开始、进行中、已结束、已取消。审核通过后根据当前时间自动计算。</p></div>
+          </div>
+          <ul class="rules">
+            <li>促销必须绑定一个明确的销售对象。本期 Package 促销只影响该 Package 的直接购买价格。</li>
+            <li>Package 被某个 Bundle 引用时，Package 促销不会改变 Bundle 的组合售卖价、原价或折扣；Bundle 继续使用审核通过时保存的独立价格。</li>
+            <li>只有销售中的 Package 才允许提交促销；折后价必须小于商品原价，商品原价只读。</li>
+            <li>到达开始时间后自动应用折后价，到达结束时间后自动恢复 Package 的非促销价格。</li>
+            <li>取消进行中的促销后立即恢复非促销价格，保留活动记录，不改变 Package 销售状态。</li>
+            <li>Package 下架销售或 DLC 下架时，未结束的相关促销自动取消。</li>
+            <li>如后续需要 Bundle 促销，应单独创建以 Bundle ID 为目标的促销，不得复用成员 Package 的促销结果；本期暂不提供 Bundle 促销。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="file-release">
+        <div class="section-head"><div><h2>11. App、Depot、Build、Manifest 与 Release</h2><p>本节为当前版本的最终实现口径：上传、文件版本和发布均以单个 Depot 为处理单位。</p></div></div>
+        <div class="section-body">
+          <div class="note"><strong>范围结论</strong>一个 Build 只对应一个 Depot 和一个 Manifest；一次 Release 只发布一个 Build。本期不增加 App Build、多 Depot Build 或一次 Release 发布多个 Build。</div>
+
+          <h3>11.1 实体关系</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>关系</th><th>基数</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>Base App → DLC App</td><td>1:N</td><td>一个本体可创建多个 DLC；每个 DLC 只归属一个本体，双方都有独立 AppID。</td></tr>
+                <tr><td>App → Depot</td><td>1:N</td><td>创建 Depot 时只选择一个 Base App 或一个 DLC App；一个 Depot 不能同时归属多个 App。</td></tr>
+                <tr><td>Depot → Build</td><td>1:N</td><td>每次选择一个 Depot 创建上传任务；同一 Depot 可以保留多个历史 Build。</td></tr>
+                <tr><td>Build → Manifest</td><td>1:1</td><td>上传完成后为该 Build 生成一个不可变 Manifest，记录文件、哈希与分片信息。</td></tr>
+                <tr><td>Release → Build</td><td>N:1</td><td>一次 Release 发布一个 Build；同一 Build 可以因重试或不同 Branch 产生多条 Release 记录。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:24px">11.2 上传与文件版本</h3>
+          <div class="flow">
+            <div class="flow-step"><b>选择一个 Depot</b><small>明确文件归属的 App 与内容类型</small></div><div class="arrow">→</div>
+            <div class="flow-step"><b>创建 Upload</b><small>生成 Upload ID 与 CLI 命令</small></div><div class="arrow">→</div>
+            <div class="flow-step"><b>CLI 上传</b><small>扫描、哈希、分片和增量上传</small></div><div class="arrow">→</div>
+            <div class="flow-step"><b>生成 Build</b><small>Build 只属于所选 Depot</small></div><div class="arrow">→</div>
+            <div class="flow-step ok"><b>生成 Manifest</b><small>一个 Build 对应一个不可变文件清单</small></div>
+          </div>
+          <div class="note warn" style="margin-top:12px"><strong>不可变规则</strong>Build 和 Manifest 生成后不允许编辑。文件变化时重新上传，生成新的 Build 与 Manifest；旧版本继续保留用于追溯、测试和回滚。</div>
+
+          <h3 style="margin-top:24px">11.3 交互流程图</h3>
+          <p style="color:var(--muted);margin:0 0 10px">使用 Mermaid MMD 实时渲染。可在固定区域内拖动画布、滚轮缩放或全屏查看。</p>
+          <div class="diagram-shell" id="releaseDiagramShell">
+            <div class="diagram-toolbar">
+              <strong>单 Depot 上传与发布链路</strong>
+              <small>Mermaid.js · MIT</small>
+              <button type="button" data-diagram-action="zoom-out" aria-label="缩小流程图">−</button>
+              <button type="button" data-diagram-action="zoom-in" aria-label="放大流程图">＋</button>
+              <button type="button" data-diagram-action="fit">适应区域</button>
+              <button type="button" data-diagram-action="reset">重置</button>
+              <button type="button" data-diagram-action="source">查看 MMD</button>
+              <button type="button" data-diagram-action="fullscreen">全屏</button>
+            </div>
+            <div class="diagram-viewport" id="releaseDiagramViewport" aria-label="可拖拽缩放的文件上传与发布流程图">
+              <div class="diagram-stage" id="releaseDiagramStage"></div>
+            </div>
+            <pre class="diagram-source" id="releaseDiagramSource">flowchart LR
+  BASE["Base App"] -->|"1:N"| DLC["DLC App"]
+  BASE --> DEPOT["Depot<br/>只归属一个 App"]
+  DLC --> DEPOT
+  DEPOT -->|"创建 Upload"| CLI["CLI 上传<br/>扫描 · 哈希 · 分片"]
+  CLI --> BUILD["Build<br/>只对应一个 Depot"]
+  BUILD -->|"1:1"| MANIFEST["Manifest<br/>不可变文件清单"]
+  BUILD --> RELEASE["Release<br/>一次发布一个 Build"]
+  RELEASE --> REVIEW{"审核通过?"}
+  REVIEW -->|"否 / 撤回"| KEEP["不更新 Active Build"]
+  REVIEW -->|"是"| EXEC{"执行成功?"}
+  EXEC -->|"否 / 取消"| KEEP
+  EXEC -->|"是"| ACTIVE["Active Build<br/>App + Depot + Branch → Build"]
+
+  classDef entity fill:#eef3ff,stroke:#3157d5,color:#1f2d3d,stroke-width:1.5px
+  classDef success fill:#e8f6f0,stroke:#14875d,color:#125e45,stroke-width:1.5px
+  classDef warn fill:#fff5dc,stroke:#d29a24,color:#6f4d08,stroke-width:1.5px
+  class BASE,DLC,DEPOT,CLI,BUILD,MANIFEST,RELEASE entity
+  class ACTIVE success
+  class REVIEW,EXEC,KEEP warn</pre>
+            <div class="diagram-error" id="releaseDiagramError" hidden>流程图加载失败，请检查 Mermaid 运行库或 MMD 语法。</div>
+          </div>
+
+          <h3 style="margin-top:24px">11.4 数据关联</h3>
+          <div class="two-col">
+            <div class="mini-card"><h3>Build</h3><p>保存 build_id、app_id、depot_id、manifest_id、版本号、构建说明、上传状态、QA 状态和提包审核状态。build_id 是唯一标识，不使用三个 ID 组成联合主键。</p></div>
+            <div class="mini-card"><h3>Active Build</h3><p>按 app_id + depot_id + branch 定位 active_build_id。一个 App 在同一 Branch 下可以同时拥有多个 Depot 的生效 Build。</p></div>
+          </div>
+          <div class="map" aria-label="单Depot Build与发布关系">
+            <div class="map-inner">
+              <div class="map-box dlc"><b>App</b><small>Base App 或 DLC App</small></div>
+              <div class="map-arrow a1">1:N →</div>
+              <div class="map-box pkg"><b>Depot</b><small>一个 Depot 只归属一个 App</small></div>
+              <div class="map-arrow a2">1:N →</div>
+              <div class="map-box player"><b>Build → Manifest</b><small>每个 Build 对应一个 Depot 文件版本</small></div>
+              <div class="map-arrow a3">发布动作 ↓</div>
+              <div class="map-box promo"><b>Release</b><small>一次发布一个 Build 到指定 Branch</small></div>
+              <div class="map-arrow a4">成功后更新 →</div>
+              <div class="map-box bundle"><b>Active Build</b><small>App + Depot + Branch → Build</small></div>
+            </div>
+          </div>
+
+          <h3 style="margin-top:24px">11.5 Release 与生效</h3>
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>阶段</th><th>Release 变化</th><th>是否更新 Active Build</th></tr></thead>
+              <tbody>
+                <tr><td>创建申请</td><td>记录 App、Depot、Build、Branch、发布方式、计划时间和说明</td><td>否</td></tr>
+                <tr><td>待审核／拒绝／撤回</td><td>保留独立申请快照与审核记录</td><td>否</td></tr>
+                <tr><td>审核通过</td><td>获得执行资格，进入待执行</td><td>否</td></tr>
+                <tr><td>取消／执行失败</td><td>记录取消或失败原因，可按规则重试</td><td>否</td></tr>
+                <tr><td>执行成功</td><td>记录实际生效时间和执行结果</td><td>是，更新该 App、Depot、Branch 的 active_build_id</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:24px">11.6 回滚</h3>
+          <ul class="rules">
+            <li>回滚选择同一 Depot 的历史 Build，并创建一条新的回滚发布任务。</li>
+            <li>任务执行成功后，将该 Depot 在目标 Branch 下的 active_build_id 指向历史 Build。</li>
+            <li>旧 Build、Manifest 与 Release 均不修改、不删除。</li>
+            <li>回滚记录必须保存操作人、原因、回滚前 Build、目标 Build、Branch、时间和结果。</li>
+          </ul>
+
+          <div class="note danger" style="margin-top:18px"><strong>本期不实现</strong>一个 Build 聚合多个 Depot、App Build、ReleaseBuild 多 Build 清单，以及一次 Release 同时发布多个 Build。未来如需多个 Depot 原子化一起发布，再独立设计组合版本能力。</div>
+        </div>
+      </section>
+
+      <div class="footer">PC 发行平台 · DLC / Package / Bundle / 促销业务规则确认稿</div>
+    </main>
+  </div>
+  <script src="./vendor/mermaid.min.js"></script>
+  <script>
+    const links=[...document.querySelectorAll('aside a')];
+    const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const observer=new IntersectionObserver(entries=>{
+      const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(!visible)return;
+      links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+visible.target.id));
+    },{rootMargin:'-20% 0px -65% 0px',threshold:[0,.2,.6]});
+    sections.forEach(s=>observer.observe(s));
+    function copyConclusion(btn){
+      const text='DLC资料已通过 + DLC已上架 + 默认Package审核已通过 + 默认Package销售中 + 当前地区价格有效 + 当前时间在开始与结束时间内 = 展示购买/免费领取入口';
+      navigator.clipboard.writeText(text).then(()=>{const old=btn.textContent;btn.textContent='已复制';setTimeout(()=>btn.textContent=old,1500)});
+    }
+
+    async function initializeReleaseDiagram(){
+      const shell=document.getElementById('releaseDiagramShell');
+      const viewport=document.getElementById('releaseDiagramViewport');
+      const stage=document.getElementById('releaseDiagramStage');
+      const source=document.getElementById('releaseDiagramSource');
+      const error=document.getElementById('releaseDiagramError');
+      if(!shell||!viewport||!stage||!source)return;
+      if(!window.mermaid){error.hidden=false;return;}
+
+      const view={scale:1,x:0,y:0,min:.25,max:3};
+      const apply=()=>{stage.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.scale})`};
+      const clamp=value=>Math.max(view.min,Math.min(view.max,value));
+      const zoom=(factor,centerX=viewport.clientWidth/2,centerY=viewport.clientHeight/2)=>{
+        const old=view.scale,next=clamp(old*factor);
+        view.x=centerX-(centerX-view.x)*(next/old);
+        view.y=centerY-(centerY-view.y)*(next/old);
+        view.scale=next;apply();
+      };
+      const fit=()=>{
+        const svg=stage.querySelector('svg');if(!svg)return;
+        const box=svg.viewBox?.baseVal;
+        const width=box?.width||svg.getBoundingClientRect().width||1200;
+        const height=box?.height||svg.getBoundingClientRect().height||500;
+        svg.style.width=`${width}px`;svg.style.height=`${height}px`;
+        view.scale=clamp(Math.min((viewport.clientWidth-48)/width,(viewport.clientHeight-48)/height));
+        view.x=(viewport.clientWidth-width*view.scale)/2;
+        view.y=(viewport.clientHeight-height*view.scale)/2;
+        apply();
+      };
+
+      try{
+        mermaid.initialize({startOnLoad:false,securityLevel:'strict',theme:'base',themeVariables:{fontFamily:'-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif',primaryColor:'#eef3ff',primaryTextColor:'#1f2d3d',primaryBorderColor:'#3157d5',lineColor:'#7f8da3',tertiaryColor:'#f8faff'},flowchart:{htmlLabels:true,useMaxWidth:false,curve:'basis'}});
+        const result=await mermaid.render('releaseDiagramSvg',source.textContent.trim());
+        stage.innerHTML=result.svg;
+        result.bindFunctions?.(stage);
+        requestAnimationFrame(fit);
+      }catch(renderError){
+        error.hidden=false;
+        error.textContent=`流程图加载失败：${renderError?.message||renderError}`;
+        return;
+      }
+
+      let dragging=false,startX=0,startY=0,originX=0,originY=0;
+      viewport.addEventListener('pointerdown',event=>{dragging=true;startX=event.clientX;startY=event.clientY;originX=view.x;originY=view.y;stage.classList.add('is-dragging');viewport.setPointerCapture(event.pointerId)});
+      viewport.addEventListener('pointermove',event=>{if(!dragging)return;view.x=originX+event.clientX-startX;view.y=originY+event.clientY-startY;apply()});
+      const stopDrag=event=>{dragging=false;stage.classList.remove('is-dragging');if(event.pointerId!==undefined&&viewport.hasPointerCapture(event.pointerId))viewport.releasePointerCapture(event.pointerId)};
+      viewport.addEventListener('pointerup',stopDrag);viewport.addEventListener('pointercancel',stopDrag);
+      viewport.addEventListener('wheel',event=>{event.preventDefault();const rect=viewport.getBoundingClientRect();zoom(event.deltaY<0?1.12:.89,event.clientX-rect.left,event.clientY-rect.top)},{passive:false});
+      shell.addEventListener('click',event=>{
+        const action=event.target.closest('[data-diagram-action]')?.dataset.diagramAction;if(!action)return;
+        if(action==='zoom-in')zoom(1.2);
+        if(action==='zoom-out')zoom(.82);
+        if(action==='fit')fit();
+        if(action==='reset'){view.scale=1;view.x=24;view.y=24;apply()}
+        if(action==='source'){source.classList.toggle('is-visible');event.target.textContent=source.classList.contains('is-visible')?'隐藏 MMD':'查看 MMD'}
+        if(action==='fullscreen'){if(document.fullscreenElement)document.exitFullscreen();else shell.requestFullscreen?.()}
+      });
+      document.addEventListener('fullscreenchange',()=>requestAnimationFrame(fit));
+      window.addEventListener('resize',()=>requestAnimationFrame(fit));
+    }
+    initializeReleaseDiagram();
+  </script>
+</body>
+</html>
