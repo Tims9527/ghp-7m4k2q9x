@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>创建游戏到完整发布｜开发者与运营双端流程</title>
+  <style>
+    :root{--navy:#10203a;--blue:#3157d5;--cyan:#16b8ca;--green:#16855b;--amber:#b7791f;--red:#c94b4b;--bg:#f3f6fa;--card:#fff;--line:#dbe3ed;--ink:#1d2b3d;--muted:#6f7f95}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}header{padding:28px 5vw;background:var(--navy);color:#fff}header span{color:#79dce6;font-size:13px;font-weight:700}header h1{margin:6px 0 8px;font-size:30px}header p{margin:0;color:#bdc9da;line-height:1.7}.wrap{max-width:1240px;margin:auto;padding:26px 22px 60px}.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:18px;background:#eaf0ff;border-left:4px solid var(--blue);border-radius:10px}.summary div{padding:12px;background:#fff;border:1px solid #d4def8;border-radius:8px}.summary small{display:block;color:var(--muted);margin-bottom:5px}.summary strong{font-size:14px}.section{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(30,49,83,.06);overflow:hidden}.section>header{padding:20px 24px;background:#fff;color:var(--ink);border-bottom:1px solid var(--line)}.section>header h2{margin:0;font-size:21px}.section>header p{margin:5px 0 0;color:var(--muted)}.lanes{padding:22px;display:grid;gap:13px}.step{display:grid;grid-template-columns:130px 48px minmax(0,1fr) 220px;align-items:stretch;gap:12px}.actor{display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:750}.actor.dev{background:#edf2ff;color:#294fbc}.actor.ops{background:#e9fafb;color:#087987}.actor.sys{background:#eaf8f1;color:#126a49}.num{display:flex;align-items:center;justify-content:center;border-radius:50%;width:40px;height:40px;margin:auto;background:var(--navy);color:#fff;font-weight:800}.content{padding:14px 16px;border:1px solid var(--line);border-radius:9px;background:#fff}.content strong{display:block;margin-bottom:5px}.content p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}.state{display:flex;align-items:center;padding:12px;border-radius:9px;background:#f7f9fc;border:1px solid var(--line);font:12px ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.55}.arrow{text-align:center;color:#96a4b7;font-size:18px}.rule{margin:22px;padding:20px;border-radius:11px;background:var(--navy);color:#fff}.rule code{color:#75e2eb;font-size:15px}.rule p{margin:10px 0 0;color:#bdc9da;line-height:1.7}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:22px}.card{border:1px solid var(--line);border-radius:11px;padding:18px}.card h3{margin:0 0 12px}.card ol{margin:0;padding-left:20px;line-height:1.9;color:#44556d}.card a{display:block;margin-top:10px;padding:10px 12px;border-radius:7px;background:#eef3ff;color:#244bb8;text-decoration:none;font-weight:650}.matrix{padding:22px;overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14px;border:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{background:#f3f6fa;color:#51627a}.ok{color:var(--green);font-weight:700}.warn{color:var(--amber);font-weight:700}.note{margin:0 22px 22px;padding:14px 16px;border-left:4px solid var(--amber);background:#fff9eb;color:#6b4d14;border-radius:8px;line-height:1.7}@media(max-width:900px){.summary{grid-template-columns:1fr 1fr}.step{grid-template-columns:95px 40px 1fr}.state{grid-column:3}.grid{grid-template-columns:1fr}}@media(max-width:600px){.summary{grid-template-columns:1fr}.step{grid-template-columns:70px 34px 1fr}.lanes{padding:12px}.wrap{padding:14px 10px 40px}}
+  </style>
+</head>
+<body>
+<header>
+  <span>完整 BUILD 模型 · 演示说明</span>
+  <h1>从创建游戏到玩家获得正式版本</h1>
+  <p>开发者端负责创建业务对象并提交；运营后台负责测试、审核和执行；系统只在Release执行成功后切换Active Build。</p>
+</header>
+<main class="wrap">
+  <section class="summary">
+    <div><small>文件归属</small><strong>App → Depot</strong></div>
+    <div><small>文件快照</small><strong>Depot → Manifest</strong></div>
+    <div><small>完整版本</small><strong>Build → 多个Manifest</strong></div>
+    <div><small>发布动作</small><strong>Release → Build + Branch</strong></div>
+    <div><small>线上指针</small><strong>App + Branch → Active Build</strong></div>
+  </section>
+
+  <section class="section">
+    <header><h2>一、开发者端与运营后台完整闭环</h2><p>同一对象ID贯穿两端；演示数据中的资料审核、QA、提包和Release审核默认通过。</p></header>
+    <div class="lanes">
+      <div class="step"><div class="actor dev">开发者端</div><div class="num">1</div><div class="content"><strong>创建游戏</strong><p>填写游戏资料，系统生成Game ID与Base AppID。演示模式默认资料审核通过。</p></div><div class="state">Game / App<br>review = APPROVED</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor dev">开发者端</div><div class="num">2</div><div class="content"><strong>创建Depot</strong><p>为同一App创建Windows、macOS、公共资源或语言Depot；Depot只确定文件归属。</p></div><div class="state">Depot.app_id<br>= Build.app_id</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor dev">开发者端</div><div class="num">3</div><div class="content"><strong>创建草稿Build</strong><p>选择目标App，填写版本号和构建说明。Build是完整候选版本，不对应单个Depot。</p></div><div class="state">Build.status<br>= DRAFT</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor dev">开发者端</div><div class="num">4</div><div class="content"><strong>逐个上传Depot</strong><p>每个Upload Task只处理一个Depot目录；成功后生成该Depot的不可变Manifest，也可复用历史Manifest。</p></div><div class="state">Upload → Manifest<br>depot.manifest_ready</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor dev">开发者端</div><div class="num">5</div><div class="content"><strong>完成并冻结Build</strong><p>全部必需Depot就绪后冻结BuildDepotManifest映射。冻结后修改文件必须创建新Build。</p></div><div class="state">Build.status<br>= FROZEN</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor ops">运营后台</div><div class="num">6</div><div class="content"><strong>QA测试完整Build</strong><p>按正式下载链路取得完整Manifest集合，记录平台子结论和综合结论。</p></div><div class="state">QA = PASSED<br>演示默认通过</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor ops">运营后台</div><div class="num">7</div><div class="content"><strong>提包审核</strong><p>审核完整Build、全部Depot Manifest、构建说明和QA报告。</p></div><div class="state">Build review<br>= APPROVED</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor dev">开发者端</div><div class="num">8</div><div class="content"><strong>提交Release</strong><p>选择已通过的完整Build、目标Branch、立即或定时方式，并填写发布说明。</p></div><div class="state">Release.review<br>= APPROVED<br>task = PENDING</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor ops">运营后台</div><div class="num">9</div><div class="content"><strong>执行发布任务</strong><p>在发布任务管理中点击“立即执行”；定时任务则在到期后执行同样的复核。</p></div><div class="state">Deployment<br>PENDING → RUNNING</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor sys">系统</div><div class="num">10</div><div class="content"><strong>原子切换Active Build</strong><p>执行成功后，仅更新相同App与Branch的线上指针；其他App与Branch不受影响。</p></div><div class="state">app_id + branch<br>→ active_build_id</div></div>
+      <div class="arrow">↓</div>
+      <div class="step"><div class="actor sys">系统</div><div class="num">11</div><div class="content"><strong>玩家下载</strong><p>根据License确定App，再查询Production Active Build，按系统、架构、语言和权益筛选Depot Manifest。</p></div><div class="state">Active Build<br>→ Manifest集合<br>→ Chunk</div></div>
+    </div>
+    <div class="rule"><code>用户下载版本 = ActiveBuild(app_id, branch) 中符合设备与License条件的Depot Manifest集合</code><p>不能按Build ID最大值、创建时间或列表第一条判断。Release审核通过也不等于已生效，必须等发布任务执行成功。</p></div>
+  </section>
+
+  <section class="section">
+    <header><h2>二、实际演示操作路径</h2><p>建议技术按以下顺序打开页面，并用Release ID、Build ID、AppID和Branch核对两端记录。</p></header>
+    <div class="grid">
+      <article class="card"><h3>开发者端</h3><ol><li>选择游戏进入单游戏工作台。</li><li>进入“游戏包管理 → Depot管理”。</li><li>进入“构建管理”，查看默认已通过完整Build，或自行创建Build。</li><li>进入“发布管理与记录”。</li><li>点击“提交发布申请”，选择Build与Branch。</li><li>提交后状态为“审核已通过／待执行”。</li></ol><a href="02-开发者与运营后台联动演示-完整Build模型.html#/P02-01">打开开发者端演示</a></article>
+      <article class="card"><h3>运营后台</h3><ol><li>进入“发布审核”，查看同一Release及Branch。</li><li>进入“发布任务管理”，找到状态“待执行”的Release。</li><li>点击“立即执行”。</li><li>进入“线上版本与回滚”。</li><li>确认相同App与Branch只有一个“当前版本”。</li><li>核对Active Build ID与刚执行的Release一致。</li></ol><a href="02-开发者与运营后台联动演示-完整Build模型.html#/P02-15">打开发布任务管理</a><a href="02-开发者与运营后台联动演示-完整Build模型.html#/P02-16">打开线上版本与回滚</a></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <header><h2>三、关键状态变化</h2><p>用状态变化判断操作是否真正生效。</p></header>
+    <div class="matrix"><table><thead><tr><th>动作</th><th>Build</th><th>Release审核</th><th>发布任务</th><th>Active Build</th><th>玩家下载</th></tr></thead><tbody>
+      <tr><td>创建并冻结Build</td><td class="ok">FROZEN</td><td>—</td><td>—</td><td>不变</td><td>仍下载旧版本</td></tr>
+      <tr><td>QA与提包通过</td><td class="ok">可发布</td><td>—</td><td>—</td><td>不变</td><td>仍下载旧版本</td></tr>
+      <tr><td>提交Release</td><td>不变</td><td class="ok">默认通过</td><td class="warn">待执行</td><td>不变</td><td>仍下载旧版本</td></tr>
+      <tr><td>发布任务执行成功</td><td>不变</td><td class="ok">已通过</td><td class="ok">已上架</td><td class="ok">切换到新Build</td><td class="ok">获得新版本</td></tr>
+      <tr><td>发布任务失败或取消</td><td>不变</td><td>已通过</td><td class="warn">失败／取消</td><td>不变</td><td>仍下载旧版本</td></tr>
+      <tr><td>回滚成功</td><td>历史Build不变</td><td>生成回滚记录</td><td class="ok">执行成功</td><td class="ok">切换到历史Build</td><td class="ok">获得回滚版本</td></tr>
+    </tbody></table></div>
+    <p class="note"><strong>Branch位置：</strong>开发者在创建Release时选择；运营端在发布审核、发布任务管理和线上版本页面查看。Build与Depot页面不设置Branch。</p>
+  </section>
+</main>
+</body>
+</html>
