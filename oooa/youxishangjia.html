@@ -2,7 +2,7 @@
 :root{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:#18253b;background:#f3f6fc}*{box-sizing:border-box}body{margin:0}header{background:#12223d;color:#fff;padding:25px 4vw 20px}h1{font-size:24px;margin:0 0 10px}.sub{color:#b8c9e5;font-size:13px}.bar{position:sticky;top:0;z-index:10;background:white;border-bottom:1px solid #dbe4f2;padding:10px 4vw;display:flex;gap:8px;flex-wrap:wrap}.bar button{border:1px solid #ccd9ec;border-radius:9px;background:#f7faff;color:#263954;padding:9px 13px;cursor:pointer;font-size:13px}.bar button.active{background:#1764d1;border-color:#1764d1;color:#fff}.legend{display:flex;gap:12px;flex-wrap:wrap;margin:20px 4vw 0;font-size:12px;color:#52627b}.legend span{display:inline-flex;align-items:center;gap:5px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block}.dot.dev{background:#1372d3}.dot.ops{background:#c36b17}.dot.sys{background:#15936e}.dot.gate{background:#7652ad}.flow{max-width:1120px;margin:18px auto 55px;padding:0 18px}.flow[hidden]{display:none}.flow-title{font-size:22px;margin:0 0 9px}.flow-sub{color:#64748b;font-size:12px;margin:0 0 20px}.lane-head{display:grid;grid-template-columns:70px 1fr 1fr 1fr;gap:12px;margin:0 0 10px;color:#5b6981;font-size:12px;font-weight:700}.lane-head span:not(:first-child){padding:8px 12px;border-radius:8px;background:#e8eef8}.step{display:grid;grid-template-columns:70px 1fr 1fr 1fr;gap:12px;min-height:84px;position:relative;padding-bottom:28px}.step{--axis:26.5px}.step::before{content:'';position:absolute;left:var(--axis);transform:translateX(-50%);bottom:9px;width:3px;height:17px;border-radius:2px;background:#7d91b1}.step::after{content:'';position:absolute;left:var(--axis);transform:translateX(-50%);bottom:4px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #7d91b1}.step.end::before,.step.end::after{display:none}.num{display:grid;place-items:center;width:53px;height:53px;background:#e5ecf7;border:2px solid #a7b7d0;border-radius:50%;font-weight:800;color:#365574;margin-top:7px}.box{padding:13px 16px;border-radius:12px;border:1px solid #b8d2f4;background:#fff;box-shadow:0 5px 15px #2339580b;min-height:80px;grid-column:2}.step.ops .box{grid-column:3;border-color:#ebc695;background:#fffbf5}.step.sys .box{grid-column:4;border-color:#9edbc6;background:#f5fffb}.step.gate .box{grid-column:2/5;border-color:#c4b5e5;background:#faf7ff}.step.end .box{grid-column:2/5;border-color:#92cdb7;background:#eefbf4}.box strong{font-size:15px;display:block;line-height:1.4}.box small{display:block;color:#53627a;font-size:12px;line-height:1.55;margin-top:6px}.box .req{color:#ae3737;font-weight:700}.box .opt{color:#527092}.box .next{color:#1d5bb8;font-weight:700}.step.ops .num{border-color:#d7a04a;background:#fff0da}.step.sys .num{border-color:#60bca0;background:#e1f8f0}.step.gate .num{border-color:#9b7dc9;background:#efe8fc}.step.end .num{border-color:#49ac7c;background:#def6e8}.sources{margin:20px 0 0;border-top:1px dashed #b5c5dc;padding-top:14px;font-size:11px;color:#65728a}.sources a{color:#3962a0;margin-right:13px}footer{padding:24px 4vw;color:#70809c;font-size:12px}.all .flow[hidden]{display:block}.all .flow{page-break-after:always}@media(max-width:700px){.lane-head{display:none}.step{grid-template-columns:48px 1fr;gap:5px}.num{width:38px;height:38px}.step{--axis:19px}.box,.step.ops .box,.step.sys .box,.step.gate .box,.step.end .box{grid-column:2}.flow{padding:0 12px}.bar{padding:8px}}@media print{.bar{display:none}.flow[hidden]{display:block}.flow{page-break-after:always}.box{box-shadow:none}body{background:white}}
 
 .term{display:inline;border:0;padding:0;background:none;color:#145ca9;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;cursor:pointer;font:inherit;font-weight:inherit}.term:hover,.sources a:hover{color:#063b84}.audit-note{padding:12px 15px;background:#fff4eb;border:1px solid #edbd95;border-radius:9px;margin:0 0 18px;color:#8b4514;font-size:13px;line-height:1.55}.info-dialog{width:min(850px,calc(100vw - 30px));max-height:85vh;border:1px solid #ccd9ea;border-radius:14px;padding:0;box-shadow:0 20px 70px #15274455}.info-dialog::backdrop{background:#10213aa6}.dialog-head{position:sticky;top:0;z-index:1;background:white;display:flex;align-items:center;justify-content:space-between;padding:15px 21px;border-bottom:1px solid #dde6f1}.dialog-head h2{margin:0;font-size:19px}.dialog-head button{border:0;background:#eef3fa;border-radius:7px;font-size:22px;cursor:pointer;width:32px;height:32px}.dialog-body{overflow:auto;max-height:calc(85vh - 65px);padding:20px 25px;line-height:1.7;font-size:14px}.dialog-body h1,.dialog-body h2,.dialog-body h3{color:#243c5f;margin:18px 0 8px}.dialog-body h1{font-size:21px}.dialog-body h2{font-size:18px}.dialog-body h3{font-size:16px}.dialog-body p{margin:8px 0}.dialog-body code{background:#eef3fa;padding:1px 4px;border-radius:4px}.dialog-body pre{overflow:auto;background:#14223a;color:white;padding:12px;border-radius:8px}.dialog-body pre code{background:none}.dialog-body table{border-collapse:collapse;display:block;overflow:auto}.dialog-body th,.dialog-body td{border:1px solid #d5dfec;padding:6px 10px}.dialog-body blockquote{border-left:4px solid #8eaddb;margin:10px 0;padding:4px 12px;background:#f5f8fd}.dialog-body img{max-width:100%}.dialog-body a{color:#145bad}
-</style></head><body><header><h1>游戏上架全场景操作流程图</h1><div class="sub">开发者平台 → 运营后台 → 状态结果｜红字为必填，灰字为可选｜前 8 个场景对应原型入口；09 开发者自测／运营 QA 已同步原型入口；差异见审查报告</div></header><nav class="bar" id="nav"></nav><div class="legend"><span><i class="dot dev"></i>开发者操作</span><span><i class="dot ops"></i>运营审核／QA</span><span><i class="dot sys"></i>系统自动处理</span><span><i class="dot gate"></i>条件判断／退回分支</span></div><main id="flows"></main><footer>本图的前 8 个场景基于现有 Demo 入口修订，非 USD 最低成交价须接入官方规则表；09 开发者自测／运营 QA 已接入原型。游戏资料每次提交审核是本平台额外规则；Build 仅首次例行人工审核。</footer><script>
+</style></head><body><header><h1>游戏上架全场景操作流程图</h1><div class="sub">开发者平台 → 运营后台 → 状态结果｜红字为必填，灰字为可选｜前 8 个场景对应原型入口；09 开发者自测／运营 QA 已同步原型入口；差异见审查报告</div></header><nav class="bar" id="nav"></nav><div class="legend"><span><i class="dot dev"></i>开发者操作</span><span><i class="dot ops"></i>运营审核／QA</span><span><i class="dot sys"></i>系统自动处理</span><span><i class="dot gate"></i>条件判断／退回分支</span></div><main id="flows"></main><footer>本图按 Steam 最低价规则描述目标流程：各币种最低基础价以 Steam 的 USD 0.99 档多变量换算结果为准，最低可能交易价为该门槛的 50%；原型的非 USD 官方门槛表及完整校验尚待实现。09 开发者自测／运营 QA 已接入原型。游戏资料每次提交审核是本平台额外规则；Build 仅首次例行人工审核。</footer><script>
 const F=[
 {id:'new',name:'01 新游上线',sub:'先准备商店资料与拟议价格；首次商店审核先于首次 Build 审核',sources:['发行流程','审核流程','内容调查','上传至 Steam','程序包','定价'],steps:[
 ['dev','平台开发者控制台 → 游戏管理 → 创建游戏','必填：游戏名称、开发商、短简介、游戏介绍、Windows／macOS／Linux 系统要求；选择支持语言、销售地区。可选：标签、素材草稿。点击「创建游戏项目」。'],
@@ -38,25 +38,25 @@ const F=[
 ['sys','立即切换或进入待执行任务','立即发布 → 当前 Branch Active Build 切新版本；定时 → 运营后台「发布任务管理」点击「立即执行」或到时执行。'],
 ['end','版本更新完成','历史 Build 与 Manifest 保留，可在「线上版本与回滚」选择历史完整 Build 回滚。']]},
 {id:'price',name:'04 定价／改价',sub:'Package 内容授权与全球区域价格',sources:['程序包','定价'],steps:[
-['dev','价格销售 → 售价设置 →「创建Package」或「编辑内容/价格」','必填：Package 名称、用途及至少一个 App；核对需要授权的 Depot。只有付费商店销售才填写拟议价格；每个目标销售币种应有适用价格。销售结束时间并非所有 Package 的通用必填项；DLC 默认 Package 在此配价。'],
+['dev','价格销售 → 售价设置 →「创建Package」或「编辑内容/价格」','必填：Package 名称、用途及至少一个 App；核对需要授权的 Depot。只有付费商店销售才填写拟议价格；每个目标销售币种应有适用价格，且不得低于该币种的最低基础价（Steam USD 0.99 档多变量换算门槛，不按即时汇率直接换算）。销售结束时间并非所有 Package 的通用必填项；DLC 默认 Package 在此配价。'],
 ['gate','Package 是否曾销售或生成 Key？','是 → 不可移除已有 App，可新增 App／Depot；否 → 可调整未生效授权内容。'],
 ['dev','点击「保存并提交」','新建或修改价格形成待通过定价提案；待通过可撤回，撤回后可重提。'],
 ['ops','运营后台 → Package定价审核','通过／拒绝通过；拒绝须写原因。'],
 ['gate','价格审核是否通过？','否 → 开发者在「售价设置」修改并重新提交；是 → 设置销售时间或点击「立即上架」。'],
-['sys','各销售币种价格生效','按已审核的币种价格生效；USD 只是一个币种。地区建议价可由工具辅助生成，但开发者须确认，不得把 USD 改动自动视为所有币种都已重新定价。'],
+['sys','各销售币种价格生效','按已审核的币种价格生效；USD 只是一个币种。各币种最低可能交易价为该币种最低基础价的 50%（美元约 USD 0.49），供后续折扣校验。地区建议价可由工具辅助生成，但开发者须确认，不得把 USD 改动自动视为所有币种都已重新定价。'],
 ['end','定价流程完成','Package 状态「销售中」后，才可作为普通折扣和 Bundle 的成员。']]},
 {id:'discount',name:'05 创建折扣',sub:'Package 自助折扣；按每个销售币种的实际价格计算',sources:['折扣','定价'],steps:[
 ['gate','前置：目标 Package 是否「销售中」？','否 → 先完成「04 定价／改价」；是 → 进入促销。'],
 ['dev','价格销售 → 促销活动 →「创建促销」','必填：促销 Package、折扣百分比、开始日期、结束日期；可选：活动说明。点击「设置促销」。'],
-['sys','即时规则校验','校验折扣比例、时长、冷却期与最低成交价。例：同一 Package 同时卖 USD 与 CNY，就分别检查美元折后价和人民币折后价是否低于各自最低门槛；不是只验 USD 后换算。当前 Demo 已按各销售币种实际定价试算；USD 最低价有演示校验，其他币种的官方最低价表仍需接入正式校验。'],
-['gate','是否通过规则校验？','否 → 调整折扣或日期后再次点击「设置促销」；是 → 生成待开始活动。'],
+['sys','即时规则校验','以各销售币种已生效的 Package 价格分别计算折后价，并校验折扣比例、时长、冷却期与各币种最低可能交易价。最低可能交易价是该币种最低基础价的 50%，美元约 USD 0.49；USD 0.99 档最多折 50%，USD 1.99 档最多折 75%，USD 4.99 档最多折 90%（示例，其他币种按当地门槛分别校验）。当前 Demo 的非 USD 官方最低价表尚未接入。'],
+['gate','是否通过规则校验？','任一销售币种的折后价低于该币种最低可能交易价 → 不允许新建该折扣，调整折扣或价格后重试；全部通过 → 生成待开始活动。既有活动若因历史价格低于门槛，相关地区可能不可购买，不等同于新建时放行。'],
 ['ops','运营后台 → 促销活动监控','查看活动、Package、折扣和状态；普通自助折扣无逐次人工审核。'],
 ['sys','开始日期生效 → 结束日期自动恢复','未开始前可编辑或删除；成员 Package 折扣会影响 Bundle 的动态结算基数。'],
 ['end','折扣流程完成','活动状态：待开始 → 进行中 → 已结束。']]},
 {id:'bundle',name:'06 创建捆绑包',sub:'同一游戏中的多个销售中 Package',sources:['Bundle 官方证据台账','定价'],steps:[
 ['gate','前置：是否有至少两个销售中的 Package？','否 → 先完成 Package 定价审核与上架；是 → 可创建 Bundle。'],
 ['dev','价格销售 → 捆绑组合 →「创建捆绑组合」','必填：组合名称、展示标题、至少两个 Package、Bundle 类型、整数折扣 1%～95%；可选：展示正文、封面图。点击「保存 Bundle 草稿」。'],
-['dev','选择类型并检查结算预览','Complete The Set：只计未拥有成员；Must Purchase Together：已拥有任一成员则不可购买。按当前销售币种的成员实际价格计算，先应用成员促销，再应用 Bundle 折扣。原型「结算预览」可切地区和模拟已拥有内容；正式结算应读取账号实际权益。'],
+['dev','选择类型并检查结算预览','Complete The Set：只计未拥有成员；Must Purchase Together：已拥有任一成员则不可购买。按当前销售币种的成员实际价格计算，先应用成员促销，再应用 Bundle 折扣。Steam 地区可售限制：Complete The Set 中每个成员折后价须高于当地最低可能交易价（仅含 DLC App 的 Package 例外）；Must Purchase Together 的组合总价至少 USD 0.58。未满足时对应地区不可购买。原型「结算预览」可切地区和模拟已拥有内容；正式结算应读取账号实际权益。'],
 ['sys','创建状态「未上架」','Bundle 无固定 USD 总价；不生成 Bundle Key。'],
 ['dev','列表 →「发布资料并 Set Live」→「确认立即上架」','前置：成员 Package 均「销售中」；成功后状态「已上架」。'],
 ['ops','运营后台 → 捆绑组合管理','仅监控和查看详情，无逐个 Bundle 人工审核。'],
@@ -65,7 +65,7 @@ const F=[
 ['gate','前置：两个 App 是否同属一个发行方，且 Package 均「销售中」？','任一不满足 → 不可创建；本期不开放不同发行方协作捆绑。'],
 ['dev','进入其中一个游戏 → 价格销售 → 捆绑组合 →「创建捆绑组合」','在成员列表勾选当前 App Package + 标注「跨 App」的另一游戏 Package；至少两个。演示样例：星海远征 + 银河拼图。'],
 ['dev','填写 Bundle 表单并保存','必填：组合名称、展示标题、Bundle 类型、折扣百分比；可选：正文、封面图。点击「保存 Bundle 草稿」。'],
-['sys','校验同一发行方及跨 App 成员价格','拒绝不同发行方的 Package；对同一发行方下不同 App 的成员，按地区价格、玩家拥有内容及成员促销动态计算。'],
+['sys','校验同一发行方及跨 App 成员价格','拒绝不同发行方的 Package；对同一发行方下不同 App 的成员，按地区价格、玩家拥有内容及成员促销动态计算。地区可售性沿用 06 捆绑包规则：Complete The Set 检查成员当地最低可能交易价（仅含 DLC App 的 Package 例外），Must Purchase Together 检查组合总价门槛。'],
 ['dev','「结算预览」→「发布资料并 Set Live」','检查地区与已拥有成员模拟结果；确认上线。'],
 ['ops','运营后台 → 捆绑组合管理','只读监控跨 App 成员与上线状态；无逐个 Bundle 审核。'],
 ['end','跨 App 组合可购买','玩家取得所购买成员 Package 的权益；既有成员按 Complete The Set 规则补齐。']]},
@@ -197,6 +197,8 @@ if(__exports != exports)module.exports = exports;return module.exports}));
     "Coming Soon": "Steam 的“即将推出”商店页面；首次发行前通常需公开展示满两周。",
     "Playtest": "与本体关联但独立的测试 AppID，用于按批次招募外部测试者，不等同于正式游戏授权。",
     "销售币种": "商店实际收款使用的币种，如 USD、CNY。折扣后的价格要分别满足每个币种的最低价格限制。",
+    "最低基础价": "商品在某个销售币种可以设置的最低原价。Steam 以 USD 0.99 档的多变量换算建议价作为各币种门槛，不能直接用实时汇率换算。",
+    "最低可能交易价": "商品折扣后允许成交的最低价格，等于对应币种最低基础价的 50%；美元约为 USD 0.49。",
     "回滚": "把分支重新指向经校验的历史 Build。",
     "权益": "玩家获得的 App 或 Depot 访问、下载许可。"
   };
@@ -204,9 +206,9 @@ if(__exports != exports)module.exports = exports;return module.exports}));
     "new": "目标顺序已按 Steam 调整：先准备商店页、内容调查和拟议价格，商店页先送审；Depot／上传可并行准备；首次 Build 再送审。当前 Demo 的资料送审仍依赖完整 Build，发布也未校验 Coming Soon 两周，后台实现待改。",
     "game-update": "按已确认的本平台规则，每次游戏资料变更都人工审核；这是与 Steam 普通更新不同的业务规则。资料审核只能检查申报和展示内容，不能证明后来上传的 Build 没有违规内容。",
     "version-update": "仅首个可发布 Build 做例行人工审核。后续更新可经测试分支验证；自动检查、举报或抽检命中高风险内容时转例外复核。当前 Demo 仍要求每个 Build 的 QA=已通过，待区分“测试”与“人工审核”。",
-    "price": "已按 Package 用途区分字段：至少一个 App 与正确 Depot 授权；付费销售时才需要币种价格。原型当前仍对不同类型复用表单，待后台同步。",
-    "discount": "“按销售币种校验”是指 USD、CNY 等折后价格各自不能低于该币种的最低门槛；当前 Demo 已按已配置币种价格试算；USD 最低价有演示校验，其他币种的官方最低价表未接入，不能据此认定价格合规。",
-    "bundle": "保持既有 Bundle 流程。",
+    "price": "付费 Package 的各币种原价不得低于 Steam USD 0.99 档多变量换算得出的当地最低基础价。当前流程图写明目标规则；原型尚未接入完整的各币种官方门槛表。",
+    "discount": "各销售币种折后价须分别达到该币种最低可能交易价（当地最低基础价的 50%）。Steam 对新建折扣采取任一币种低于门槛即不允许创建；当前 Demo 的非 USD 官方门槛表未接入，不能据此认定价格合规。",
+    "bundle": "Steam Bundle 有单独的地区可售规则：Complete The Set 按成员检查最低可能交易价（纯 DLC Package 例外）；Must Purchase Together 检查组合总价 USD 0.58 门槛。此处为目标流程说明，不代表原型已完成各地区结算校验。",
     "cross-bundle": "本期仅支持同一发行方名下的不同 App；不同发行方的成员应被创建校验拒绝。",
     "dlc": "DLC 有独立 AppID 与授权 Package，但不一定有独立文件。无新文件时只验权解锁；有新文件才建 Depot 并上传，具体归属取决于是否开启分别管理。",
     "qa-testing": "Steam 的内部测试账号在 Steamworks「添加/管理用户」添加，再检查 Dev Comp／测试 Package 对 AppID 与 DepotID 的授权。当前 Demo 已加入演示用内部账号管理、App／Depot 授权及开发者自测入口。09 已收窄为开发者自测和运营 QA；后续 Build 若不逐次人工审核，就无法承诺在每次更新上线前发现所有故意隐瞒的违规内容。"
@@ -237,6 +239,8 @@ if(__exports != exports)module.exports = exports;return module.exports}));
     "Coming Soon": ["即将推出页面", "例如首次商店审核通过后公开该页面，满足 Steam 的首发等待条件。", "https://partner.steamgames.com/doc/store/releasing"],
     "Playtest": ["游戏测试应用", "例如为本体游戏建立关联 Playtest App，按批次允许外部玩家参与。", "https://partner.steamgames.com/doc/features/playtest"],
     "销售币种": ["销售币种", "例如一款游戏同时以美元和人民币出售，折后价需分别检查各自币种的最低门槛。", "https://partner.steamgames.com/doc/store/pricing"],
+    "最低基础价": ["可设置的最低原价", "例如美元售价不能低于 USD 0.99；CNY 等其他币种应对照 Steam USD 0.99 档的多变量换算门槛，不能直接按即时汇率换算。", "https://partner.steamgames.com/doc/store/pricing"],
+    "最低可能交易价": ["折后成交底价", "例如美元最低约 USD 0.49；USD 0.99／1.99／4.99 档分别最多可折 50%／75%／90%。其他币种分别按当地最低基础价的 50% 校验。", "https://partner.steamgames.com/doc/store/pricing"],
     "回滚": ["版本回退", "例如 Build 011 出现严重问题，把公开 Branch 重新指向历史 Build 010。", "https://partner.steamgames.com/doc/store/application/builds"],
     "权益": ["访问授权", "例如购买本体 Package 后可下载本体 App 及其中授权的 Depot。", "https://partner.steamgames.com/doc/store/application/packages"]
   };
